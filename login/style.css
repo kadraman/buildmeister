@@ -1,0 +1,64 @@
+a 
+{ 
+	color:#0000FF; 
+	font-family: verdana; 
+	font-size: 11px; 
+	text-decoration: none;
+}
+
+a:link 
+{ 
+	color:#0000FF; 
+	font-family: verdana; 
+	font-size: 11px; 
+	text-decoration: none; 
+}
+
+a:visited 
+{ 
+	color:#666666; 
+	font-family: verdana; 
+	font-size: 11px; 
+	text-decoration: none; 
+}
+
+a:active 
+{ 
+	color:#FF0000; 
+	font-family: verdana; 
+	font-size: 11px; 
+	text-decoration: none; 
+}
+
+a:hover { 
+	color: #0000FF; 
+	font-family: verdana; 
+	font-size: 12px; 
+	text-decoration: none; 
+}
+body 
+{
+	background-color:#FFFFFF;
+	font-family:verdana;
+	font-size:11px;
+	color:#000000;
+}
+.heading
+{
+	font-family:Trebuchet MS;
+	color:#FFFFFF;
+	font-size:20px;
+	text-align:center;
+	text-transform:uppercase;
+}
+input 
+{
+	font-family:Tahoma;
+	font-size:11px;
+	color:#333333;
+}
+p
+{
+	font-family:Verdana;
+	font-size:11px;
+}

@@ -1,0 +1,162 @@
+<div id="article">
+<h2>The fundamentals of Java Platform, Enterprise Edition Packaging and Deployment</h2>
+<p> by <a href="mailto:kevin.lee@buildmeister.com?subject=">Kevin A. Lee</a></p>
+<p style="font-style: italic;">This article describes how Enterprise Java applications and typically packaged and deployments. It introduces some of the fundamental concepts and terminology, as well as discussing some of the tools and techniques that can be applied.</p>
+<h3>Introduction</h3>
+<p><b>Java Platform, Enterprise Edition</b> or <b>Java EE</b> (which was formerly known as Java 2 Platform, Enterprise Edition or J2EE up to version 1.5), is a programming platform for developing and executing distributed, multi-tier applications.&nbsp;The Java EE platform is made up of a whole host of APIs (with a wealth of acronyms such as <a href="http://en.wikipedia.org/wiki/JDBC">JDBC</a>, <a href="http://en.wikipedia.org/wiki/Java_remote_method_invocation">RMI</a>, <a href="http://en.wikipedia.org/wiki/Java_Message_Service">JMS</a>) - and they are all defined by Java community <i>specifications</i>. The purpose of this article is not to discuss all of the myriad of technologies at play in a Java EE application but rather to look at what information someone involved in the build and deployment of such applications would typically need to know.</p>
+<h3>Java EE Packaging</h3>
+<p>Java EE applications are designed to execute on specific software infrastructure (or middleware) components, an example of a typical infrastructure is illustrated in the diagram below:</p>
+<p style="text-align: center;"><img width="474" height="259" style="width: 474px; height: 259px;" alt="Java EE Application Architecture" src="%image_dir%/JavaEE_Architecture.gif"/></p>
+<p>In this example we have a multi-tiered application that makes use of (or connects with):</p>
+<ul>
+    <li>A <span style="font-weight: bold;">Database</span> to store and serve data. </li>
+    <li>An&nbsp;existing <span style="font-weight: bold;">Legacy System.</span> </li>
+    <li>An <span style="font-weight: bold;"><a href="http://en.wikipedia.org/wiki/Application_server#Java_application_servers">Application Server</a> </span>to execute the the core business logic (examples of such a server include IBM WebSphere, BEA WebLogic or Apache Geronimo). </li>
+    <li>A <span style="font-weight: bold;">Web Server</span> to serve requests and execute presentations functions and finally various clients (examples include&nbsp;Apache Tomcat or the IBM HTTP Server). Note that the Web Server can also be &quot;embedded&quot; in the Application Server for smaller applications. </li>
+    <li>The various <span style="font-weight: bold;">Clients</span> (Internet browsers, desktop applications) that users make use of to operate the application. </li>
+</ul>
+<p>There are two important points to realize about such an infrastructure:</p>
+<ol>
+    <li>A&nbsp;Java EE application&nbsp;consists of multiple modules&nbsp;that need to be deployed to each of these infrastructure components. </li>
+    <li>There are many different vendor supplied&nbsp;infrastructure components that the application could be deployed to. </li>
+</ol>
+<p>The first point should naturally get you thinking about complexity - Java EE packaging and deployment is not simple - whilst the second point leads us on to the fact that although Java EE applications are based on standards, there are still vendor specific packaging and deployment steps that might have to be carried out. Given this type of infrastructure, let us look next at how Java EE applications are typically packaged.</p>
+<h4>Java EE Modules</h4>
+<p>All Java packaging is carried out using variations of the Java ARchive (<a href="http://en.wikipedia.org/wiki/JAR_%28file_format%29"><span style="font-weight: bold;">JAR</span></a>) format , this is a ZIP compatible format that allows pre-built Java classes to be bundled together into a module. An optional <span style="font-weight: bold;">MANIFEST</span> file can also be included in the JAR that contains meta-data to additionally describe the contents, an example of a manifest file is show below:</p>
+<div id="codelisting">                         Manifest-Version: 1.0<br/>
+Ant-Version: Apache Ant 1.7.0<br/>
+Created-By: 1.4.2 (IBM Corporation)<br/>
+Built-By: Dale King<br/>
+Main-Class: com.ratlbank.main.BankMain<br/>
+Name: com/ratlbank/<br/>
+Specification-Title: &quot;Rational Bank Classes&quot; <br/>
+Specification-Version: &quot;1.0&quot;<br/>
+Specification-Vendor: &quot;IBM Corporation&quot;.<br/>
+Implementation-Title: &quot;com.ratlbank&quot; <br/>
+Implementation-Version: &quot;RATLBANK_02_REL&quot;<br/>
+Implementation-Vendor: &quot;IBM Corporation&quot;</div>
+<p>The manifest file is defined according to a standard and allows you to inject custom information that defines more detail about the archive and could potentially be used at a later date - for debugging as an example. For more information on manifest files see <a href="http://java.sun.com/j2se/1.4.2/docs/guide/jar/jar.html#JAR%20Manifest">here</a>.</p>
+<p>Java EE applications are typically packaged up into an Enterprise ARchive (or <a href="http://en.wikipedia.org/wiki/EAR_%28file_format%29"><span style="font-weight: bold;">EAR</span></a> file) for deployment. An EAR file is a composite module that is made up of all the modules that need to be deployed to the different tiers. It is still a valid JAR style archive (and the same tools can be used to create and extract it), however it has additional content and it is best to think of an EAR file as a JAR of JARs. A logical example of a typical EAR file is illustrated in the diagram below:</p>
+<div style="text-align: center;"><img width="378" height="152" style="width: 378px; height: 152px;" alt="Example EAR file" src="%image_dir%/EAR_File.gif"/></div>
+<p>In this example, the EAR file is made up of modules for each of the tiers as follows:</p>
+<ul>
+    <li>Web ARchives (or <a style="font-weight: bold;" href="http://en.wikipedia.org/wiki/WAR_%28file_format%29">WAR</a> files), that are to be installed into the Web Server </li>
+    <li><a href="http://en.wikipedia.org/wiki/Enterprise_JavaBeans">Enterprise Java Bean</a> JAR files, that are to be installed into the Application Server </li>
+    <li>Application Client JAR files, that are to be executed on the Client </li>
+    <li>Utility JARs, which are standard Java Archives that the application will make use of </li>
+</ul>
+<p>Note that each of these individual modules can be deployed separately, for example a simple Web application might only consist of a WAR file, however complex Java EE applications typically contain the complete set of modules.</p>
+<p>In order to describe how each of these module should be deployed on the target infrastructure, each of them has a <span style="font-weight: bold;">deployment descriptor</span>. This is an XML file stored in the module that describes the contents of the module, its components and relationships. The standard name of each of these deployment descriptors is shown in light-blue in the diagram below:</p>
+<div style="text-align: center;"><img width="378" height="303" style="width: 378px; height: 303px;" alt="EAR File deployment descriptors" src="%image_dir%/EAR_descriptors.gif"/><br/>
+</div>
+<p>In this example as well as the standard deployment descriptors you will notice that there are placeholders for each of the vendor specific deployment descriptors. These have different names from vendor to vendor, however an example of &nbsp;the names used by Apache Geronimo and IBM WebSphere are given in the table below:</p>
+<div align="center">
+<table width="90%">
+    <tbody>
+        <tr>
+            <th style="background-color: rgb(204, 204, 204);">Module</th><th style="background-color: rgb(204, 204, 204);">Java EE standard</th><th style="background-color: rgb(204, 204, 204);">Apache Geronimo additions</th><th style="background-color: rgb(204, 204, 204);">IBM WebSphere additions</th>
+        </tr>
+        <tr>
+            <td style="background-color: rgb(102, 204, 204);">
+            <p align="left">EAR file</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">application.xml</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">geronimo-application.xml</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">ibm-application-bnd.xml<br/>
+            ibm-application-ext.xmi</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: rgb(102, 204, 204);">
+            <p align="left">EJB-JAR file</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">ejb-jar.xml</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">openejb-jar.xml</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">ibm-ejb-jar-bnd.xmi<br/>
+            ibm-ejb-jar-ext.xmi</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: rgb(102, 204, 204);">
+            <p align="left">WAR file</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">web.xml</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">geronimo-web.xml</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">ibm-web-bnd.xmi<br/>
+            ibm-web-ext-xmi</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: rgb(102, 204, 204);">
+            <p align="left">Application Client</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">application-client.xml</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">geronimo-application-client.xml</p>
+            </td>
+            <td style="font-family: monospace; background-color: rgb(102, 204, 204);">
+            <p align="left">ibm-application-client-bnd.xmi</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<p>In this table each module has additional vendor specific deployment descriptors (called deployment plans in Apache Geronimo's case). IBM WebSphere has two for the majority of modules, a bindings (<span style="font-weight: bold;">bnd</span>) file that binds the abstract contents of the Java EE deployment descriptor to a concrete WebSphere runtime component, and an extension (<span style="font-weight: bold;">ext</span>) file that contains extensions that WebSphere provides above and beyond the Java EE standard.</p>
+<h4>Packaging Tools</h4>
+<p>So the questions is what does this mean for the person who has to package all of this together. Well fortunately there is quite a significant amount of tool support that is available to help create and manage the content of these files, examples include:</p>
+<ul>
+    <li>Development Environments such as Eclipse, Rational Application Developer or Intelli J IDEA which have wizard and presentation facilities to automate the generation of deployment descriptors and visualize them. </li>
+    <li>Programming Tools such as XDoclet which automate their construction based on annotations that you supply in source code (this is an approach that Java EE 5 uses). </li>
+    <li>Build Tools such as Apache Ant or Apache Maven which have tasks for creating EAR, WAR and JAR packages. </li>
+</ul>
+<p>However despite all of this tool support, the typical Java EE deployment engineer will undoubtedly have to have some understanding of the contents of these files, not just at packaging time but at deployment time - for reasons we will discuss next.</p>
+<h3>Deployment</h3>
+<p>As we have discussed, the technical nature of Java EE deployment will ultimately depend on the infrastructure that is being deployed to, however there are a number of common issues in deployment which&nbsp;apply.&nbsp;</p>
+<h4>Deployment Flow</h4>
+<p>In order for Java EE applications to be built, tested and released organizations typically implement separate run-time infrastructure environments for each part of the lifecycle. An example of the flow of a Java EE application through a complete lifecycle is illustrated in the figure below:</p>
+<p style="text-align: center;"><img width="600" height="192" style="width: 600px; height: 192px;" alt="JavaEE Deployment Flow" src="%image_dir%/JavaEE_Deployment_Flow.gif"/></p>
+<p>In this example there are four environments: Integration Testing, System Testing, User Acceptance Testing and Production. The number of environments and their names&nbsp;differ from customer to customer, however these are a typical minimum set. Notice that different environments also have different permissions as to who is allowed to deploy to them. In this example a Development Build Engineer would typically be able to deploy to the Integration Testing and System Testing environments, however only an Operations Deployment Engineer would be allowed to deploy to the customer facing environments of User Acceptance Testing and Production.</p>
+<h4>Deployment Configuration</h4>
+<p>Since each environment can have multiple servers (e.g. Web, Application, Database), each with different properties (e.g. database names, message queues, user authentication schemes) then it follows that a single Java EE application will need to be configured differently for each one. Some example strategies that can be followed to achieve this are:</p>
+<ol>
+    <li>Construct a package for each environment. </li>
+    <li>Create scripts that are included in the package and then supply configuration it for each environment at install time. </li>
+    <li>Create a single package that contains logical bindings that are resolved at deployment time by an extra configuration file.&nbsp; </li>
+</ol>
+<p>The exact approach to be used often depends on the capabilities of the infrastructure that is being deployed to, however most Java EE application servers now support some form of option 3 - for example Apache Geronimo allows you to specify a deployment plan file alongside the EAR file at deployment time. Moving forwards Java EE 5 aims to simplify this process by removing the need for deployment descriptors. </p>
+<p>A subtle point to note however, is that since Java EE applications are very flexible in how they can be deployed, often one the main challenge of deployment configuration is obtaining exact information about numbers of servers, distribution, and physical names in each environment so that configuration files can be constructed. One of the ways of mitigating against this is to create a logical <span style="font-weight: bold;">deployment model</span> that lists all the application components. This model can then be used in discussions to help elicit the required information.</p>
+<h4>Deployment Tools</h4>
+For Java EE packages to be deployed tool support is needed, there are a number of tools that can be used to achieve this as follows:<br/>
+<ul>
+    <li>Build or scripting tools such as Apache Ant, Apache Maven, shell scripts and so on. </li>
+    <li>Application server specific deployment clients (which often conform to the <a href="http://jcp.org/en/jsr/detail?id=88">JSR-88</a> standard) </li>
+    <li>Technology neutral Enterprise deployment and provisioning tools such as <a href="http://www.google.co.uk/url?sa=t&amp;ct=res&amp;cd=1&amp;url=http%3A%2F%2Fwww.ibm.com%2Fsoftware%2Ftivoli%2Fproducts%2Fprov-mgr%2F&amp;ei=ci3gRs3QKpb2wwHPloSOAw&amp;usg=AFQjCNFinJmQOpT_hiMPFmfzGGLx4E8vHQ&amp;sig2=qxbeYu-LFk27SL6z8lzZaA">IBM Tivoli Provision Manager</a> or BMC Marimba </li>
+</ul>
+<p>Often combined approaches are used, for example scripts are created but they and their associated EAR files are physically moved to servers by an Enterprise deployment tool which then subsequently executes the scripts to perform the install. One of the main reasons why Enterprise deployment tools are used around scripting is that they perform functions such as authentication and access, inventory, guaranteed delivery and rollback that scripting alone could not achieve without significant effort.</p>
+<h3>Summary</h3>
+<p>In this article I have concentrated on the basics of Java EE deployment - by reading this article you will not be a Java EE packaging and deployment expert. However, you will be aware of some of the issues and best practices that are involved. One of the most important things that you should takeaway is that Java EE application packaging and deployment is not a trivial task and the overall package-test-deploy process is a significant part of an applications development lifecycle. It is recommended that the packaging and deployment is&nbsp;proposed, discussed and implemented early on in the development lifecycle - not when development has almost been completed. Doing so, will mean there are no surprises (which might mean re-development) - or delays (while decisions are made) - in getting your application in the hands of your testers and end-users.</p>
+<h3>References</h3>
+<ul>
+    <li><a href="http://www.amazon.com/gp/product/0471785431?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0471785431">Professional Apache Geronimo (Wrox Professional Guides)</a><img width="1" height="1" border="0" style="border: medium none  ! important; margin: 0px ! important;" alt="" src="http://www.assoc-amazon.com/e/ir?t=thebuildmeist-20&amp;l=as2&amp;o=1&amp;a=0471785431"/></li>
+    <li><a href="http://www.amazon.com/gp/product/0131855875?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0131855875">IBM(R) WebSphere(R) Application Server for Distributed Platforms and z/OS(R): An Administrator's Guide</a><img width="1" height="1" border="0" style="border: medium none  ! important; margin: 0px ! important;" alt="" src="http://www.assoc-amazon.com/e/ir?t=thebuildmeist-20&amp;l=as2&amp;o=1&amp;a=0131855875"/></li>
+    <li><a href="http://www.amazon.com/gp/product/0321356993?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0321356993">IBM Rational(R) ClearCase(R), Ant, and CruiseControl: The Java(TM) Developer's Guide to Accelerating and Automating the Build Process</a><img width="1" height="1" border="0" src="http://www.assoc-amazon.com/e/ir?t=thebuildmeist-20&amp;l=as2&amp;o=1&amp;a=0321356993" alt="" style="border: medium none  ! important; margin: 0px ! important;"/> </li>
+</ul>
+</div>
+

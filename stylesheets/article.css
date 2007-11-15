@@ -1,0 +1,81 @@
+#article {
+    text-align: justify;
+    padding-left: 0px;
+    padding-right: 0px;
+    font-size: 8pt;
+}
+#keyconcepts {
+    width: 250px;
+    background-color: #99ccff;
+    padding: 10px;
+    font-size: 8pt;
+    float: right;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+#codeoutput {
+    text-align: left;
+    font-family: monospace;
+    color: #008080;
+    margin-left: 40px;
+}
+#codelisting { 
+    width: 90%;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-family: monospace;
+    background-color: rgb(245,245,245);
+    valign: top;
+}
+p#articlehead {
+    font-style: italic;
+    text-align: justify;
+}
+p#article {
+    text-align: justify;
+}
+p#codeoutput {
+    text-align: left;
+    font-family: monospace;
+    color: #008080;
+    margin-left: 40px;
+}
+table#fullwidth {
+    cellspacing: 0px;
+    cellpadding: 0px;
+    width: 100%;
+    border: 0;
+}
+table#nicewidth {
+    cellspacing: 0px;
+    cellpadding: 0px;
+    width: 95%;
+    border: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+table#code {
+    width: 90%;
+    BORDER-COLLAPSE: collapse;
+    bordercolor: #111111;
+    cellspacing: 0px;
+    cellpadding: 0px;
+    border: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+td#codelines {
+    FONT-FAMILY: monospace;
+    COLOR: #008080;
+    BACKGROUND-COLOR: rgb(255,255,204);
+    valign: top;
+    width: 50px;
+    align: center;
+}
+td#codecontent {
+    FONT-FAMILY: courier new;
+    BACKGROUND-COLOR: rgb(255,255,204);
+    valign: top;
+    width: 700px;
+    align: left;
+}   

@@ -1,0 +1,295 @@
+/*
+ *
+ * default styles 
+ *
+ */
+body {
+	background:#CCC;
+	color:#000;
+	margin:0px;
+	padding:0px;
+    	font-family: arial, "lucida console", sans-serif;
+    	list-style-type: disc;
+    	font-size: 8pt;
+}
+form {
+	margin:0px;
+}
+img {
+	border:0px;
+}
+
+/*
+ * document structure:
+ *
+ * container
+ *   - header
+ *   - sidebar                     - content
+ *       - navigation			- etc.
+ *       - search
+ *       - spacer
+ *       - links
+ *       - spacer
+ *   - footer
+ *   - shadow
+ *
+ */
+
+/* main container - for side shadows */
+#container {
+	background:#FFF
+		url("/buildmeister.com/images/template-background.gif")
+		repeat-y 50% 0px;
+	margin:0px auto;
+	padding:0px 10px;
+	width:930px;
+	text-align:left;
+}
+/* header bar - including logo */
+#header {
+	background:#FFF
+		url("/buildmeister.com/images/template-gradient.gif")
+		repeat-x 50% 0%;
+	margin:0px;
+	height: 88px;
+}
+#logo {
+	float:left;
+	margin:5px 5px 0px 5px;
+}
+#logo img {
+	border:none;
+}
+/* sidebar - for menus etc */
+#sidebar {
+	border-right:1px solid #E6EDF2;
+	position:relative;
+	float:left;
+	width:199px;
+}
+/* content - for main structured content */
+#content {
+	float:left;
+	position:relative;
+	width:710px;
+	padding: 10px 10px 10px 10px;
+}
+/*
+ * footer - for extra links */
+#footer {
+	background:
+		url("/buildmeister.com/images/template-links-gradient.gif")
+		repeat-x;
+	clear:both;
+	margin:0px;
+	height:29px;
+}
+#footer ul {
+	list-style-type:none;
+	margin:0px;
+	padding:0px;
+	height:1%;
+}
+#footer li {
+	float:left;
+	overflow:inherit;
+	padding:5px 10px 5px 14px;
+	white-space:nowrap;
+}
+#footer li.first {
+	background-image:none;
+	padding-left:19px;
+}
+#footer a {
+	color:#228;
+	text-decoration:none;
+}
+#footer a:hover {
+	color:#228;
+	text-decoration:underline;
+}
+/* shadow - for bottom shadow */
+#shadow {
+	background:
+		url("/buildmeister.com/images/template-bottom.gif")
+		no-repeat 50% 0%;
+	margin:0px;
+	padding:16px 0px 0px 0px;
+}
+
+/* 
+ *
+ * navigation bar - for main links
+ *
+ */
+#navigation {
+	position:relative;
+	float:left;
+	padding:10px 10px 10px 10px;
+	width:180px;
+}
+#navigation ul {
+	background:#C8D7E3 url("/buildmeister.com/images/template-leftnav.gif")
+		no-repeat 100% 100%;
+	line-height:1.25em;
+	list-style-type:none;
+	margin:0px;
+	padding:0px 0px 21px;
+}
+#navigation li a.subsection {
+	background:#FFF url("/buildmeister.com/images/template-right-arrow.gif")
+		no-repeat 6px 0.33em;
+	border-top:none;
+	border-bottom:1px solid #FFF;
+	border-left:1px solid #E6EDF2;
+	border-right:1px solid #E6EDF2;
+	display:block;
+	margin:0px;
+	padding:3px 4px 3px 20px;
+}
+#navigation li a.subsection:hover {
+	background:#98B1C4 url("/buildmeister.com/images/template-right-arrow.gif")
+		no-repeat 6px 0.33em;
+	border-top:none;
+	border-bottom:1px solid #FFF;
+	border-left:1px solid #E6EDF2;
+	border-right:1px solid #E6EDF2;
+	display:block;
+	margin:0px;
+	padding:3px 4px 3px 20px;
+}
+#navigation li a {
+	background:#7A96AB
+		url("/buildmeister.com/images/template-box.gif")
+		repeat-x 0px 50%;
+	border-top:1px solid #E6EDF2;
+	display:block;
+	margin:0px;
+	padding:4px 10px;
+}
+#navigation  a {
+	color:#228;
+	text-decoration:none;
+}
+#navigation li a.is-active {
+	padding-top:5px;
+	padding-bottom:3px;
+	background:#FFF
+		url("/buildmeister.com/images/template-leftnav-selected.gif")
+		repeat-x 0% 0%;
+	border-top:1px solid #E6EDF2;
+}
+#navigation li a.is-active:hover {
+	background:#98B1C4;
+	border-top:1px solid #E6EDF2;
+}
+#navigation li a:hover {
+	background:#98B1C4;
+}	
+
+/*
+ *
+ * search form 
+ *
+ */
+#search {
+	background:#C8D7E3 url("/buildmeister.com/images/template-leftnav2.gif")
+		no-repeat 100% 100%;
+	position:relative;
+	float:left;
+	width:180px;
+	margin-left:10px;
+	margin-right:10px;
+	padding: 0px 0px 20px 0px;
+}	
+#search-form {
+	background:#FFF;
+	/*clear:left;
+	float:left;*/
+	padding:10px 10px 10px 10px;
+	border-left:1px solid #E6EDF2;
+	border-right:1px solid #E6EDF2;
+}
+#search p {
+	color:#228;
+	text-decoration:none;
+	padding:0px 0px 0px 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}	
+/** TODO: does not work */
+input.sa {
+        color:#FFF;       
+        border:none;
+        padding:2px 6px 1px 6px;
+        margin-bottom:4px;
+        text-align:center;
+        cursor:pointer;
+}
+
+
+/* 
+ * login/logout and user functionality
+ *
+ */
+#login {
+	background:#C8D7E3 url("/buildmeister.com/images/template-leftnav2.gif")
+		no-repeat 100% 100%;
+	position:relative;
+	float:left;
+	width:180px;
+	margin-left:10px;
+	margin-right:10px;
+	padding: 0px 0px 20px 0px;
+}	
+#login-form {
+	background:#FFF;
+	/*clear:left;
+	float:left;*/
+	padding:10px 10px 10px 10px;
+	border-left:1px solid #E6EDF2;
+	border-right:1px solid #E6EDF2;
+}
+input.login {
+        color:#FFF;       
+        border:none;
+        padding:2px 6px 1px 6px;
+        margin-bottom:4px;
+        text-align:center;
+        cursor:pointer;
+}
+#login p {
+	color:#228;
+	text-decoration:none;
+	padding:0px 0px 0px 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}	
+#login ul {
+	line-height:1.25em;
+	list-style-type:none;
+	margin:0px;
+	text-align:left;
+}
+#login li a {
+	display:block;
+	padding:3px 4px 3px 0px;
+	text-decoration:none;
+}
+#login li a:hover {
+	display:block;
+	padding:3px 4px 3px 0px;
+	text-decoration:underline;
+}
+#login  a {
+	color:#228;
+	text-decoration:none;
+}
+
+#spacer {
+	position:relative;
+	float:left;
+	padding: 0px 5px 10px 0px;
+}
+
+/* end */
