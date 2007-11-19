@@ -93,7 +93,7 @@ img {
 #footer li {
 	float:left;
 	overflow:inherit;
-	padding:5px 10px 5px 14px;
+	padding:8px 10px 5px 14px;
 	white-space:nowrap;
 }
 #footer li.first {
@@ -125,7 +125,7 @@ img {
 #navigation {
 	position:relative;
 	float:left;
-	padding:10px 10px 10px 10px;
+	padding:10px 10px 15px 10px;
 	width:180px;
 }
 #navigation ul {
@@ -204,8 +204,6 @@ img {
 }	
 #search-form {
 	background:#FFF;
-	/*clear:left;
-	float:left;*/
 	padding:10px 10px 10px 10px;
 	border-left:1px solid #E6EDF2;
 	border-right:1px solid #E6EDF2;
@@ -230,7 +228,6 @@ input.sa {
 
 /* 
  * login/logout and user functionality
- *
  */
 #login {
 	background:#C8D7E3 url("/buildmeister.com/images/template-leftnav2.gif")
@@ -246,17 +243,9 @@ input.sa {
 	background:#FFF;
 	/*clear:left;
 	float:left;*/
-	padding:10px 10px 10px 10px;
+	padding:0px 0px 10px 0px;
 	border-left:1px solid #E6EDF2;
 	border-right:1px solid #E6EDF2;
-}
-input.login {
-        color:#FFF;       
-        border:none;
-        padding:2px 6px 1px 6px;
-        margin-bottom:4px;
-        text-align:center;
-        cursor:pointer;
 }
 #login p {
 	color:#228;
@@ -266,30 +255,112 @@ input.login {
 	margin-bottom: 5px;
 }	
 #login ul {
+	background:#FFFFFF url("/buildmeister.com/images/template-leftlist.gif")
+		no-repeat 100% 100%;
 	line-height:1.25em;
 	list-style-type:none;
 	margin:0px;
+	padding:10px 0px 0px;
+	line-height:1.25em;
 	text-align:left;
 }
 #login li a {
 	display:block;
-	padding:3px 4px 3px 0px;
-	text-decoration:none;
+	margin:0px;
+	padding:4px 10px;
 }
 #login li a:hover {
 	display:block;
-	padding:3px 4px 3px 0px;
 	text-decoration:underline;
-}
-#login  a {
-	color:#228;
-	text-decoration:none;
+	padding:4px 10px;
 }
 
+/* form for user login */
+fieldset.login-form {
+    color: #000;
+    padding: 2px;
+    border: solid 1px #C8D7E3;
+    width: 235px;
+}
+/* form for user information */
+fieldset.userinfo-form {
+    color: #000;
+    padding: 2px;
+    border: solid 1px #C8D7E3;
+    width: 235px;
+}
+/* form for user information */
+fieldset.useredit-form {
+    color: #000;
+    padding: 2px;
+    border: solid 1px #C8D7E3;
+    width: 280px;
+}
+/* form for user login */
+fieldset.register-form {
+    color: #000;
+    padding: 2px;
+    border: solid 1px #C8D7E3;
+    width: 590px;
+}
+/*
+ * general settings for all input forms
+ */
+legend {
+    color: #000;
+    font-weight: bold;
+    font-variant: small-caps;
+    background-color: #C8D7E3;
+    padding: 2px 6px;
+    margin-bottom: 8px;
+}
+label.formLabelText {
+    font-size: 8pt;
+    color: #000;
+    padding: 2px;
+    margin-right: 5px;
+    margin-bottom: 0px
+}
+textarea.formTextArea {
+    font-size: 8pt;
+    color: #000;
+}
+input.formInputText  {
+    font-size: 8pt;
+    color: #000;
+    background-color: #EFE;
+    padding: 2px;
+    border: solid 1px #C8D7E3;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    height: 15px;
+    width:150px;
+}
+input.formInputText:hover {
+    color: #000;
+    background-color: #FFFFBB;
+    border: solid 1px #C8D7E3;
+    cursor: pointer;
+}
+input.formInputText:focus {
+    color: #000;
+    background-color: #FFF;
+    border: solid 1px #0066FF; 
+    cursor: text;
+}
+
+/* blank line spacer */
 #spacer {
 	position:relative;
 	float:left;
-	padding: 0px 5px 10px 0px;
+	padding: 0px 5px 0px 0px;
+}
+
+/* error message */
+#error {
+	color:#ff0000;
+	margin:0px;
+	padding:0px;
 }
 
 /* end */

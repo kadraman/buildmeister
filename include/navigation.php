@@ -1,9 +1,5 @@
 <?php
 
-session_start();
-
-require("db.php");
-
 for ($i = 0; $i < sizeof($navmenu_main); $i++) {
     # is the item currently active?
     if ($i == $_SESSION['SESS_NAVITEM']) {

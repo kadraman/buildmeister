@@ -18,7 +18,7 @@
 <script language="javascript" src="javascript/shCore.js"></script>
 <script language="javascript" src="javascript/shBrushXml.js"></script>
 <script language="javascript">
-dp.SyntaxHighlighter.ClipboardSwf = '/buildmeister/javascrip/clipboard.swf';
+dp.SyntaxHighlighter.ClipboardSwf = '/buildmeister/javascript/clipboard.swf';
 dp.SyntaxHighlighter.HighlightAll('code');
 </script>
 </html>

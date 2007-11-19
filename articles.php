@@ -4,7 +4,7 @@
 session_register("SESS_NAVITEM");
 $_SESSION['SESS_NAVITEM'] = 1;
 
-require("include/header.php");
+include("include/header.php");
 
 # fetch build process articles
 echo "<div id='article'>";

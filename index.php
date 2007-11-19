@@ -4,8 +4,8 @@
 session_register("SESS_NAVITEM");
 $_SESSION['SESS_NAVITEM'] = 0;
 
-require("include/header.php");
+include("include/header.php");
 
-require("include/footer.php");
+include("include/footer.php");
 
 ?>

@@ -1,7 +1,5 @@
 <?php
 
-#require("db.php");
-
 # articles page is selected
 session_register("SESS_NAVITEM");
 $_SESSION['SESS_NAVITEM'] = 1;
@@ -13,7 +11,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 	$currentid = 0;
 }
 
-require("include/header.php");
+include("include/header.php");
 
 # fetch article content
 $placeholder = "%image_dir%";
@@ -30,6 +28,6 @@ echo $text;
 
 # comment on article
 
-require("include/footer.php");
+include("include/footer.php");
 
 ?>

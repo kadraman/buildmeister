@@ -1,24 +1,21 @@
 <?php
-    session_start();
+    
+include("include/session.php");
 
-    require("config.php");
-
-    if ($_POST['userlogin']) {
-	    echo $_POST['username'];
-            $_SESSION['SESS_USERNAME']  = "admin";
-            $_SESSION['SESS_USERID']    = 1;
-	    $_SESSION['SESS_USERLEVEL'] = 1;
-	    header("Location: " . $_SERVER['SCRIPT_NAME']);
-    }	    
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-    <title><?php echo $config_sitename; ?></title>
+    <title><?php echo SITE_NAME; ?></title>
     <link type="text/css" title="www" rel="stylesheet" media="screen" href="stylesheets/main.css" />
     <link type="text/css" title="www" rel="stylesheet" media="screen" href="stylesheets/article.css" />
+    <script language="javascript" type="text/javascript">
+function clearField(obj) {
+	if (obj.defaultValue==obj.value) obj.value = '';
+}
+</script>
 </head>
 
 <body id="buildmeister">
@@ -40,7 +37,7 @@
         <div id="navigation">
             <ul id="links">
                 <?php
-                    require("navigation.php");
+                    include("navigation.php");
                 ?>
             </ul>
         </div>
@@ -48,23 +45,43 @@
 
     <!-- login begin -->
     <div id="login">
+        <p>User Menu</p>
+        <form id="login-form">
 <?php
-    if (isset ($_SESSION['SESS_USERNAME'])) {
-        require("logout-form.php");
+    if ($session->logged_in) {
+?>      
+		<ul>
+        	<li><a href="userinfo.php?user=<?php echo $session->username; ?>">View My Account</a></li>
+        	<li><a href="useredit.php?user=<?php echo $session->username; ?>">Edit Account</a></li>
+<?php        	
+	if ($session->isAdmin()) {
+            echo "<li><a href=\"admin\admin.php\">Admin Center</a></li>";         
+    }
+?>    
+ 			<li><a href="process.php">Logout</a></li>
+		</ul>	
+<?php
     } else {
-        require("login-form.php");
+?>	   
+        <ul>
+        	<li><a href="login.php">Login</a></li>
+            <li><a href="forgotpass.php">Forgotten password?</a></li>
+		    <li><a href="register.php">Register now?</a></li>
+        </ul>
+<?php
     }        
-?>            
-        </div>
+?>       
+    </form>     
+    </div>
     <!-- login end -->
 
     <div id="spacer"></div>
 
     <!-- search begin -->
     <div id="search">
-        <p>Search for:</p>
-            <form id="search-form" method="get" action="http://www.buildmeister.com/search_results.php" target="_top">
-                 <input type="text" name="q" maxlength="255" value="buildmeister" id="sbi"></input>
+        <p>Search</p>
+            <form id="search-form" method="get" action="http://www.buildmeister.com/search_results.php">
+                 <input class="formInputText" type="text" name="q" maxlength="255" value="" id="sbi"><br/>
                  <input type="radio" name="sitesearch" checked id="ss0"></input>
                  <label for="ss0" title="Search the Web">The Web</label>
                  <input type="radio" name="sitesearch" checked value="www.buildmeister.com" id="ss1"></input>
@@ -72,7 +89,9 @@
                  <label for="sbi" style="display: none">Enter your search terms</label>
                  <label for="sbb" style="display: none">Submit search form</label>
                  <input type="hidden" name="domains" value="www.buildmeister.com"></input>
-                 <input type="submit" name="sa" value="Search" id="sa"></input>
+                 <div align=left>
+                 	<input type="submit" name="sa" value="Search" id="sa"></input>
+                 </div>
                  <input type="hidden" name="client" value="pub-3805144493754901"></input>
                  <input type="hidden" name="forid" value="1"></input>
                  <input type="hidden" name="channel" value="1628619554"></input>
