@@ -240,13 +240,17 @@ class Session
    }
 
    /**
-    * register - Gets called when the user has just submitted the
-    * registration form. Determines if there were any errors with
-    * the entry fields, if so, it records the errors and returns
-    * 1. If no errors were found, it registers the new user and
-    * returns 0. Returns 2 if registration failed.
+    * Gets called when the user has just submitted the
+    * registration form.
+    *
+    * @param string $subuser
+    * @param string $subpass
+    * @param string $subemail
+    * @param bool $mailok
+    * @return 0 if no errors with the fields, 1 if errors
+    * or 2 if the registration attempt failed. 
     */
-   function register($subuser, $subpass, $subemail, $mailok){
+   function register($subuser, $subpass, $subfirst, $sublast, $subemail, $mailok) {
       global $database, $form, $mailer;  // the database, form and mailer object
       
       // username error checking
@@ -284,7 +288,7 @@ class Session
             $form->setError($field, "Password should contain alpha numeric characters only.");
          }
       }
-      
+           
       // email error checking
       $field = "email";  // use field name for email
       if (!$subemail || strlen($subemail = trim($subemail)) == 0){
@@ -310,7 +314,7 @@ class Session
              $randomstring .= chr(mt_rand(32, 126));
          }
          $verifystring = urlencode($randomstring);
-         if ($database->addNewUser($subuser, md5($subpass), $subemail, $verifystring, $mailok)) {
+         if ($database->addNewUser($subuser, md5($subpass), $subfirst, $sublast, $subemail, $verifystring, $mailok)) {
              $mailer->sendVerification($subuser, $subemail, $subpass, $verifystring);
              return 0;  // new inactive user added succesfully
          } else {
@@ -319,6 +323,15 @@ class Session
       }
    } // register
    
+   /**
+    * Submit a new book, checking the paramters supplied.
+    *
+    * @param string $booktitle
+    * @param string $bookauthor
+    * @param string $bookurl
+    * @param string $booksummary
+    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+    */
    function submitBook($booktitle, $bookauthor, $bookurl, $booksummary){
       global $database, $form, $mailer;  // the database, form and mailer object
       
@@ -343,95 +356,230 @@ class Session
          $form->setError($field, "A book summary is required.");
       }
       
-      // Errors exist, have user correct them
+      // errors exist, have user correct them
       if ($form->num_errors > 0) {
          return 1;  
       } else {       
          if ($database->addNewBook($this->username, $booktitle, $bookauthor, $bookurl, $booksummary)) {
              return 0;      // new inactive book added succesfully
          } else {
-             return 2;       // registration attempt failed
+             return 2;      // submission attempt failed
          }
       }
    } // submitBook
    
    /**
-    * editAccount - Attempts to edit the user's account information
+    * Submit a new glossary item, checking the paramters supplied.
+    *
+    * @param string $glosstitle
+    * @param string $booksummary
+    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+    */
+   function submitGlossItem($glosstitle, $glosssummary){
+      global $database, $form, $mailer;  // the database, form and mailer object
+      
+      // gloss title error checking
+      $field = "title"; 
+      if (!$glosstitle || strlen($glosstitle = trim($glosstitle)) == 0) {
+         $form->setError($field, "A glossary term is required.");
+      }
+           
+      // gloss summary error checking
+      $field = "summary"; 
+      if (!$glosssummary || strlen($glosssummary = trim($glosssummary)) == 0) {
+         $form->setError($field, "A glossary definition is required.");
+      }
+      
+      // errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;  
+      } else {       
+         if ($database->addNewGlossItem($this->username, $glosstitle, $glosssummary)) {
+             return 0;      // new inactive glossary item added succesfully
+         } else {
+             return 2;      // submission attempt failed
+         }
+      }
+   } // submitGlossItem
+   
+   /**
+    * Submit a new link, checking the paramters supplied.
+    *
+    * @param string $linktitle
+    * @param string $linkauthor
+    * @param string $linkurl
+    * @param string $linksummary
+    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+    */
+   function submitLink($linktitle, $linkurl, $linksummary){
+      global $database, $form, $mailer;  // the database, form and mailer object
+      
+      // book title error checking
+      $field = "title"; 
+      if (!$linktitle || strlen($linktitle = trim($linktitle)) == 0) {
+         $form->setError($field, "A link title is required.");
+      }
+          
+      // link email error checking
+      $field = "url"; 
+      if (!$linkurl || strlen($linkurl = trim($linkurl)) == 0) {
+         $form->setError($field, "A link URL is required.");
+      }
+      $linkurl = stripslashes($linkurl);
+      
+      // link summary error checking
+      $field = "summary"; 
+      if (!$linksummary || strlen($linksummary = trim($linksummary)) == 0) {
+         $form->setError($field, "A link summary is required.");
+      }
+      
+      // errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;  
+      } else {       
+         if ($database->addNewLinkItem($this->username, $linktitle, $linkurl, $linksummary)) {
+             return 0;      // new inactive link added succesfully
+         } else {
+             return 2;      // submission attempt failed
+         }
+      }
+   } // submitBook
+   
+     /**
+    * Submit a new article, checking the paramters supplied.
+    *
+    * @param string $articletitle
+    * @param string $articlesummary
+    * @param string $articlecontent
+    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+    */
+   function submitArticle($articletitle, $articlesummary, $articlecontent) {
+      global $database, $form, $mailer;  // the database, form and mailer object
+      
+      // article title error checking
+      $field = "title"; 
+      if (!$articletitle || strlen($articletitle = trim($articletitle)) == 0) {
+         $form->setError($field, "An article title is required.");
+      }
+           
+      // article summary error checking
+      $field = "summary"; 
+      if (!$articlesummary || strlen($articlesummary = trim($articlesummary)) == 0) {
+         $form->setError($field, "An article summary is required.");
+      }
+      
+      // article content error checking
+      $field = "summary"; 
+      if (!$articlecontent || strlen($articlecontent = trim($articlecontent)) == 0) {
+         $form->setError($field, "Article content is required.");
+      }
+      
+      // errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;  
+      } else {       
+         if ($database->addNewArticle($this->username, $articletitle, $articlesummary, $articlecontent)) {
+             return 0;      // new inactive article added succesfully
+         } else {
+             return 2;      // submission attempt failed
+         }
+      }
+   } // submitArticle
+   
+   /**
+    * Attempts to edit the user's account information
     * including the password, which it first makes sure is correct
     * if entered, if so and the new password is in the right
     * format, the change is made. All other fields are changed
     * automatically.
+    *
+    * @param string $subcurpass
+    * @param string $subnewpass
+    * @param string $subemail
+    * @param string $subnewfirst
+    * @param string $subnewlast
+    * @return true if user is succesfully updated else false
     */
-   function editAccount($subcurpass, $subnewpass, $subemail){
-      global $database, $form;  //The database and form object
-      /* New password entered */
-      if($subnewpass){
-         /* Current Password error checking */
-         $field = "curpass";  //Use field name for current password
-         if(!$subcurpass){
-            $form->setError($field, "* Current Password not entered");
-         }
-         else{
-            /* Check if password too short or is not alphanumeric */
+   function editAccount($subcurpass, $subnewpass, $subnewfirst, $subnewlast, $subemail){
+      global $database, $form;  
+      
+      // new password entered
+      if ($subnewpass) {
+         // current Password error checking
+         $field = "curpass";  // use field name for current password
+         if (!$subcurpass) {
+            $form->setError($field, "The Current Password needs to be entered.");
+         } else {
+            // check if password too short or is not alphanumeric
             $subcurpass = stripslashes($subcurpass);
-            if(strlen($subcurpass) < 4 ||
+            if (strlen($subcurpass) < 4 ||
                !eregi("^([0-9a-z])+$", ($subcurpass = trim($subcurpass)))){
-               $form->setError($field, "* Current Password incorrect");
+               $form->setError($field, "The Current Password is invalid.");
             }
-            /* Password entered is incorrect */
-            if($database->confirmUserPass($this->username,md5($subcurpass)) != 0){
-               $form->setError($field, "* Current Password incorrect");
+            // password entered is incorrect
+            if ($database->confirmUserPass($this->username,md5($subcurpass)) != 0) {
+               $form->setError($field, "The Current Password is incorrect.");
             }
          }
          
-         /* New Password error checking */
-         $field = "newpass";  //Use field name for new password
-         /* Spruce up password and check length*/
+         // new Password error checking
+         $field = "newpass";  // use field name for new password
+         // spruce up password and check length
          $subpass = stripslashes($subnewpass);
-         if(strlen($subnewpass) < 4){
-            $form->setError($field, "* New Password too short");
+         if (strlen($subnewpass) < 4) {
+            $form->setError($field, "The New Password is too short.");
          }
-         /* Check if password is not alphanumeric */
-         else if(!eregi("^([0-9a-z])+$", ($subnewpass = trim($subnewpass)))){
-            $form->setError($field, "* New Password not alphanumeric");
+         // Check if password is not alphanumeric
+         else if(!eregi("^([0-9a-z])+$", ($subnewpass = trim($subnewpass)))) {
+            $form->setError($field, "The New Password is not alphanumeric.");
          }
       }
-      /* Change password attempted */
+      // change password attempted
       else if($subcurpass){
-         /* New Password error reporting */
-         $field = "newpass";  //Use field name for new password
-         $form->setError($field, "* New Password not entered");
+         // New Password error reporting
+         $field = "newpass";  // use field name for new password
+         $form->setError($field, "A New Password has not been entered.");
       }
       
-      /* Email error checking */
-      $field = "email";  //Use field name for email
-      if($subemail && strlen($subemail = trim($subemail)) > 0){
-         /* Check if valid email address */
+      // email error checking
+      $field = "email";  // use field name for email
+      if ($subemail && strlen($subemail = trim($subemail)) > 0) {
+         // check if valid email address
          $regex = "^[_+a-z0-9-]+(\.[_+a-z0-9-]+)*"
                  ."@[a-z0-9-]+(\.[a-z0-9-]{1,})*"
                  ."\.([a-z]{2,}){1}$";
-         if(!eregi($regex,$subemail)){
-            $form->setError($field, "* Email invalid");
+         if (!eregi($regex,$subemail)) {
+            $form->setError($field, "The Email address is invalid.");
          }
          $subemail = stripslashes($subemail);
       }
       
-      /* Errors exist, have user correct them */
+      // errors exist, have user correct them */
       if($form->num_errors > 0){
-         return false;  //Errors with form
+         return false;  // errors with form
       }
       
-      /* Update password since there were no errors */
-      if($subcurpass && $subnewpass){
-         $database->updateUserField($this->username,"password",md5($subnewpass));
+      // update password since there were no errors
+      if ($subcurpass && $subnewpass) {
+         $database->updateUserField($this->username, "password", md5($subnewpass));
       }
       
-      /* Change Email */
-      if($subemail){
-         $database->updateUserField($this->username,"email",$subemail);
+      // change Email
+      if ($subemail) {
+         $database->updateUserField($this->username, "email", $subemail);
       }
       
-      /* Success! */
+      // change firstname
+      if ($subnewfirst) {
+          $database->updateUserField($this->username, "firstname", $subnewfirst);
+      }
+      
+      // change lastname
+      if ($subnewlast) {
+          $database->updateUserField($this->username, "lastname", $subnewlast);
+      }
+      
+      // success!
       return true;
    }
    

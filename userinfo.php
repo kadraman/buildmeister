@@ -11,7 +11,7 @@ if(!$req_user || strlen($req_user) == 0 ||
 ?>
 
 <form>
-	<fieldset class="userinfo-form">
+	<fieldset style="width:250px">
 
 <?php    
 // logged in user viewing own account
@@ -28,6 +28,20 @@ $req_user_info = $database->getUserInfo($req_user);
 
 ?>
 	<table>
+	 	<tr>
+        	<td><label class="formLabelText" for="firstname">Firstname:</label></td> 
+        	<td>
+        		<input class="formInputText" type="text" id="firstname"
+					value="<?php echo $req_user_info['firstname']; ?>" readonly>
+			</td>
+		</tr>
+	 	<tr>
+        	<td><label class="formLabelText" for="lastname">Lastname:</label></td> 
+        	<td>
+        		<input class="formInputText" type="text" id="lastname"
+					value="<?php echo $req_user_info['lastname']; ?>" readonly>
+			</td>
+		</tr>		
     	<tr>
         	<td><label class="formLabelText" for="user">Username:</label></td> 
         	<td>

@@ -10,6 +10,25 @@ include("include/header.php");
 
 <div id="article">
 
+<?php
+// just submitted a new book
+if (isset($_SESSION['booksuccess'])) {
+    if ($_SESSION['booksuccess']) {
+        // submissions was successful
+        $session->displayDialog("Submission Succesfull",
+        	"Thank you for your submission, it will be reviewed before being added to the site.",
+            SITE_BASEDIR . "/books.php");
+    } else {
+        // submission failed
+        $session->displayDialog("Submission Failed",
+            "We're sorry, but an error has occurred and your submission has failed. "
+            ."Please try again at a later time.",
+            $session->referrer);
+    }
+    unset($_SESSION['booksuccess']);
+} else {
+?>
+
 <div id="toptitle"><h2>Recommended Books</h2></div>
 
 <div id="introductory">
@@ -24,7 +43,7 @@ read and enjoyed, together with some personal comments about them. </p>
 
 <?php
 # fetch build process books
-$sql = "SELECT * from books where active = 1 ORDER BY date_published DESC;";
+$sql = "SELECT * from " . TBL_BOOKS . " where active = 1 ORDER BY date_published DESC;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
@@ -39,36 +58,23 @@ if ($numrows != 0) {
 
 <a id="submit"></a>
 
-<?php
-// just submitted a new book
-if (isset($_SESSION['booksuccess'])) {
-    if ($_SESSION['booksuccess']) {
-        // registration was successful
-        echo "<p>Thank you for your submission, it will be reviewed before being added to the site.</p>";
-    } else {
-        // Registration failed
-        echo "<p>We're sorry, but an error has occurred and your submission has failed.<br>Please try again at a later time.</p>";
-    }
-    unset($_SESSION['booksuccess']);
-} else {
-?>
-
-<div align="center">
-<form name='booksubmit' id='booksubmit' action='process.php' method='post'>
-<fieldset style="text-align:left;width:450px"><legend>Submit Book</legend>
-<table>
-
+<h3>Submit a new book</h3>
 <?php
     // has the user logged in
     if (!$session->logged_in) {
-        echo "<tr><td>&nbsp;</td>";
-        echo "<td><p>Note: new submissions can only be made by registered users. "
-        . "Please <a href='login.php'>login</a> first.</p></td></tr>";
+        echo "<tr>";
+        echo "<td colspan=\"2\"><p>Please note that submissions can only be made by registered users. "
+        . "Please <a href='register.php'>register</a> and/or <a href='login.php'>login</a> first.</p></td></tr>";        
         $disable_field = "disabled";
     } else {
         $disable_field = "";
     }
 ?>    
+
+<div align="center">
+<form name='booksubmit' id='booksubmit' action='process.php' method='post'>
+<fieldset style="text-align:left;width:500px"><legend>Submit Book</legend>
+<table>
 	<tr>
 		<td><label class="formLabelText" for="booktitle">Title:</label></td>
 		<td><input class="formInputText" type="text" name="booktitle" <?php echo $disable_field; ?>
@@ -85,10 +91,10 @@ if (isset($_SESSION['booksuccess'])) {
 			maxlength="80" value="<?php echo $form->value("bookurl"); ?>"></td>
 	</tr>
 	<tr>
-		<td><label class="formLabelText" for="disclaimer">Summary:</label></td>
+		<td><label class="formLabelText" for="booksummary">Summary of book:</label></td>
 		<td>
 			<textarea class="formTextArea" name='booksummary' id='booksummary' 
-			<?php echo $disable_field; ?> rows='4' cols='50'/>
+			<?php echo $disable_field; ?> rows='6' cols='50'/>
 			</textarea>
 		</td>
 	</tr>
@@ -118,7 +124,6 @@ if (isset($_SESSION['booksuccess'])) {
 <noscript>
     <img src="http://www.assoc-amazon.com/s/noscript?tag=thebuildmeist-20" alt="" />
 </noscript>
-
 
 <?php
 include("include/footer.php");

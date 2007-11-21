@@ -174,7 +174,6 @@ class MySQLDB {
       }
    } // confirmUserInActive
    
-   
    /**
     * Checks whether the specified username is already taken.
     *
@@ -219,7 +218,7 @@ class MySQLDB {
     * @param int $mailok
     * @return true on success, false otherwise.
     */
-   function addNewUser($username, $password, $email, $verifystring, $mailok) {
+   function addNewUser($username, $password, $firstname, $lastname, $email, $verifystring, $mailok) {
       $time = time();
       /* If admin sign up, give admin user level */
       if(strcasecmp($username, ADMIN_NAME) == 0){
@@ -228,27 +227,11 @@ class MySQLDB {
          $ulevel = USER_LEVEL;
       }
       $q = "INSERT INTO " . TBL_USERS 
-      . " VALUES ('$username', '$password', '0', $ulevel, '$email', $time, $mailok, '$verifystring', 0)";
+      . " VALUES ('$username', '$password', '$firstname', '$lastname', 
+      '0', $ulevel, '$email', $time, $mailok, '$verifystring', 0)";
       return mysql_query($q, $this->connection);
    } // addNewUser
-   
-   /**
-    * Adds a new article into the database.
-    * By default the article is inactive.
-    *
-    * @param string $username
-    * @param string $arttitle
-    * @param string $artsummary
-    * @param string $artcontent
-    * @return true on success, false otherwise.
-    */
-   function addNewArticle($username, $arttitle, $artsummary, $artcontent) {
-      $time = time();
-      $q = "INSERT INTO " . TBL_ARTICLES . " (date_posted, posted_by, title, summary, content)"
-      . " VALUES ($time, '$username', '$arttitle', '$artsummary', '$artcontent')";
-      return mysql_query($q, $this->connection);
-   } // addNewArticle
-   
+     
    /**
     * Adds a new book into the database.
     * By default the book is inactive.
@@ -300,6 +283,22 @@ class MySQLDB {
    } // addNewLinkItem
    
    /**
+    * Adds a new article into the database.
+    * By default the article is inactive.
+    *
+    * @param unknown_type $username
+    * @param unknown_type $articletitle
+    * @param unknown_type $articlesummary
+    * @return true on success, false otherwise.
+    */
+   function addNewArticle($username, $articletitle, $articlesummary, $articlecontent) {
+      $time = time();
+      $q = "INSERT INTO " . TBL_ARTICLES . " (date_posted, posted_by, title, summary, content)"
+      . " VALUES ($time, '$username', '$articletitle', '$articlesummary', '$articlecontent')";
+      return mysql_query($q, $this->connection);
+   } // addNewArticle
+   
+   /**
     * Updates a field in the user's row.
     *
     * @param string $username
@@ -313,7 +312,6 @@ class MySQLDB {
       return mysql_query($q, $this->connection);
    } // updateUserField
    
-
    /**
     * Gets all the information for a specific user.
     *

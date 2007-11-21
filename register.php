@@ -2,17 +2,24 @@
 include("include/header.php");
 
 // the user is already logged in
-if ($session->logged_in){
-    echo "<p>We're sorry <b>$session->username</b>, but you are already registered and logged in.</p>";
+if ($session->logged_in) {
+    $session->displayDialog("Already Registered",
+        "The user <b>$session->username</b>, is already registered and logged in.",
+        SITE_BASEDIR . "/index.php");
 } else if (isset($_SESSION['regsuccess'])) {
     if ($_SESSION['regsuccess']) {
         // registration was successful
-        echo "<p>Thank you <b>" . $_SESSION['reguname']."</b>, an email has been sent to your " .
-		    "inbox, please click on the link it contains to enable your account.</p>";
+        $session->displayDialog("Registration Succesfull",
+            "Thank you <b>" . $_SESSION['reguname'] . "</b>, an email has been sent to your " .
+		    "inbox, please click on the link it contains to enable your account.",
+            SITE_BASEDIR . "/index.php");
     } else {
-        // Registration failed
-        echo "<p>We're sorry, but an error has occurred and your registration for the username <b>"
-        . $_SESSION['reguname']."</b>, " . " could not be completed.<br>Please try again at a later time.</p>";
+        // registration failed
+        $session->displayDialog("Registration Failed",
+            "Unfortunately an error has occurred and registration for the username <b>"
+            . $_SESSION['reguname'] . "</b>, " . " could not be completed.v"
+            . "Please try again at a later time.",
+            SITE_BASEDIR . "/index.php");
     }
     unset($_SESSION['regsuccess']);
     unset($_SESSION['reguname']);
@@ -21,28 +28,37 @@ if ($session->logged_in){
 ?>
 
 <form name='userinfo' id='userinfo' action='process.php' method='post' onsubmit='return validate_userinfo();'>
-<fieldset class="register-form"><legend>User Registration</legend>
+<fieldset style="width:580px"><legend>User Registration</legend>
 <table>
+<tr>
+	<td><label class="formLabelText" for="regfirst">Firstname:</label></td>
+		<td><input class="formInputText" type="text" name="regfirst"
+			maxlength="30" value="<?php echo $form->value("regfirst"); ?>"></td>
+	</tr>
+	<tr>
+		<td><label class="formLabelText" for="reglast">Lastname:</label></td>
+		<td><input class="formInputText" type="password" name="reglast"
+			maxlength="30" value="<?php echo $form->value("reglast"); ?>"></td>
+	</tr>
 	<tr>
 		<td><label class="formLabelText" for="reguser">Username:</label></td>
 		<td><input class="formInputText" type="text" name="reguser"
-			maxlength="30" value="<?php echo $form->value("reguser"); ?>"></td>
+			maxlength="30" value="<?php echo $form->value("reguser"); ?>">*</td>
 	</tr>
 	<tr>
 		<td><label class="formLabelText" for="regpass">Password:</label></td>
 		<td><input class="formInputText" type="password" name="regpass"
-			maxlength="30" value="<?php echo $form->value("regpass"); ?>"></td>
+			maxlength="30" value="<?php echo $form->value("regpass"); ?>">*</td>
 	</tr>
 	<tr>
 		<td><label class="formLabelText" for="regvpass">Verify Password:</label></td>
 		<td><input class="formInputText" type='password' name='regvpass'
-			maxlength="30" value="<?php echo $form->value("regvpass"); ?>"></td>
+			maxlength="30" value="<?php echo $form->value("regvpass"); ?>">*</td>
 	</tr>
 	<tr>
 		<td><label class="formLabelText" for="regemail">Email:</label></td>
 		<td><input class="formInputText" type="text" name="regemail"
-			maxlength="50" value="<?php echo $form->value("regemail"); ?>"></td>
-		<td><?php echo $form->error("regemail"); ?></td>
+			maxlength="50" value="<?php echo $form->value("regemail"); ?>">*</td>
 	</tr>
 	<tr>
 		<td>&nbsp;</td>

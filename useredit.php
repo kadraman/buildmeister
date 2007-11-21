@@ -5,7 +5,7 @@ require("include/header.php");
 if (isset($_SESSION['useredit'])) {
    unset($_SESSION['useredit']);
    $session->displayDialog("Account Updated", 
-       "The account " . $session->username . " has been succesfully updated.",
+       "The account <b>" . $session->username . "</b> has been succesfully updated.",
        SITE_BASEDIR . "/index.php");    
 } else {
     // if user is logged in
@@ -13,9 +13,36 @@ if (isset($_SESSION['useredit'])) {
 ?>
 
 <form action="process.php" method="post">
-	<fieldset class="useredit-form">
+	<fieldset style="width:280px">
 	<legend>Edit Account: <?php echo $session->username; ?></legend>
 	<table>
+		<tr>
+        	<td><label class="formLabelText" for="curfirst">Firstname:</label></td> 
+        	<td>
+        		<input class="formInputText" type="text" id="curfirst" name="curfirst"
+					value="
+<?php
+if($form->value("curfirst") == "") {
+   echo $session->userinfo['firstname'];
+}else{
+   echo $form->value("firstname");
+}
+?>">					
+			</td>
+		</tr>
+	 	<tr>
+        	<td><label class="formLabelText" for="curlast">Lastname:</label></td> 
+        	<td>
+        		<input class="formInputText" type="text" id="curlast" name="curlast"
+					value="<?php
+if($form->value("curlast") == "") {
+   echo $session->userinfo['lastname'];
+}else{
+   echo $form->value("lastname");
+}
+?>"> 
+			</td>
+		</tr>	
     	<tr>
         	<td><label class="formLabelText" for="curpass">Current Password:</label></td> 
         	<td>
@@ -53,9 +80,9 @@ if($form->value("email") == ""){
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2">
+			<td colspan="2" align="right">
 				<input type="hidden" name="subedit" value="1">
-				<input type="submit" value="Edit Account">
+				<input type="submit" value="Update Account">
 			</td>
 		</tr>
 	</table>

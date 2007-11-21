@@ -45,6 +45,10 @@ class Process
       else if(isset($_POST['sublink'])) {
           $this->procSubmitLink();
       }
+      // user submitting new article
+      else if(isset($_POST['subarticle'])) {
+          $this->procSubmitArticle();
+      }
       /**
        * The only other reason user should be directed here
        * is if he wants to logout, which means user is
@@ -95,44 +99,46 @@ class Process
    }
    
    /**
-    * procRegister - Processes the user submitted registration form,
+    * Processes the user submitted registration form,
     * if errors are found, the user is redirected to correct the
     * information, if not, the user is effectively registered with
     * the system and an email is (optionally) sent to the newly
     * created user.
+    *
     */
-   function procRegister(){
+   function procRegister() {
       global $session, $form;
-      /* Convert username to all lowercase (by option) */
-      if(ALL_LOWERCASE){
+      // convert username to all lowercase (by option)
+      if (ALL_LOWERCASE){
          $_POST['reguser'] = strtolower($_POST['reguser']);
       }
-      /* Registration attempt */
-      $retval = $session->register($_POST['reguser'], $_POST['regpass'], $_POST['regemail'], $_POST['regmailok']);
       
-      /* Registration Successful */
-      if($retval == 0){
+      // attempt registration
+      $retval = $session->register($_POST['reguser'], $_POST['regpass'], 
+          $_POST['regfirst'], $_POST['reglast'], $_POST['regemail'], 
+          $_POST['regmailok']);
+      
+      // succesful
+      if ($retval == 0) {
          $_SESSION['reguname'] = $_POST['reguser'];
          $_SESSION['regsuccess'] = true;
          header("Location: ".$session->referrer);
       }
-      /* Error found with form */
-      else if($retval == 1){
+      // error with form
+      else if ($retval == 1) {
          $_SESSION['value_array'] = $_POST;
          $_SESSION['error_array'] = $form->getErrorArray();
          header("Location: ".$session->referrer);
-      }
-      /* Registration attempt failed */
-      else if($retval == 2){
+      } // failed
+      else if ($retval == 2) {
          $_SESSION['reguname'] = $_POST['reguser'];
          $_SESSION['regsuccess'] = false;
          header("Location: ".$session->referrer);
       }
-   }
+   } // procRegister
    
    /**
-    * Enter description here...
-    *
+    * Submit a new book into the database.
     */
    function procSubmitBook() {
       global $session, $form;
@@ -156,7 +162,88 @@ class Process
          $_SESSION['booksuccess'] = false;
          header("Location: ".$session->referrer);
       }
-   }
+   } // procSubmitBook
+   
+   /**
+    * Submit a new glossary item into the database.
+    */
+   function procSubmitGloss() {
+      global $session, $form;
+      
+      // submission attemp
+      $retval = $session->submitGlossItem($_POST['glosstitle'], $_POST['glosssummary']);
+      
+      // successful
+      if ($retval == 0){
+         $_SESSION['glosssuccess'] = true;
+         header("Location: ".$session->referrer);
+      }
+      // error found with form
+      else if ($retval == 1){
+         $_SESSION['value_array'] = $_POST;
+         $_SESSION['error_array'] = $form->getErrorArray();
+         header("Location: ".$session->referrer);
+      }
+      // failed
+      else if($retval == 2){
+         $_SESSION['glosssuccess'] = false;
+         header("Location: ".$session->referrer);
+      }
+   } // procSubmitGlossItem
+   
+   /**
+    * Submit a new link into the database.
+    */
+   function procSubmitLink() {
+      global $session, $form;
+      
+      // submission attemp
+      $retval = $session->submitLink($_POST['linktitle'], $_POST['linkurl'], $_POST['linksummary']);
+      
+      // successful
+      if ($retval == 0){
+         $_SESSION['linksuccess'] = true;
+         header("Location: ".$session->referrer);
+      }
+      // error found with form
+      else if ($retval == 1){
+         $_SESSION['value_array'] = $_POST;
+         $_SESSION['error_array'] = $form->getErrorArray();
+         header("Location: ".$session->referrer);
+      }
+      // failed
+      else if($retval == 2){
+         $_SESSION['linksuccess'] = false;
+         header("Location: ".$session->referrer);
+      }
+   } // procSubmitLink
+   
+   /**
+    * Submit a new article into the database.
+    */
+   function procSubmitArticle() {
+      global $session, $form;
+      
+      // submission attemp
+      $retval = $session->submitArticle($_POST['articletitle'], $_POST['articlesummary'], $_POST['articlecontent']);
+      
+      // successful
+      if ($retval == 0){
+         $_SESSION['articlesuccess'] = true;
+         header("Location: ".$session->referrer);
+      }
+      // error found with form
+      else if ($retval == 1){
+         $_SESSION['value_array'] = $_POST;
+         $_SESSION['error_array'] = $form->getErrorArray();
+         header("Location: ".$session->referrer);
+      }
+      // failed
+      else if($retval == 2){
+         $_SESSION['articlesuccess'] = false;
+         header("Location: ".$session->referrer);
+      }
+   } // procSubmitArticle
    
    /**
     * procForgotPass - Validates the given username then if
@@ -211,27 +298,29 @@ class Process
    }
    
    /**
-    * procEditAccount - Attempts to edit the user's account
+    * Attempts to edit the user's account
     * information, including the password, which must be verified
     * before a change is made.
+    *
     */
-   function procEditAccount(){
+   function procEditAccount() {
       global $session, $form;
-      /* Account edit attempt */
-      $retval = $session->editAccount($_POST['curpass'], $_POST['newpass'], $_POST['email']);
-
-      /* Account edit successful */
-      if($retval){
+      // account edit attempt
+      $retval = $session->editAccount($_POST['curpass'], $_POST['newpass'], 
+          $_POST['curfirst'], $_POST['curlast'], $_POST['email']);
+          
+      // account edit successful
+      if ($retval) {
          $_SESSION['useredit'] = true;
          header("Location: ".$session->referrer);
       }
-      /* Error found with form */
-      else{
+      // error found with form
+      else {
          $_SESSION['value_array'] = $_POST;
          $_SESSION['error_array'] = $form->getErrorArray();
          header("Location: ".$session->referrer);
       }
-   }
+   } // procEditAccount
 };
 
 /* Initialize process */
