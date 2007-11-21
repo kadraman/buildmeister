@@ -11,104 +11,112 @@
 include("constants.php");
       
 class MySQLDB {
-   var $connection;         //The MySQL database connection
-   var $num_active_users;   //Number of active users viewing site
-   var $num_active_guests;  //Number of active guests viewing site
-   var $num_members;        //Number of signed-up users
-   /* Note: call getNumMembers() to access $num_members! */
+   var $connection;         // the MySQL database connection
+   var $num_active_users;   // number of active users viewing site
+   var $num_active_guests;  // number of active guests viewing site
+   var $num_members;        // number of signed-up users
 
-   /* Class constructor */
-   function MySQLDB(){
-      /* Make connection to database */
+   /**
+	* Class constructor 
+	*/
+   function MySQLDB() {
+      // connect to database
       $this->connection = mysql_connect(DB_SERVER, DB_USER, DB_PASS) or die(mysql_error());
       mysql_select_db(DB_NAME, $this->connection) or die(mysql_error());
       
-      /**
-       * Only query database to find out number of members
-       * when getNumMembers() is called for the first time,
-       * until then, default value set.
-       */
+      // only query database to find out number of members
+      // when getNumMembers() is called for the first time,
+      // until then, default value set.
       $this->num_members = -1;
       
-      if(TRACK_VISITORS){
-         /* Calculate number of users at site */
+      if (TRACK_VISITORS){
+         // calculate number of users at site
          $this->calcNumActiveUsers();
-      
-         /* Calculate number of guests at site */
+         // calculate number of guests at site */
          $this->calcNumActiveGuests();
       }
-   }
+   } // MySQLDB
 
    /**
-    * confirmUserPass - Checks whether or not the given
-    * username is in the database, if so it checks if the
-    * given password is the same password in the database
-    * for that user. If the user doesn't exist or if the
-    * passwords don't match up, it returns an error code
-    * (1 or 2). On success it returns 0.
+    * Checks whether or not the given username is in the database, 
+    * if so it checks if the given password is the same password 
+    * in the database for that user.
+    *
+    * @param string $username
+    * @param string $password
+    * @return If the user doesn't exist or if the passwords don't match up, 
+    * it returns an error code (1 or 2). On success it returns 0.
     */
-   function confirmUserPass($username, $password){
-      /* Add slashes if necessary (for query) */
-      if(!get_magic_quotes_gpc()) {
+   function confirmUserPass($username, $password) {
+      // add slashes if necessary (for query)
+      if (!get_magic_quotes_gpc()) {
 	      $username = addslashes($username);
       }
 
-      /* Verify that user is in database */
-      $q = "SELECT password FROM ".TBL_USERS." WHERE username = '$username'";
+      // verify that user is in database
+      $q = "SELECT password FROM " . TBL_USERS . " WHERE username = '$username'";
       $result = mysql_query($q, $this->connection);
-      if(!$result || (mysql_numrows($result) < 1)){
-         return 1; //Indicates username failure
+      if( !$result || (mysql_numrows($result) < 1)){
+         return 1; // indicates username failure
       }
 
-      /* Retrieve password from result, strip slashes */
+      // retrieve password from result, strip slashes
       $dbarray = mysql_fetch_array($result);
       $dbarray['password'] = stripslashes($dbarray['password']);
       $password = stripslashes($password);
 
-      /* Validate that password is correct */
-      if($password == $dbarray['password']){
-         return 0; //Success! Username and password confirmed
+      // validate that password is correct
+      if ($password == $dbarray['password']) {
+         return 0; // success! Username and password confirmed
+      } else {
+         return 2; // indicates password failure
       }
-      else{
-         return 2; //Indicates password failure
-      }
-   }
+   } // confirmUserPass
    
    /**
-    * confirmUserID - Checks whether or not the given
-    * username is in the database, if so it checks if the
-    * given userid is the same userid in the database
-    * for that user. If the user doesn't exist or if the
+    * Checks whether or not the given username is in 
+    * the database, if so it checks if the given userid 
+    * is the same userid in the database for that user.
+    *
+    * @param string $username
+    * @param string $userid
+    * @return If the user doesn't exist or if the
     * userids don't match up, it returns an error code
     * (1 or 2). On success it returns 0.
     */
    function confirmUserID($username, $userid){
-      /* Add slashes if necessary (for query) */
-      if(!get_magic_quotes_gpc()) {
+      // Add slashes if necessary (for query)
+      if (!get_magic_quotes_gpc()) {
 	      $username = addslashes($username);
       }
 
-      /* Verify that user is in database */
-      $q = "SELECT userid FROM ".TBL_USERS." WHERE username = '$username'";
+      // verify that user is in database
+      $q = "SELECT userid FROM " . TBL_USERS . " WHERE username = '$username'";
       $result = mysql_query($q, $this->connection);
-      if(!$result || (mysql_numrows($result) < 1)){
-         return 1; //Indicates username failure
+      if (!$result || (mysql_numrows($result) < 1)) {
+         return 1; // indicates username failure
       }
 
-      /* Retrieve userid from result, strip slashes */
+      // retrieve userid from result, strip slashes
       $dbarray = mysql_fetch_array($result);
       $dbarray['userid'] = stripslashes($dbarray['userid']);
       $userid = stripslashes($userid);
 
-      /* Validate that userid is correct */
-      if($userid == $dbarray['userid']){
-         return 0; //Success! Username and userid confirmed
+      // validate that userid is correct
+      if ($userid == $dbarray['userid']) {
+         return 0; // success! username and userid confirmed
+      } else {
+         return 2; // indicates userid invalid
       }
-      else{
-         return 2; //Indicates userid invalid
-      }
-   }
+   } // confirmUserID
    
+   /**
+    * Checks whether the given user has been activated.
+    *
+    * @param string $username
+    * @return If the user doesn't exist or is inactive 
+    * returns 1 otherwise returns 0.
+    */
    function confirmUserActive($username){
       // add slashes if necessary (for query)
       if (!get_magic_quotes_gpc()) {
@@ -127,46 +135,91 @@ class MySQLDB {
       $dbarray['active'] = stripslashes($dbarray['active']);
 
       // validate that user is active
-      if ($dbarray['active'] == '0'){
+      if ($dbarray['active'] == '0') {
          return 0; // success user is active
       } else {
          return 1; // user is inactive
       }
    } // confirmUserActive
    
+   /**
+    * Checks whether the given user is inactive.
+    *
+    * @param string $email
+    * @return If the user is active returns 1 otherwise
+    * returns 0.
+    */
+   function confirmUserInactive($email) {
+      // add slashes if necessary (for query)
+      if (!get_magic_quotes_gpc()) {
+	      $email = addslashes($email);
+      }
+
+      // verify that user is in database
+      $q = "SELECT active FROM ".TBL_USERS." WHERE email = '$email'";
+      $result = mysql_query($q, $this->connection);
+      if (!$result || (mysql_numrows($result) < 1)) {
+         return 1; // indicates email failure
+      }
+
+      // retrieve active status from result, strip slashes
+      $dbarray = mysql_fetch_array($result);
+      $dbarray['active'] = stripslashes($dbarray['active']);
+
+      // validate that user is active
+      if ($dbarray['active'] == '1'){
+         return 0; // success user is inactive
+      } else {
+         return 1; // user is already active
+      }
+   } // confirmUserInActive
+   
    
    /**
-    * usernameTaken - Returns true if the username has
-    * been taken by another user, false otherwise.
+    * Checks whether the specified username is already taken.
+    *
+    * @param string $username
+    * @return true if the username has been taken, otherwise
+    * false.
     */
    function usernameTaken($username){
-      if(!get_magic_quotes_gpc()){
+      if (!get_magic_quotes_gpc()) {
          $username = addslashes($username);
       }
-      $q = "SELECT username FROM ".TBL_USERS." WHERE username = '$username'";
+      $q = "SELECT username FROM " . TBL_USERS . " WHERE username = '$username'";
       $result = mysql_query($q, $this->connection);
       return (mysql_numrows($result) > 0);
-   }
+   } // usernameTaken
    
    /**
-    * usernameBanned - Returns true if the username has
-    * been banned by the administrator.
+    * Checks whether the specified username has been
+    * banned by the administrator.
+    *
+    * @param string $username
+    * @return true if the username has been banned, 
+    * otherwise false.
     */
-   function usernameBanned($username){
-      if(!get_magic_quotes_gpc()){
+   function usernameBanned($username) {
+      if (!get_magic_quotes_gpc()) {
          $username = addslashes($username);
       }
-      $q = "SELECT username FROM ".TBL_BANNED_USERS." WHERE username = '$username'";
+      $q = "SELECT username FROM " . TBL_BANNED_USERS . " WHERE username = '$username'";
       $result = mysql_query($q, $this->connection);
       return (mysql_numrows($result) > 0);
-   }
+   } // usernameBanned
    
    /**
-    * Inserts the given (username, password, email)
-    * info into the database. Appropriate user level is set.
-    * Returns true on success, false otherwise.
+    * Inserts the given user into the database.
+    * By default the user is inactive.
+    *
+    * @param string $username
+    * @param string $password
+    * @param string $email
+    * @param string $verifystring
+    * @param int $mailok
+    * @return true on success, false otherwise.
     */
-   function addNewUser($username, $password, $email, $verifystring, $mailok){
+   function addNewUser($username, $password, $email, $verifystring, $mailok) {
       $time = time();
       /* If admin sign up, give admin user level */
       if(strcasecmp($username, ADMIN_NAME) == 0){
@@ -174,146 +227,253 @@ class MySQLDB {
       }else{
          $ulevel = USER_LEVEL;
       }
-      $q = "INSERT INTO ".TBL_USERS." VALUES ('$username', '$password', '0', $ulevel, '$email', $time, $mailok, '$verifystring', 0)";
+      $q = "INSERT INTO " . TBL_USERS 
+      . " VALUES ('$username', '$password', '0', $ulevel, '$email', $time, $mailok, '$verifystring', 0)";
       return mysql_query($q, $this->connection);
-   }
+   } // addNewUser
    
    /**
-    * updateUserField - Updates a field, specified by the field
-    * parameter, in the user's row of the database.
+    * Adds a new article into the database.
+    * By default the article is inactive.
+    *
+    * @param string $username
+    * @param string $arttitle
+    * @param string $artsummary
+    * @param string $artcontent
+    * @return true on success, false otherwise.
     */
-   function updateUserField($username, $field, $value){
-      $q = "UPDATE ".TBL_USERS." SET ".$field." = '$value' WHERE username = '$username'";
+   function addNewArticle($username, $arttitle, $artsummary, $artcontent) {
+      $time = time();
+      $q = "INSERT INTO " . TBL_ARTICLES . " (date_posted, posted_by, title, summary, content)"
+      . " VALUES ($time, '$username', '$arttitle', '$artsummary', '$artcontent')";
       return mysql_query($q, $this->connection);
-   }
+   } // addNewArticle
    
    /**
-    * getUserInfo - Returns the result array from a mysql
-    * query asking for all information stored regarding
-    * the given username. If query fails, NULL is returned.
+    * Adds a new book into the database.
+    * By default the book is inactive.
+    *
+    * @param unknown_type $username
+    * @param unknown_type $booktitle
+    * @param unknown_type $bookauthor
+    * @param unknown_type $bookurl
+    * @param unknown_type $booksummary
+    * @return true on success, false otherwise.
     */
-   function getUserInfo($username){
-      $q = "SELECT * FROM ".TBL_USERS." WHERE username = '$username'";
+   function addNewBook($username, $booktitle, $bookauthor, $bookurl, $booksummary) {
+      $time = time();
+      $q = "INSERT INTO " . TBL_BOOKS . " (date_posted, posted_by, title, author, summary, url)"
+      . " VALUES ($time, '$username', '$booktitle', '$bookauthor', '$booksummary', '$bookurl')";
+      return mysql_query($q, $this->connection);
+   } // addNewBook
+   
+   /**
+    * Adds a new glossary item into the database.
+    * By default the item is inactive.
+    *
+    * @param string $username
+    * @param string $glosstitle
+    * @param string $glosssummary
+    * @return true on success, false otherwise.
+    */
+   function addNewGlossItem($username, $glosstitle, $glosssummary) {
+      $q = "INSERT INTO " . TBL_GLOSSARY . " (posted_by, title, summary)"
+      . " VALUES ('$username', '$glosstitle', '$glosssummary')";
+      return mysql_query($q, $this->connection);
+   } // addNewGlossItem
+   
+   /**
+    * Adds a new link item to the database.
+    * By default the item is inactive.
+    *
+    * @param string $username
+    * @param string $linktitle
+    * @param string $linkurl
+    * @param string $linksummary
+    * @return true on success, false otherwise.
+    */
+   function addNewLinkItem($username, $linktitle, $linkurl, $linksummary) {
+      $time = time();
+      $q = "INSERT INTO " . TBL_LINKS . " (date_posted, posted_by, title, summary, url)"
+      . " VALUES ($time, '$username', '$linktitle', '$linksummary', '$linkurl')";
+      return mysql_query($q, $this->connection);
+   } // addNewLinkItem
+   
+   /**
+    * Updates a field in the user's row.
+    *
+    * @param string $username
+    * @param string $field
+    * @param string $value
+    * @return true on success, false otherwise.
+    */
+   function updateUserField($username, $field, $value) {
+      $q = "UPDATE " . TBL_USERS . " SET " . $field 
+      . " = '$value' WHERE username = '$username'";
+      return mysql_query($q, $this->connection);
+   } // updateUserField
+   
+
+   /**
+    * Gets all the information for a specific user.
+    *
+    * @param string $username
+    * @return the result array with all information stored 
+    * regarding the given username. If query fails, NULL 
+    * is returned.
+    */
+   function getUserInfo($username) {
+      $q = "SELECT * FROM " . TBL_USERS . " WHERE username = '$username'";
       $result = mysql_query($q, $this->connection);
-      /* Error occurred, return given name by default */
-      if(!$result || (mysql_numrows($result) < 1)){
+      // error occurred, return given name by default
+      if (!$result || (mysql_numrows($result) < 1)) {
          return NULL;
       }
-      /* Return result array */
+      // return result array
       $dbarray = mysql_fetch_array($result);
       return $dbarray;
-   }
+   } // getUserInfo
    
    /**
-    * getNumMembers - Returns the number of signed-up users
-    * of the website, banned members not included. The first
-    * time the function is called on page load, the database
-    * is queried, on subsequent calls, the stored result
-    * is returned. This is to improve efficiency, effectively
-    * not querying the database when no call is made.
+    * Gets the number of signed-up users (excluding banned
+    * members). The first time the function is called on 
+    * page load, the database is queried, on subsequent calls, 
+    * the stored result is returned. This is to improve 
+    * efficiency, effectively not querying the database when 
+    * no call is made.
+    *
+    * @return number of users
     */
    function getNumMembers(){
-      if($this->num_members < 0){
-         $q = "SELECT * FROM ".TBL_USERS;
+      if ($this->num_members < 0) {
+         $q = "SELECT * FROM " . TBL_USERS;
          $result = mysql_query($q, $this->connection);
          $this->num_members = mysql_numrows($result);
       }
       return $this->num_members;
-   }
+   } // getNumMembers
    
    /**
-    * calcNumActiveUsers - Finds out how many active users
-    * are viewing site and sets class variable accordingly.
+    * Finds out how many active users are viewing site and 
+    * sets class variable accordingly.
     */
    function calcNumActiveUsers(){
-      /* Calculate number of users at site */
-      $q = "SELECT * FROM ".TBL_ACTIVE_USERS;
+      $q = "SELECT * FROM " . TBL_ACTIVE_USERS;
       $result = mysql_query($q, $this->connection);
       $this->num_active_users = mysql_numrows($result);
-   }
+   } // calcNumActiveUsers
    
    /**
-    * calcNumActiveGuests - Finds out how many active guests
-    * are viewing site and sets class variable accordingly.
+    * Finds out how many active guests are viewing site 
+    * and sets class variable accordingly.
     */
-   function calcNumActiveGuests(){
-      /* Calculate number of guests at site */
-      $q = "SELECT * FROM ".TBL_ACTIVE_GUESTS;
+   function calcNumActiveGuests() {
+      $q = "SELECT * FROM " . TBL_ACTIVE_GUESTS;
       $result = mysql_query($q, $this->connection);
       $this->num_active_guests = mysql_numrows($result);
-   }
+   } // calcNumActiveGuests
    
    /**
-    * addActiveUser - Updates username's last active timestamp
-    * in the database, and also adds him to the table of
+    * Updates username's last active timestamp in the 
+    * database, and also adds him to the table of
     * active users, or updates timestamp if already there.
+    *
+    * @param string $username
+    * @param datetime $time
     */
-   function addActiveUser($username, $time){
-      $q = "UPDATE ".TBL_USERS." SET timestamp = '$time' WHERE username = '$username'";
+   function addActiveUser($username, $time) {
+      $q = "UPDATE " . TBL_USERS . " SET timestamp = '$time' WHERE username = '$username'";
       mysql_query($q, $this->connection);
       
-      if(!TRACK_VISITORS) return;
-      $q = "REPLACE INTO ".TBL_ACTIVE_USERS." VALUES ('$username', '$time')";
+      if (!TRACK_VISITORS) return;
+      $q = "REPLACE INTO " . TBL_ACTIVE_USERS . " VALUES ('$username', '$time')";
       mysql_query($q, $this->connection);
       $this->calcNumActiveUsers();
-   }
-   
-   /* addActiveGuest - Adds guest to active guests table */
-   function addActiveGuest($ip, $time){
-      if(!TRACK_VISITORS) return;
-      $q = "REPLACE INTO ".TBL_ACTIVE_GUESTS." VALUES ('$ip', '$time')";
-      mysql_query($q, $this->connection);
-      $this->calcNumActiveGuests();
-   }
-   
-   /* These functions are self explanatory, no need for comments */
-   
-   /* removeActiveUser */
-   function removeActiveUser($username){
-      if(!TRACK_VISITORS) return;
-      $q = "DELETE FROM ".TBL_ACTIVE_USERS." WHERE username = '$username'";
-      mysql_query($q, $this->connection);
-      $this->calcNumActiveUsers();
-   }
-   
-   /* removeActiveGuest */
-   function removeActiveGuest($ip){
-      if(!TRACK_VISITORS) return;
-      $q = "DELETE FROM ".TBL_ACTIVE_GUESTS." WHERE ip = '$ip'";
-      mysql_query($q, $this->connection);
-      $this->calcNumActiveGuests();
-   }
-   
-   /* removeInactiveUsers */
-   function removeInactiveUsers(){
-      if(!TRACK_VISITORS) return;
-      $timeout = time()-USER_TIMEOUT*60;
-      $q = "DELETE FROM ".TBL_ACTIVE_USERS." WHERE timestamp < $timeout";
-      mysql_query($q, $this->connection);
-      $this->calcNumActiveUsers();
-   }
-
-   /* removeInactiveGuests */
-   function removeInactiveGuests(){
-      if(!TRACK_VISITORS) return;
-      $timeout = time()-GUEST_TIMEOUT*60;
-      $q = "DELETE FROM ".TBL_ACTIVE_GUESTS." WHERE timestamp < $timeout";
-      mysql_query($q, $this->connection);
-      $this->calcNumActiveGuests();
-   }
+   } // addActiveUser
    
    /**
-    * query - Performs the given query on the database and
-    * returns the result, which may be false, true or a
-    * resource identifier.
+    * Activate a previously created user.
+    *
+    * @param string $email
+    */
+   function activateUser($email) {
+      $q = "UPDATE " . TBL_USERS . " SET active = '1' WHERE email = '$email'";
+      mysql_query($q, $this->connection);
+   } // activateUser
+   
+   /**
+	* Adds guest to active guests table
+	* 
+	* @param string ip
+	* @param datetime time
+	*/
+   function addActiveGuest($ip, $time) {
+      if (!TRACK_VISITORS) return;
+      $q = "REPLACE INTO " . TBL_ACTIVE_GUESTS . " VALUES ('$ip', '$time')";
+      mysql_query($q, $this->connection);
+      $this->calcNumActiveGuests();
+   } // addActiveGuest
+   
+   /**
+    * Removes an active user.
+    *
+    * @param string $username
+    */
+   function removeActiveUser($username) {
+      if (!TRACK_VISITORS) return;
+      $q = "DELETE FROM " . TBL_ACTIVE_USERS . " WHERE username = '$username'";
+      mysql_query($q, $this->connection);
+      $this->calcNumActiveUsers();
+   } // removeActiveUser
+   
+   /**
+    * Removes an active guest.
+    *
+    * @param string $ip
+    */
+   function removeActiveGuest($ip) {
+      if (!TRACK_VISITORS) return;
+      $q = "DELETE FROM " . TBL_ACTIVE_GUESTS . " WHERE ip = '$ip'";
+      mysql_query($q, $this->connection);
+      $this->calcNumActiveGuests();
+   } // removeActiveGuest
+   
+   /**
+    * Removes all inactive users.
+    */
+   function removeInactiveUsers() {
+      if (!TRACK_VISITORS) return;
+      $timeout = time() - USER_TIMEOUT*60;
+      $q = "DELETE FROM " . TBL_ACTIVE_USERS . " WHERE timestamp < $timeout";
+      mysql_query($q, $this->connection);
+      $this->calcNumActiveUsers();
+   } // removeInactiveUsers
+
+   /**
+    * Removes all inactive guests.
+    *
+    */
+   function removeInactiveGuests() {
+      if (!TRACK_VISITORS) return;
+      $timeout = time() - GUEST_TIMEOUT*60;
+      $q = "DELETE FROM " . TBL_ACTIVE_GUESTS . " WHERE timestamp < $timeout";
+      mysql_query($q, $this->connection);
+      $this->calcNumActiveGuests();
+   } // removeInactiveGuests
+   
+   /**
+    * Performs the given query on the database and
+    * returns the result.
+    *
+    * @param string $query
+    * @return false, true or a resource identifier.
     */
    function query($query){
       return mysql_query($query, $this->connection);
    }
 };
 
-
-/* Create database connection */
+// create database connection
 $database = new MySQLDB;
 
 ?>

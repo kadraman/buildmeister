@@ -22,12 +22,11 @@ class Mailer {
     */
    function sendVerification($user, $email, $pass, $verifystring){
       $from = "From: ". EMAIL_FROM_NAME . " <" . EMAIL_FROM_ADDR . ">";
-      $subject = SITE_NAME . " User Registration";
+      $subject = "\"" . SITE_NAME . "\" Registration";
       $body = "Hello " . $user . ",\n\n"
              . "Please click on the following link to verify your new account:\n\n"
-             . SITE_BASEDIR . "/verify.php" . "?email=" . $email . "&verify=" . $verifystring;
-
-             echo "<p>" . $body . "</p>";
+             . SITE_BASEDIR . "/verify.php" . "?email=" . $email . "&verify=" . $verifystring
+             . "\n\n The Buildmeister\n";
              
       return mail($email,$subject,$body,$from);
    }

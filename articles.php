@@ -6,49 +6,76 @@ $_SESSION['SESS_NAVITEM'] = 1;
 
 include("include/header.php");
 
-# fetch build process articles
-echo "<div id='article'>";
-echo "<p id='summary'>Articles on the Build Process</p>";
-$sql = "SELECT * from articles where cat_id = 1 ORDER BY date_posted DESC;";
+?>
+
+<div id="article">
+
+<div id="toptitle"><h2>Articles</h2></div>
+
+<div id="introductory">
+<p>This page lists all of the categorized articles that are contained on this site. 
+If you have an idea for an article or have written some content yourself, then please 
+<a href="contact.php">contact us</a> for more information or <a href="#submit">submit</a> 
+your content using the form at the bottom of this page.</p>
+</div>
+
+<div id="boxedtitle">Build Process</div>
+
+<?php
+// fetch build process articles
+$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 1 ORDER BY date_posted DESC;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
 if ($numrows != 0) {
     while ($row = mysql_fetch_assoc($result)) {
-        echo "<strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
+        echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
     		. $row['title'] . "</a></strong><br/>"
-		. $row['summary'] . "<br/><br/>";
+		. $row['summary'] . "</div>";
     }
 }    
+?>
 
-# fetch build tools articles
-echo "<p id='summary'>Articles on Build Tools</p>";
-$sql = "SELECT * from articles where cat_id = 2 ORDER BY date_posted DESC;";
+<div id="spacer">&nbsp;</div>
+<div id="boxedtitle">Build Tools</div>
+
+<?php
+// fetch build tools articles
+$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 2 ORDER BY date_posted DESC;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
 if ($numrows != 0) {
     while ($row = mysql_fetch_assoc($result)) {
-        echo "<strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
+        echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
     		. $row['title'] . "</a></strong><br/>"
-		. $row['summary'] . "<br/><br/>";
+		. $row['summary'] . "</div>";
     }
 }
 
-# fetch miscellaneous articles
-echo "<p id='summary'>Articles on Supporting Core Skills</p>";
-$sql = "SELECT * from articles where cat_id = 3 ORDER BY date_posted DESC;";
+?>
+
+<div id="spacer">&nbsp;</div>
+<div id="boxedtitle">Supporting Core Skills</div>
+
+<?php
+// fetch miscellaneous articles
+$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 3 ORDER BY date_posted DESC;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
 if ($numrows != 0) {
     while ($row = mysql_fetch_assoc($result)) {
-        echo "<strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
+        echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
     		. $row['title'] . "</a></strong><br/>"
-		. $row['summary'] . "<br/><br/>";
+		. $row['summary'] . "</div>";
     }
-}	    
-echo "</div>";
-require("include/footer.php");
+}
+?>
 
+<a id="submit"></a>	    
+</div>
+
+<?php
+include("include/footer.php");
 ?>

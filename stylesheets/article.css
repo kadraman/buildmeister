@@ -34,6 +34,10 @@ p#articlehead {
 p#article {
     text-align: justify;
 }
+#dashedrow {
+  padding: 0.5em; margin: 0 0 2em 0;
+  border-bottom: 1px dashed #B2B2B2; border-top: 1px dashed #B2B2B2;		
+}	
 p#codeoutput {
     text-align: left;
     font-family: monospace;

@@ -4,8 +4,9 @@ require("include/header.php");
 // account has been updated succesfully
 if (isset($_SESSION['useredit'])) {
    unset($_SESSION['useredit']);
-   
-   echo "<p><b>$session->username</b>, your account has been successfully updated.</p>";
+   $session->displayDialog("Account Updated", 
+       "The account " . $session->username . " has been succesfully updated.",
+       SITE_BASEDIR . "/index.php");    
 } else {
     // if user is logged in
     if($session->logged_in) {

@@ -22,6 +22,8 @@ class Session
    var $userinfo = array();  //The array holding all user info
    var $url;          //The page url current being viewed
    var $referrer;     //Last recorded site page viewed
+   var $result_str;   // results string to be displayed.
+   
    /**
     * Note: referrer should really only be considered the actual
     * page referrer in process.php, any other time it may be
@@ -317,6 +319,42 @@ class Session
       }
    } // register
    
+   function submitBook($booktitle, $bookauthor, $bookurl, $booksummary){
+      global $database, $form, $mailer;  // the database, form and mailer object
+      
+      // book title error checking
+      $field = "title"; 
+      if (!$booktitle || strlen($booktitle = trim($booktitle)) == 0) {
+         $form->setError($field, "A book title is required.");
+      }
+      
+      // book author error checking
+      $field = "author"; 
+      if (!$bookauthor || strlen($bookauthor = trim($bookauthor)) == 0) {
+         $form->setError($field, "A book author is required.");
+      }
+     
+      // book email error checking
+      $bookurl = stripslashes($bookurl);
+      
+      // book author error checking
+      $field = "summary"; 
+      if (!$booksummary || strlen($booksummary = trim($booksummary)) == 0) {
+         $form->setError($field, "A book summary is required.");
+      }
+      
+      // Errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;  
+      } else {       
+         if ($database->addNewBook($this->username, $booktitle, $bookauthor, $bookurl, $booksummary)) {
+             return 0;      // new inactive book added succesfully
+         } else {
+             return 2;       // registration attempt failed
+         }
+      }
+   } // submitBook
+   
    /**
     * editAccount - Attempts to edit the user's account information
     * including the password, which it first makes sure is correct
@@ -433,6 +471,17 @@ class Session
          }
       }
       return $randstr;
+   }
+   
+   function displayDialog($title, $text, $referrer) {
+       echo "<div align=\"center\">";
+       echo "<form action=\"$referrer\">\n";
+       echo "<fieldset style=\"width:400px\">\n";
+       echo "<legend>$title</legend>";
+       echo "<p>$text</p>";
+       echo "<input type=\"submit\" value=\"OK\">\n";
+       echo "</fieldset>\n";
+       echo "</form></div>\n";
    }
 };
 

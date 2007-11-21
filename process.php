@@ -33,6 +33,18 @@ class Process
       else if(isset($_POST['subedit'])){
          $this->procEditAccount();
       }
+      // user submitting new book
+      else if(isset($_POST['subbook'])) {
+          $this->procSubmitBook();
+      }
+      // user submitting new glossary item
+      else if(isset($_POST['subgloss'])) {
+          $this->procSubmitGloss();
+      }
+      // user submitting new link item
+      else if(isset($_POST['sublink'])) {
+          $this->procSubmitLink();
+      }
       /**
        * The only other reason user should be directed here
        * is if he wants to logout, which means user is
@@ -62,13 +74,13 @@ class Process
                 
       /* Login successful */
       if($retval){
-         header("Location: ".$session->referrer);
+         header("Location: ". SITE_BASEDIR . "/index.php");
       }
       /* Login failed */
       else{
          $_SESSION['value_array'] = $_POST;
          $_SESSION['error_array'] = $form->getErrorArray();
-         header("Location: ".$session->referrer);
+         header("Location: " . $session->referrer);
       }
    }
    
@@ -114,6 +126,34 @@ class Process
       else if($retval == 2){
          $_SESSION['reguname'] = $_POST['reguser'];
          $_SESSION['regsuccess'] = false;
+         header("Location: ".$session->referrer);
+      }
+   }
+   
+   /**
+    * Enter description here...
+    *
+    */
+   function procSubmitBook() {
+      global $session, $form;
+      
+      // submission attemp
+      $retval = $session->submitBook($_POST['booktitle'], $_POST['bookauthor'], $_POST['bookurl'], $_POST['booksummary']);
+      
+      // successful
+      if ($retval == 0){
+         $_SESSION['booksuccess'] = true;
+         header("Location: ".$session->referrer);
+      }
+      // error found with form
+      else if ($retval == 1){
+         $_SESSION['value_array'] = $_POST;
+         $_SESSION['error_array'] = $form->getErrorArray();
+         header("Location: ".$session->referrer);
+      }
+      // failed
+      else if($retval == 2){
+         $_SESSION['booksuccess'] = false;
          header("Location: ".$session->referrer);
       }
    }

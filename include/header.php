@@ -28,10 +28,35 @@ function clearField(obj) {
             <img src="images/logo.gif" alt="The Buildmeister"/>
             </a>
         </div>
-    </div>
+    	<!-- advert begin -->
+    	<div id="advert">
+        <script type="text/javascript"><!--
+         google_ad_client = "pub-3805144493754901";
+		 google_alternate_color = "F4F4F4";
+		 google_ad_width = 468;
+		 google_ad_height = 60;
+		 google_ad_format = "468x60_as";
+		 google_ad_type = "text_image";
+		 //2007-07-19: buildmeister.com
+		 google_ad_channel = "7986490318";
+		 google_color_border = "F4F4F4";
+		 google_color_bg = "F4F4F4";
+		 google_color_link = "0000FF";
+		 google_color_text = "000000";
+		 google_color_url = "008000";
+		 google_ui_features = "rc:6";
+		 //-->
+	    </script>
+           <script type="text/javascript"
+            src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+        </script>
+    	</div>	   
+		<!-- advert end -->
+	</div>
     <!-- header end -->
-
-  <!-- sidebar begin -->
+    
+	
+    <!-- sidebar begin -->
     <div id="sidebar">
         <!-- navigation menu begin -->
         <div id="navigation">
@@ -80,7 +105,7 @@ function clearField(obj) {
     <!-- search begin -->
     <div id="search">
         <p>Search</p>
-            <form id="search-form" method="get" action="http://www.buildmeister.com/search_results.php">
+            <form id="search-form" method="get" action="search.php">
                  <input class="formInputText" type="text" name="q" maxlength="255" value="" id="sbi"><br/>
                  <input type="radio" name="sitesearch" checked id="ss0"></input>
                  <label for="ss0" title="Search the Web">The Web</label>
@@ -98,13 +123,35 @@ function clearField(obj) {
                  <input type="hidden" name="ie" value="ISO-8859-1"></input>
                  <input type="hidden" name="oe" value="ISO-8859-1"></input>
                  <input type="hidden" name="safe" value="active"></input>
-                 <input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:F4F4F4;LBGC:336699;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;FORID:11"></input>
+                 <input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFF;LBGC:336699;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;FORID:11"></input>
                  <input type="hidden" name="hl" value="en"></input>
      </form>
     </div>
     <!-- search end -->
 
     <div id="spacer"></div>
+
+	<!-- related reading begin -->
+	<div id="reading">
+    	<p>Related Reading</p>
+    	<form id="reading-form">
+    	<div align="center">
+<script type="text/javascript"><!--
+  amazon_ad_tag = "thebuildmeist-20";  amazon_ad_width = "120";  amazon_ad_height = "240";  amazon_ad_link_target = "new";  amazon_color_background = "FFFFFF";  amazon_ad_include = "clearcase;ibm;build;java;software";  amazon_ad_categories = "a";//--></script>
+
+<script type="text/javascript" src="http://www.assoc-amazon.com/s/ads.js"></script>
+<script type="text/javascript"><!--
+google_ad_client = "pub-3805144493754901";
+google_ad_width = 110;
+google_ad_height = 32;
+google_ad_format = "110x32_as_rimg";
+google_cpa_choice = "CAAQkJXCmwIaCOajEBnquhJpKOz1uosB";
+google_ad_channel = "1461545465";
+//--></script>
+		</div>
+		</form>
+	</div>
+	<!-- related reading end -->
 
     </div>
     <!-- sidebar end -->

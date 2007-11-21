@@ -7,7 +7,7 @@ if ($session->logged_in) {
 }
 ?>
 <form method="post" action="process.php">
-    <fieldset class="login-form">
+    <fieldset style="width: 250px">
         <legend>User Login</legend> 
         <table>
             <tr>
@@ -35,7 +35,7 @@ if ($session->logged_in) {
 					<?php echo $form->allErrors(); ?>
 				</td>
 			<tr>
-				<td colspan="2">
+				<td colspan="2" align="right">
 					<input type="hidden" name="sublogin" value="1"></input> 
 					<input id="login-button" type="submit" name="userlogin" value="Login" id="input.login"></input>
 				</td>
