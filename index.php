@@ -8,6 +8,7 @@ include("include/header.php");
 ?>
 
 <div id="toptitle"><h2>Welcome to <i>The Buildmeister</i></h2></div>
+
 <div id="introductory">
 <table width="100%">
 	<tbody>
@@ -57,10 +58,6 @@ if ($numrows != 0) {
 }   
 
 ?>
-
-</div>
-</td>
-</tr>
 
 <?php
 include("include/footer.php");

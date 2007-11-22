@@ -244,9 +244,8 @@ class MySQLDB {
     * @return true on success, false otherwise.
     */
    function addNewBook($username, $booktitle, $bookauthor, $bookurl, $booksummary) {
-      $time = time();
       $q = "INSERT INTO " . TBL_BOOKS . " (date_posted, posted_by, title, author, summary, url)"
-      . " VALUES ($time, '$username', '$booktitle', '$bookauthor', '$booksummary', '$bookurl')";
+      . " VALUES (now(), '$username', '$booktitle', '$bookauthor', '$booksummary', '$bookurl')";
       return mysql_query($q, $this->connection);
    } // addNewBook
    
@@ -276,9 +275,8 @@ class MySQLDB {
     * @return true on success, false otherwise.
     */
    function addNewLinkItem($username, $linktitle, $linkurl, $linksummary) {
-      $time = time();
       $q = "INSERT INTO " . TBL_LINKS . " (date_posted, posted_by, title, summary, url)"
-      . " VALUES ($time, '$username', '$linktitle', '$linksummary', '$linkurl')";
+      . " VALUES (now(), '$username', '$linktitle', '$linksummary', '$linkurl')";
       return mysql_query($q, $this->connection);
    } // addNewLinkItem
    
@@ -286,17 +284,46 @@ class MySQLDB {
     * Adds a new article into the database.
     * By default the article is inactive.
     *
-    * @param unknown_type $username
-    * @param unknown_type $articletitle
-    * @param unknown_type $articlesummary
+    * @param string $username
+    * @param string $articletitle
+    * @param string $articlesummary
     * @return true on success, false otherwise.
     */
    function addNewArticle($username, $articletitle, $articlesummary, $articlecontent) {
-      $time = time();
       $q = "INSERT INTO " . TBL_ARTICLES . " (date_posted, posted_by, title, summary, content)"
-      . " VALUES ($time, '$username', '$articletitle', '$articlesummary', '$articlecontent')";
+      . " VALUES (now(), '$username', '$articletitle', '$articlesummary', '$articlecontent')";
       return mysql_query($q, $this->connection);
    } // addNewArticle
+   
+   /**
+    * Adds a new glossary item comment into the database.
+    * By default the article is inactive.
+    *
+    * @param string $username
+    * @param string $glossid
+    * @param string $comment
+    * @return true on success, false otherwise.
+    */
+   function addNewGlossaryComment($username, $glossid, $comment) {
+      $q = "INSERT INTO " . TBL_GLOSSCOM . " (date_posted, posted_by, gloss_id, comment)"
+      . " VALUES (now(), '$username', '$glossid', '$comment')";
+      return mysql_query($q, $this->connection);
+   } // addNewGlossaryComment
+   
+   /**
+    * Adds a new article comment into the database.
+    * By default the article is inactive.
+    *
+    * @param string $username
+    * @param string $artid
+    * @param string $comment
+    * @return true on success, false otherwise.
+    */
+   function addNewArticleComment($username, $artid, $comment) {
+      $q = "INSERT INTO " . TBL_ARTCOM . " (date_posted, posted_by, art_id, comment)"
+      . " VALUES (now(), '$username', '$artid', '$comment')";
+      return mysql_query($q, $this->connection);
+   } // addNewArticleComment
    
    /**
     * Updates a field in the user's row.

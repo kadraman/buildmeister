@@ -6,12 +6,13 @@
 }
 #keyconcepts {
     width: 250px;
-    background-color: #99ccff;
+    background: #F8F7EF;
     padding: 10px;
     font-size: 8pt;
     float: right;
     margin-left: 20px;
     margin-bottom: 10px;
+    border: 1px dashed #B2B2B2;
 }
 #codeoutput {
     text-align: left;
@@ -19,23 +20,18 @@
     color: #008080;
     margin-left: 40px;
 }
-#codelisting { 
-    width: 90%;
-    margin-left: 10px;
-    margin-right: 10px;
-    font-family: monospace;
-    background-color: rgb(245,245,245);
-    valign: top;
-}
+h1 { margin-bottom: 0.5em; font: 1.5em; letter-spacing: 2px;
+	padding: 0.5em; border-left: 3px solid #B2B2B2;}
 p#articlehead {
-    font-style: italic;
-    text-align: justify;
+  text-align: justify; font: 1.2em; margin-top: 1em;
+  padding: 0.5em; background: #F8F7EF;
+  border-bottom: 1px dashed #B2B2B2; border-top: 1px dashed #B2B2B2;
 }
 p#article {
     text-align: justify;
 }
 #dashedrow {
-  padding: 0.5em; margin: 0 0 2em 0;
+  padding: 0.5em; margin: 2 0 2em 0;
   border-bottom: 1px dashed #B2B2B2; border-top: 1px dashed #B2B2B2;		
 }	
 p#codeoutput {

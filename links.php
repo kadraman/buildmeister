@@ -13,7 +13,7 @@ include("include/header.php");
 // just submitted a new link
 if (isset($_SESSION['linksuccess'])) {
     if ($_SESSION['linksuccess']) {
-        // submissions was successfull
+        // submissions was sucessful
         $session->displayDialog("Submission Succesfull",
         	"Thank you for your submission, it will be reviewed before being added to the site.",
             SITE_BASEDIR . "/links.php");
@@ -74,20 +74,20 @@ if ($numrows != 0) {
 <fieldset style="text-align:left;width:480px"><legend>Submit Link</legend>
 <table>
 	<tr>
-		<td><label class="formLabelText" for="linktitle">Title:</label></td>
+		<td>*<label class="formLabelText" for="linktitle">Title:</label></td>
 		<td><input class="formInputText" type="text" name="linktitle" <?php echo $disable_field; ?>
-			maxlength="80" value="<?php echo $form->value("linktitle"); ?>">*</td>
+			maxlength="80" value="<?php echo $form->value("linktitle"); ?>"></td>
 	</tr>	
 	<tr>
-		<td><label class="formLabelText" for="linkurl">URL:</label></td>
+		<td>*<label class="formLabelText" for="linkurl">URL:</label></td>
 		<td><input class="formInputText" type='text' name='linkurl' <?php echo $disable_field; ?>
-			maxlength="80" value="<?php echo $form->value("linkurl"); ?>">*</td>
+			maxlength="80" value="<?php echo $form->value("linkurl"); ?>"></td>
 	</tr>
 	<tr>
-		<td><label class="formLabelText" for="linksummary">Summary of link:</label></td>
+		<td>*<label class="formLabelText" for="linksummary">Summary of link:</label></td>
 		<td>
-			<textarea class="formTextArea" name='linksummary' id='linksummary' 
-			<?php echo $disable_field; ?> rows='6' cols='50'/>*
+			<textarea class="formTextArea" name='linksummary' id='linksummary' onfocus="this.value=''; this.onfocus=null;"
+			<?php echo $disable_field; ?> rows='6' cols='50'/>Enter your summary here...
 			</textarea>
 		</td>
 	</tr>
@@ -97,8 +97,8 @@ if ($numrows != 0) {
 	</tr>		
 	<tr>
 		<td colspan="2" align="right">
-			<input type="hidden" name="sublink"	value="1"> 
-			<input type="submit" value="Submit">
+			<input type="hidden" name="sublink" value="1"> 
+			<input type="submit" value="Submit" <?php echo $disable_field; ?>>
 		</td>
 	</tr>
 </table>

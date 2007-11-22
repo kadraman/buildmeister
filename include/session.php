@@ -198,7 +198,7 @@ class Session
          setcookie("cookid",   $this->userid,   time()+COOKIE_EXPIRE, COOKIE_PATH);
       }
 
-      /* Login completed successfully */
+      /* Login completed sucessfuly */
       return true;
    }
 
@@ -403,7 +403,7 @@ class Session
    } // submitGlossItem
    
    /**
-    * Submit a new link, checking the paramters supplied.
+    * Submit a new link, checking the parameters supplied.
     *
     * @param string $linktitle
     * @param string $linkauthor
@@ -445,46 +445,61 @@ class Session
       }
    } // submitBook
    
-     /**
-    * Submit a new article, checking the paramters supplied.
-    *
-    * @param string $articletitle
-    * @param string $articlesummary
-    * @param string $articlecontent
-    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
-    */
-   function submitArticle($articletitle, $articlesummary, $articlecontent) {
+    /**
+     * Submit a new comment on a glossary item, checking the parameters supplied.
+     *
+     * @param string $glossid
+     * @param string $comment
+     * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+     */
+   function submitGlossaryComment($glossid, $comment) {
       global $database, $form, $mailer;  // the database, form and mailer object
       
-      // article title error checking
-      $field = "title"; 
-      if (!$articletitle || strlen($articletitle = trim($articletitle)) == 0) {
-         $form->setError($field, "An article title is required.");
-      }
-           
-      // article summary error checking
-      $field = "summary"; 
-      if (!$articlesummary || strlen($articlesummary = trim($articlesummary)) == 0) {
-         $form->setError($field, "An article summary is required.");
-      }
-      
-      // article content error checking
-      $field = "summary"; 
-      if (!$articlecontent || strlen($articlecontent = trim($articlecontent)) == 0) {
-         $form->setError($field, "Article content is required.");
-      }
+      // comment error checking
+      $field = "comment"; 
+      if (!$comment || strlen($comment = trim($comment)) == 0) {
+         $form->setError($field, "A comment is required.");
+      }     
       
       // errors exist, have user correct them
       if ($form->num_errors > 0) {
          return 1;  
       } else {       
-         if ($database->addNewArticle($this->username, $articletitle, $articlesummary, $articlecontent)) {
-             return 0;      // new inactive article added succesfully
+         if ($database->addNewGlossaryComment($this->username, $glossid, $comment)) {
+             return 0;      // new inactive comment added succesfully
          } else {
              return 2;      // submission attempt failed
          }
       }
-   } // submitArticle
+   } // submitGlossaryComment
+   
+    /**
+     * Submit a new comment on an article, checking the parameters supplied.
+     *
+     * @param string $artid
+     * @param string $comment
+     * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+     */
+   function submitArticleComment($atrid, $comment) {
+      global $database, $form, $mailer;  // the database, form and mailer object
+      
+      // comment error checking
+      $field = "comment"; 
+      if (!$comment || strlen($comment = trim($comment)) == 0) {
+         $form->setError($field, "A comment is required.");
+      }     
+      
+      // errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;  
+      } else {       
+         if ($database->addNewArticleComment($this->username, $artid, $comment)) {
+             return 0;      // new inactive comment added succesfully
+         } else {
+             return 2;      // submission attempt failed
+         }
+      }
+   } // submitArticleComment
    
    /**
     * Attempts to edit the user's account information

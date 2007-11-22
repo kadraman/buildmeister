@@ -16,7 +16,7 @@ if (isset($_SESSION['glosssuccess'])) {
         // submissions was successful
         $session->displayDialog("Submission Succesfull",
         	"Thank you for your submission, it will be reviewed before being added to the site.",
-            SITE_NAME . "/glossary.php");
+            SITE_BASEDIR . "/glossary.php");
     } else {
         // submission failed
         $session->displayDialog("Submission Failed",
@@ -45,16 +45,22 @@ $numrows = mysql_num_rows($result);
 
 $count = 0;
 if ($numrows != 0) {
+    echo "<table width='95%'>";    
     while ($row = mysql_fetch_assoc($result)) {
-        if (($count++ % 2) == 0) {
-            $usediv = "glossitem-even";
-        } else {
-            $usediv = "glossitem-odd";          
-        }
-        echo "<div id='" . $usediv . "'><strong><a id='#" . $row['title'] . "'>" 
-        . $row['title'] . "</a></strong><br/>"
-		. $row['summary'] . "</div>";
+        if (($count % 2) == 0) {
+            echo "<tr>\n";
+        } 
+        echo "<td align='left'><strong><a id='#" . $row['title'] . "'></a>"
+        	. "<a href='viewterm.php?term=" . $row['title'] . "'>" 
+            . $row['title'] . "</a></strong><br/>"
+		    . $row['summary'] . "</td>\n";
+		if (($count++ % 2) == 1) {
+            echo "</tr>\n";
+        } 
+		
     }
+    echo "</table>\n";
+    echo "</div>\n";
 }   
 ?>
 
@@ -80,16 +86,16 @@ if ($numrows != 0) {
 <fieldset style="text-align:left;width:460px"><legend>Submit Glossary Item</legend>
 <table>
 	<tr>
-		<td><label class="formLabelText" for="glossoktitle">Term:</label></td>
+		<td>*<label class="formLabelText" for="glossoktitle">Term:</label></td>
 		<td><input class="formInputText" type="text" name="glosstitle" <?php echo $disable_field; ?>
-			maxlength="80" value="<?php echo $form->value("glosstitle"); ?>">*</td>
+			maxlength="80" value="<?php echo $form->value("glosstitle"); ?>"></td>
 	</tr>
 	<tr>
-		<td><label class="formLabelText" for="glosssummary">Definition:</label></td>
+		<td>*<label class="formLabelText" for="glosssummary">Definition:</label></td>
 		<td>
-			<textarea class="formTextArea" name='glosssummary' id='glosssummary' 
-			<?php echo $disable_field; ?> rows='6' cols='50'/>
-			</textarea>*
+			<textarea class="formTextArea" name='glosssummary' id='glosssummary' onfocus="this.value=''; this.onfocus=null;"
+			<?php echo $disable_field; ?> rows='6' cols='50'/>Enter your definition here...
+			</textarea>
 		</td>
 	</tr>
 	<tr>
@@ -98,8 +104,8 @@ if ($numrows != 0) {
 	</tr>		
 	<tr>
 		<td colspan="2" align="right">
-			<input type="hidden" name="subgloss"	value="1"> 
-			<input type="submit" value="Submit">
+			<input type="hidden" name="subgloss" value="1"> 
+			<input type="submit" value="Submit" <?php echo $disable_field; ?>>
 		</td>
 	</tr>
 </table>
@@ -111,7 +117,7 @@ if ($numrows != 0) {
     }
 ?>
 
-</div>
+
 
 <?php
 include("include/footer.php");

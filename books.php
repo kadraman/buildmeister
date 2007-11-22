@@ -8,6 +8,14 @@ include("include/header.php");
 
 ?>
 
+<?php
+//<script type="text/javascript" src="http://www.assoc-amazon.com/s/link-enhancer?tag=thebuildmeist-20&o=1">
+//</script>
+//<noscript>
+    //<img src="http://www.assoc-amazon.com/s/noscript?tag=thebuildmeist-20" alt="" />
+//</noscript>
+?>
+
 <div id="article">
 
 <?php
@@ -43,15 +51,21 @@ read and enjoyed, together with some personal comments about them. </p>
 
 <?php
 # fetch build process books
-$sql = "SELECT * from " . TBL_BOOKS . " where active = 1 ORDER BY date_published DESC;";
+$sql = "SELECT * from " . TBL_BOOKS . " where active = 1 ORDER BY date_posted DESC;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
 if ($numrows != 0) {
     while ($row = mysql_fetch_assoc($result)) {
-        echo "<div id='splitsection'><strong><a href='" . $row['url'] . "'>" . $row['title'] . "</a></strong><br/>by <i>"
+        echo "<div id='splitsection'>\n";
+        echo "<table width='100%' border=0'><tr>\n";
+        echo "<td align='center' width='150px'><img width='125px' src=" 
+        . $row['imageurl'] . " alt='[book image]'></td>\n";
+        echo "<td><strong><a href='" . $row['url'] . "'>" . $row['title'] . "</a></strong><br/>by <i>"
         . $row['author'] . "</i><br/><br/>"
-		. $row['summary'] . "</div>";
+		. $row['summary'] . "</td>\n";
+		echo "</tr></table>"; 
+		echo "</div>";
     }
 }   
 ?>
@@ -73,28 +87,29 @@ if ($numrows != 0) {
 
 <div align="center">
 <form name='booksubmit' id='booksubmit' action='process.php' method='post'>
-<fieldset style="text-align:left;width:500px"><legend>Submit Book</legend>
+<fieldset style="text-align:left;width:500px">
+<legend>Submit Book</legend>
 <table>
 	<tr>
-		<td><label class="formLabelText" for="booktitle">Title:</label></td>
+		<td>*<label class="formLabelText" for="booktitle">Book Title:</label></td>
 		<td><input class="formInputText" type="text" name="booktitle" <?php echo $disable_field; ?>
 			maxlength="80" value="<?php echo $form->value("booktitle"); ?>"></td>
 	</tr>
 	<tr>
-		<td><label class="formLabelText" for="bookauthor">Author:</label></td>
+		<td>*<label class="formLabelText" for="bookauthor">Book Author:</label></td>
 		<td><input class="formInputText" type="text" name="bookauthor" <?php echo $disable_field; ?>
 			maxlength="80" value="<?php echo $form->value("bookauthor"); ?>"></td>
 	</tr>
 	<tr>
-		<td><label class="formLabelText" for="bookurl">URL:</label></td>
+		<td>*<label class="formLabelText" for="bookurl">Amazon URL:</label></td>
 		<td><input class="formInputText" type='text' name='bookurl' <?php echo $disable_field; ?>
 			maxlength="80" value="<?php echo $form->value("bookurl"); ?>"></td>
 	</tr>
 	<tr>
-		<td><label class="formLabelText" for="booksummary">Summary of book:</label></td>
+		<td>*<label class="formLabelText" for="booksummary">Summary of book:</label></td>
 		<td>
-			<textarea class="formTextArea" name='booksummary' id='booksummary' 
-			<?php echo $disable_field; ?> rows='6' cols='50'/>
+			<textarea class="formTextArea" name='booksummary' id='booksummary' onfocus="this.value=''; this.onfocus=null;"
+			<?php echo $disable_field; ?> rows='6' cols='50'/>Enter your summary here
 			</textarea>
 		</td>
 	</tr>
@@ -104,8 +119,8 @@ if ($numrows != 0) {
 	</tr>		
 	<tr>
 		<td colspan="2" align="right">
-			<input type="hidden" name="subbook"	value="1"> 
-			<input type="submit" value="Submit">
+			<input type="hidden" name="subbook" value="1"> 
+			<input type="submit" value="Submit" <?php echo $disable_field; ?>>
 		</td>
 	</tr>
 </table>
@@ -118,12 +133,6 @@ if ($numrows != 0) {
 ?>
 
 </div>
-
-<script type="text/javascript" src="http://www.assoc-amazon.com/s/link-enhancer?tag=thebuildmeist-20&o=1">
-</script>
-<noscript>
-    <img src="http://www.assoc-amazon.com/s/noscript?tag=thebuildmeist-20" alt="" />
-</noscript>
 
 <?php
 include("include/footer.php");

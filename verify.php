@@ -6,20 +6,26 @@ if (isset($_GET['email']) && isset($_GET['verify'])) {
 	$verifystring = urldecode($_GET['verify']); 
 } else {
 	  // verification failed
-      echo "<p>We're sorry, but an error has occurred and your verification could not be completed."
-      . "<br>Please try again at a later time.</p>";
+	  $session->displayDialog("Verification Failed",
+          "We're sorry, but an error has occurred and your verification could not be completed. "
+          . "Please try again at a later time.",
+          SITE_BASEDIR . "/index.php");
 }
 
 include("include/header.php");
 
 // check if user has already been activated
 if ($database->confirmUserInactive($email) == 0) {
-      echo "<p>We're sorry, but the user for email " . $email . " has already been activated.";
+    $session->displayDialog("Already Activated",
+    	"We're sorry, but the user for email " . $email . " has already been activated.",
+        SITE_BASEDIR . "/index.php");
 } else {
     # make user active
     $database->activateUser($email);
-    echo "<p>The user for email " . $email . " has been activated."
-    . "\n\nYou may now <a href=\"login.php\">login</a> to the site.";
+    $session->displayDialog("User Activated",
+    	"The user for email " . $email . " has been activated. "
+        . "You may now <a href=\"login.php\">login</a> to the site.",
+        SITE_BASEDIR . "/login.php");
 }    
 
 include("include/footer.php");

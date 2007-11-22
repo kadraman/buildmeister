@@ -44,7 +44,7 @@ if (isset($_SESSION['forgotpass'])) {
 	</tr>
 	<tr>
 		<td colspan="2" align="right"><input type="hidden" name="subforgot"
-			value="1"> <input type="submit" value="New Password"></td>
+			value="1"> <input type="submit" value="Generate Password"></td>
 	</tr>
 </table>
 </fieldset>

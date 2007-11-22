@@ -41,24 +41,24 @@ if ($session->logged_in) {
 			maxlength="30" value="<?php echo $form->value("reglast"); ?>"></td>
 	</tr>
 	<tr>
-		<td><label class="formLabelText" for="reguser">Username:</label></td>
+		<td>*<label class="formLabelText" for="reguser">Username:</label></td>
 		<td><input class="formInputText" type="text" name="reguser"
-			maxlength="30" value="<?php echo $form->value("reguser"); ?>">*</td>
+			maxlength="30" value="<?php echo $form->value("reguser"); ?>"></td>
 	</tr>
 	<tr>
-		<td><label class="formLabelText" for="regpass">Password:</label></td>
+		<td>*<label class="formLabelText" for="regpass">Password:</label></td>
 		<td><input class="formInputText" type="password" name="regpass"
-			maxlength="30" value="<?php echo $form->value("regpass"); ?>">*</td>
+			maxlength="30" value="<?php echo $form->value("regpass"); ?>"></td>
 	</tr>
 	<tr>
-		<td><label class="formLabelText" for="regvpass">Verify Password:</label></td>
+		<td>*<label class="formLabelText" for="regvpass">Verify Password:</label></td>
 		<td><input class="formInputText" type='password' name='regvpass'
-			maxlength="30" value="<?php echo $form->value("regvpass"); ?>">*</td>
+			maxlength="30" value="<?php echo $form->value("regvpass"); ?>"></td>
 	</tr>
 	<tr>
-		<td><label class="formLabelText" for="regemail">Email:</label></td>
+		<td>*<label class="formLabelText" for="regemail">Email:</label></td>
 		<td><input class="formInputText" type="text" name="regemail"
-			maxlength="50" value="<?php echo $form->value("regemail"); ?>">*</td>
+			maxlength="50" value="<?php echo $form->value("regemail"); ?>"></td>
 	</tr>
 	<tr>
 		<td>&nbsp;</td>
@@ -84,7 +84,7 @@ This site system uses cookies to store information on your local computer. These
 By clicking Register below you agree to be bound by these conditions.
 		</textarea>
 		<br />
-		<input type='checkbox' id='agreedisc' name='agreedisc'/>I agree to the above</td>
+		<input type='checkbox' id='agreedisc' name='agreedisc'/>&nbsp;I agree to the above</td>
 	</tr>
 	<tr>
 		<td colspan="2" align="right">

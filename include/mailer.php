@@ -26,7 +26,7 @@ class Mailer {
       $body = "Hello " . $user . ",\n\n"
              . "Please click on the following link to verify your new account:\n\n"
              . SITE_BASEDIR . "/verify.php" . "?email=" . $email . "&verify=" . $verifystring
-             . "\n\n The Buildmeister\n";
+             . "\n\nThe Buildmeister\n";
              
       return mail($email,$subject,$body,$from);
    }

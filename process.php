@@ -49,6 +49,13 @@ class Process
       else if(isset($_POST['subarticle'])) {
           $this->procSubmitArticle();
       }
+      else if (isset($_POST['subartcom'])) {
+          $this->procSubmitArticleComment();
+      }
+      // user submitting a comment on a glossary item
+      else if (isset($_POST['subgcom'])) {
+          $this->procSubmitGlossaryComment();
+      }
       /**
        * The only other reason user should be directed here
        * is if he wants to logout, which means user is
@@ -244,6 +251,60 @@ class Process
          header("Location: ".$session->referrer);
       }
    } // procSubmitArticle
+   
+   /**
+    * Submit a comment on an article into the database.
+    */
+   function procSubmitArticleComment() {
+      global $session, $form;
+      
+      // submission attempt
+      $retval = $session->submitArticleComment($_POST['articleid'], $_POST['comment']);
+      
+      // successful
+      if ($retval == 0){
+         $_SESSION['artcomsuccess'] = true;
+         header("Location: ".$session->referrer);
+      }
+      // error found with form
+      else if ($retval == 1){
+         $_SESSION['value_array'] = $_POST;
+         $_SESSION['error_array'] = $form->getErrorArray();
+         header("Location: ".$session->referrer);
+      }
+      // failed
+      else if($retval == 2){
+         $_SESSION['artcomsuccess'] = false;
+         header("Location: ".$session->referrer);
+      }
+   } // procSubmitArticleComment
+   
+   /**
+    * Submit a comment on a glossary item into the database.
+    */
+   function procSubmitGlossaryComment() {
+      global $session, $form;
+      
+      // submission attempt
+      $retval = $session->submitGlossaryComment($_POST['glossid'], $_POST['comment']);
+      
+      // successful
+      if ($retval == 0){
+         $_SESSION['gcomsuccess'] = true;
+         header("Location: ".$session->referrer);
+      }
+      // error found with form
+      else if ($retval == 1){
+         $_SESSION['value_array'] = $_POST;
+         $_SESSION['error_array'] = $form->getErrorArray();
+         header("Location: ".$session->referrer);
+      }
+      // failed
+      else if($retval == 2){
+         $_SESSION['gcomsuccess'] = false;
+         header("Location: ".$session->referrer);
+      }
+   } // procSubmitGlossaryComment
    
    /**
     * procForgotPass - Validates the given username then if

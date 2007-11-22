@@ -28,6 +28,10 @@ define("TBL_ARTICLES", "articles");
 define("TBL_BOOKS", "books");
 define("TBL_GLOSSARY", "glossary");
 define("TBL_LINKS", "links");
+define("TBL_ARTRATE", "articles_ratings");
+define("TBL_LINKRATE", "links_ratings");
+define("TBL_ARTCOM", "article_comm");
+define("TBL_GLOSSCOM", "glossary_comm");
 
 // special names and level constants
 define("SITE_BASEDIR", "http://localhost/buildmeister.com");

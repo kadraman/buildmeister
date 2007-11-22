@@ -12,7 +12,7 @@ include("include/header.php");
 // just submitted a new article
 if (isset($_SESSION['articlesuccess'])) {
     if ($_SESSION['articlesuccess']) {
-        // submission was successfull
+        // submission was sucessful
         $session->displayDialog("Submission Succesfull",
         	"Thank you for your submission, it will be reviewed before being added to the site.",
             SITE_BASEDIR . "/articles.php");
@@ -114,21 +114,21 @@ if ($numrows != 0) {
 <fieldset style="text-align:left;width:600px"><legend>Submit Article</legend>
 <table>
 	<tr>
-		<td><label class="formLabelText" for="articletitle">Title:</label></td>
+		<td>*<label class="formLabelText" for="articletitle">Title:</label></td>
 		<td><input class="formInputText" type="text" name="articletitle" <?php echo $disable_field; ?>
-			maxlength="80" value="<?php echo $form->value("articletitle"); ?>">*</td>
+			maxlength="80" value="<?php echo $form->value("articletitle"); ?>"></td>
 	</tr>
 	<tr>
-		<td><label class="formLabelText" for="articlesummary">Summary:</label></td>
+		<td>*<label class="formLabelText" for="articlesummary">Summary:</label></td>
 		<td><input class="formInputText" type="text" name="articlesummary" <?php echo $disable_field; ?>
-			maxlength="80" value="<?php echo $form->value("articlesummary"); ?>">*</td>
+			maxlength="80" value="<?php echo $form->value("articlesummary"); ?>"></td>
 	</tr>
 
 	<tr>
-		<td><label class="formLabelText" for="articlecontent">Content:</label></td>
+		<td>*<label class="formLabelText" for="articlecontent">Content:</label></td>
 		<td>
-			<textarea class="formTextArea" name='articlecontent' id='articlecontent' 
-			<?php echo $disable_field; ?> rows='10' cols='70'/>
+			<textarea class="formTextArea" name='articlecontent' id='articlecontent' onfocus="this.value=''; this.onfocus=null;"
+			<?php echo $disable_field; ?> rows='10' cols='70'/>Enter your content here...
 			</textarea>
 		</td>
 	</tr>
@@ -139,7 +139,7 @@ if ($numrows != 0) {
 	<tr>
 		<td colspan="2" align="right">
 			<input type="hidden" name="subarticle"	value="1"> 
-			<input type="submit" value="Submit">
+			<input type="submit" value="Submit" <?php echo $disable_field; ?>>
 		</td>
 	</tr>
 </table>
