@@ -1,0 +1,327 @@
+<table align="center"
+	style="border-top-width: 0px; border-left-width: 0px; width: 95%;">
+	<tbody>
+		<tr>
+			<td>
+			<h2>Managing Java dependencies with Apache Ant and Ivy</h2>
+			<p align="justify" style="font-style: italic;">The world of Java
+			is one of open-source, common components and rapid, evolving change.
+			However, one of the caveats of such a model is the time spent in
+			managing library dependencies. In this article I discuss in more
+			detail the nature of this problem and how a specific tool: <a
+				href="http://jayasoft.org/ivy">Ivy</a> - can be used to help you
+			solve this problem.</p>
+			<h3>The Java dependency management problem</h3>
+			<p align="justify">If you took a typical enterprise Java
+			application and decomposed it down into the libraries that were
+			developed or reused to implement it, you could easily find upwards of
+			100 different libraries (or .j<span style="font-style: italic;">ar</span>
+			files). A number of these libraries might be open source
+			implementations, such as the Jakarta <a
+				href="http://jakarta.apache.org/commons/">commons</a> libraries,
+			others might be commercial business components that you have sourced
+			from a third party. However, since many commercial components also
+			make extensive&nbsp;use of open source components themselves (and why
+			wouldn't they!), you can quite easily find yourself with duplicate
+			sets of libraries&nbsp;at&nbsp;different versions levels!</p>
+			<p align="justify">When you are developing your own common
+			libraries, you will obviously also be creating multiple versions of
+			them and will probably need to support different versions&nbsp;for
+			different projects, or for projects in different
+			phases.&nbsp;Following on from this, your library dependencies might
+			have dependencies on other libraries themselves (so called <span
+				style="font-weight: bold;">transitive dependencies</span>), you will
+			also need to manage and capture this kind of metadata too.</p>
+			<p align="justify">The typical ways that organizations solve this
+			problem are to create a shared&nbsp;repository of libraries -
+			sometimes in version control system, sometimes not. This approach can
+			work but requires a significant amount of administration to keep it
+			up to date. This is especially true for&nbsp;transitive dependencies
+			where you would need to somehow store&nbsp;their associative metadata
+			alongside the components. Alternately you would need to create a
+			significant amount of baselines in your version control system to
+			refer to a compatible (and collective set) of libraries.</p>
+			<p align="justify">Fortunately, there are now a number of Java
+			tools that can help you resolve this problem. These include <a
+				href="http://www.buildmeister.com/modules/content/index.php?id=14">Apache
+			Maven</a> (which is a complete replacement for <a
+				href="http://www.buildmeister.com/modules/content/index.php?id=13">Apache
+			Ant</a>) or the tool that is the subject of this article: <a
+				href="http://jayasoft.org/ivy">Ivy</a> - which works with your
+			existing Apache Ant build scripts.</p>
+			<h3>Getting started with Ivy<span
+				style="font-family: monospace;"></span></h3>
+			<p align="justify">Getting Ivy up and running with your existing
+			Apache Ant base build process is relatively straightforward, and can
+			be carried out as follows:</p>
+			<ul>
+				<li>Download the Ivy binary distribution from <a
+					href="http://jayasoft.org/ivy/download">http://jayasoft.org/ivy/download</a>
+				</li>
+				<li>Extract the downloaded archive somewhere on your hard disk.
+				</li>
+				<li>Copy the extracted .<span style="font-style: italic;">jar</span>
+				file, i.e. <span style="font-family: monospace;">ivy-1.3-RC3.jar</span><span
+					style="font-weight: bold;"> </span>to your Ant <span
+					style="font-family: monospace;">lib</span><span
+					style="font-weight: bold;"> </span>directory (this ensures that it
+				will be on your <span style="font-style: italic;">classpath</span>).
+				</li>
+				<li>Create an <span style="font-family: monospace;">ivy.xml</span>
+				file (alongside your Ant <span style="font-family: monospace;">build.xml</span>
+				file) to specify your project's library dependencies</li>
+				<li>Configure your Ant <span style="font-family: monospace;">build.xml</span>
+				file to resolve these dependencies and build against them.</li>
+			</ul>
+			<p align="justify">Let's walk through the last two steps in a bit
+			more detail. The <span style="font-family: monospace;">ivy.xml</span>
+			file lists the library dependencies which the project requires to be
+			accessible so that it can build against them,&nbsp;as in the
+			following:</p>
+			<p
+				style="margin-left: 40px; color: rgb(102, 102, 102); font-family: monospace;">&lt;ivy-module
+			version=&quot;1.0&quot;&gt;<br />
+			&nbsp; &nbsp; &lt;info organisation=&quot;jayasoft&quot;
+			module=&quot;ivytest&quot; /&gt; <br />
+			&nbsp; &nbsp; &lt;dependencies&gt;<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &lt;dependency org=&quot;apache&quot;
+			name=&quot;commons-lang&quot; rev=&quot;2.1&quot; /&gt;&nbsp;<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &lt;<span class="xmlverb-element-name">dependency</span>
+			<span class="xmlverb-attr-name">org</span>=&quot;<span
+				class="xmlverb-attr-content">apache</span>&quot; <span
+				class="xmlverb-attr-name">name</span>=&quot;<span
+				class="xmlverb-attr-content">commons-cli</span>&quot; <span
+				class="xmlverb-attr-name">rev</span>=&quot;<span
+				class="xmlverb-attr-content">1.0</span>&quot; /&gt;<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &lt;dependency
+			org=&quot;buildmeister&quot; name=&quot;RatlBankModel&quot;
+			rev=&quot;1.001&quot;/&gt;<br />
+			&nbsp; &nbsp; &lt;/dependencies&gt;<br />
+			&lt;/ivy-module&gt;</p>
+			<p align="justify">This particular example lists three
+			dependencies, two of which are Apache commons libraries (<span
+				style="font-style: italic;">commons-lan</span>g and <span
+				style="font-style: italic;">commons-cli</span>) and one of which is
+			an internally produced library (<span style="font-style: italic;">RatlBankModel</span>).
+			One of the best things about Ivy is that it supports transitive
+			dependencies. In this example there is some extra metadata that has
+			been placed in the ivy repository for the <span
+				style="font-style: italic;">commons-cli</span> library that says
+			that it depends on <span style="font-style: italic;">commons-logging</span>
+			too, so this library will be additionally downloaded at resolve time.</p>
+			<p align="justify">To configure your Ant <span
+				style="font-family: monospace;">build.xml</span> file to resolve and
+			build against these dependencies you would include the following:</p>
+			<blockquote
+				style="color: rgb(102, 102, 102); font-family: monospace;">&lt;project
+			<span style="font-weight: bold;">xmlns:ivy=&quot;antlib:fr.jayasoft.ivy.ant&quot;</span>
+			name=&quot;ivytest&quot; default=&quot;compile&quot;&gt;<br />
+			&nbsp; &nbsp; ...<br />
+			&nbsp; &nbsp; &lt;property name=&quot;dir.src&quot;
+			value=&quot;src&quot;/&gt;<br />
+			<span style="font-weight: bold;">&nbsp; &nbsp; &lt;property
+			name=&quot;dir.lib&quot; value=&quot;lib&quot;/&gt;</span><br />
+			<br />
+			&nbsp; &nbsp; &lt;!-- define a classpath for use throughout the file
+			--&gt;<br />
+			&nbsp;&nbsp; &nbsp;&lt;path id=&quot;project.classpath&quot;&gt;<br />
+			&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- include local libraries
+			--&gt;<br />
+			<span style="font-weight: bold;">&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp; &lt;fileset dir=&quot;${dir.lib}&quot;/&gt;</span><br />
+			&nbsp;&nbsp; &nbsp;&lt;/path&gt;<br />
+			<br />
+			&nbsp; &nbsp; &lt;target name=&quot;resolve&quot;
+			description=&quot;retrieve dependencies with ivy&quot;&gt;<br />
+			&nbsp; &nbsp; <span style="font-weight: bold;">&nbsp; &nbsp;
+			&lt;ivy:retrieve/&gt;</span> <br />
+			&nbsp; &nbsp; &lt;/target&gt;<br />
+			&nbsp; &nbsp; ...<br />
+			&nbsp; &nbsp; &lt;target name=&quot;compile&quot;
+			depends=&quot;resolve&quot;&gt;<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &lt;javac&gt;<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;src
+			path=&quot;${dir.src}&quot;/&gt; <br />
+			<span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp;
+			&nbsp; &nbsp; &lt;classpath refid=&quot;project.classpath&quot;/&gt;
+			</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &lt;/javac&gt;<br />
+			&nbsp; &nbsp; &lt;/target&gt;<br />
+			&nbsp; &nbsp; ...<br />
+			&lt;/project&gt;</blockquote>
+			<p align="justify">As you can see the first line of this file
+			declares the namespace for the Ivy tasks that the build file will
+			include, one of Ivy tasks is the <span style="font-style: italic;">retrieve</span>
+			task which scans your Ivy repositories to resolve the dependencies.
+			By default any libraries are resolved to a local cache first and then
+			retrieved (copied) to the <span style="font-family: monospace;">lib</span>
+			directory inside the current working directory. Consequently the
+			project's <span style="font-style: italic;">classpath</span> uses
+			this fact to define the set of files that this project should build
+			against. The actual resolution process is quite seamless with Ivy;
+			it's conflict manager will download libraries as you need them, evict
+			those that are no longer required and can also be configured to
+			execute operations such as download the libraries that are latest in
+			time or latest in revision number.</p>
+			<h3>Configuring Ivy resolvers</h3>
+			<p align="justify">Ivy can be configured to look for (and
+			resolve) libraries in a number of locations, either on the Internet
+			at the <a href="http://ivyrep.jayasoft.org/">ivyrep</a> site (its
+			default) or the Apache Maven <a href="http://www.ibiblio.org/maven/">ibiblio</a>
+			site. These sites contain a vast collection of common libraries, the
+			advantage of the <span style="font-style: italic;">ivyrep</span> site
+			is that the metadata for resolving transitive dependencies is also
+			stored there. If you don't have an Internet connection or want to
+			create your own repository, Ivy can also be configured to look at a
+			shared or user specific repository. To customize this configuration
+			you create an <span style="font-family: monospace;">ivyconf.xml</span>
+			file as in the following:</p>
+			<blockquote
+				style="color: rgb(102, 102, 102); font-family: monospace;">&lt;ivyconf&gt;<br />
+			&nbsp; &lt;conf defaultResolver=&quot;buildmeister&quot;/&gt;<br />
+			&nbsp; &lt;resolvers&gt;<br />
+			&nbsp;&nbsp;&nbsp; &lt;chain name=&quot;buildmeister&quot;&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;filesystem
+			name=&quot;local&quot;&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifact
+			pattern=&quot;${ivy.conf.dir}/artifacts/[artifact]-[revision].[ext]&quot;
+			/&gt;<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; <span class="xmlverb-text"></span>&lt;<span
+				class="xmlverb-element-name">ivy</span> <span
+				class="xmlverb-attr-name">pattern</span>=&quot;<span
+				class="xmlverb-attr-content">${</span>ivy.conf.dir<span
+				class="xmlverb-attr-content">}/ivy/[module]-[revision].xml</span>&quot;
+			/&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/filesystem&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code><span
+				class="synIdentifier">&lt;ivyrep name=&quot;public&quot;/&gt;</span><span
+				class="synIdentifier"></span></code><br />
+			&nbsp;&nbsp;&nbsp; &lt;/chain&gt;<br />
+			&nbsp; &lt;/resolvers&gt;<br />
+			&lt;/ivyconf&gt;</blockquote>
+			<p align="justify">This example chains together two resolvers,
+			the first resolver looks locally for any revisions of libraries in
+			the <span style="font-family: monospace;">artifacts</span> directory
+			in the same directory as the <span style="font-family: monospace;">ivyconf.xml</span>
+			file. If the library cannot be found then a second resolver is used
+			to look on <span style="font-style: italic;">ivyrep.</span> To
+			specify the location of this <span style="font-family: monospace;">ivyconf.xml</span>
+			file in your build script you would specify the <span
+				style="font-family: monospace;">ivy.conf.dir</span> property as
+			follows:</p>
+			<blockquote
+				style="color: rgb(102, 102, 102); font-family: monospace;">
+			<p>&nbsp; &nbsp; &lt;property
+			name=&quot;dir.lib&quot;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
+			value=&quot;lib&quot;/&gt;<br />
+			&nbsp;&nbsp; &nbsp;<br />
+			&nbsp;&nbsp; &nbsp;<span style="font-weight: bold;">&lt;property
+			name=&quot;ivy.conf.dir&quot;&nbsp;&nbsp;&nbsp;&nbsp;
+			value=&quot;../components/&quot;/&gt;</span><br />
+			&nbsp; &nbsp;<br />
+			&nbsp;&nbsp; &nbsp;&lt;!-- define a classpath for use throughout the
+			file --&gt;<br />
+			&nbsp;&nbsp; &nbsp;&lt;path id=&quot;project.classpath&quot;&gt;<br />
+			&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- include local libraries
+			--&gt;<br />
+			&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &lt;fileset
+			dir=&quot;${dir.lib}&quot;/&gt;<br />
+			&nbsp;&nbsp; &nbsp;&lt;/path&gt;</p>
+			</blockquote>
+			<p align="justify">In this example the <span
+				style="font-family: monospace;">ivy.conf.dir</span> property is
+			specified to look at the <span style="font-family: monospace;">components</span>
+			directory that is at the same level in the directory hierarchy as the
+			project's working directory. Inside this <span
+				style="font-family: monospace;">component</span> directory is where
+			the <span style="font-family: monospace;">ivyconf.xml</span> file
+			resides and the <span style="font-family: monospace;">artifacts</span>
+			and <span style="font-family: monospace;">ivy</span> directory.</p>
+			<h3>Publishing libraries using Ivy</h3>
+			<p align="justify">To make use of Ivy for your own internally
+			developed libraries, you can use Ivy's <span
+				style="font-style: italic;">publish</span> task in your <span
+				style="font-family: monospace;">build.xml</span> file as follows:</p>
+			<blockquote
+				style="color: rgb(102, 102, 102); font-family: monospace;">&lt;target
+			name=&quot;publish&quot; depends=&quot;jar&quot;&gt;<br />
+			&nbsp; &nbsp; &lt;property name=&quot;revision&quot;
+			value=&quot;${build.number}&quot;/&gt; <br />
+			&nbsp; &nbsp; <span style="font-weight: bold;">&lt;ivy:publish
+			artifactspattern=&quot;${dir.build}/[artifact].[ext]&quot; </span><br
+				style="font-weight: bold;" />
+			<span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp;
+			resolver=&quot;buildmeister&quot; pubrevision=&quot;${revision}&quot;
+			status=&quot;release&quot;/&gt; </span><br style="font-weight: bold;" />
+			<span style="font-weight: bold;">&nbsp; &nbsp; </span>&lt;echo
+			message=&quot;project ${ant.project.name} released with version
+			${revision}&quot;/&gt; <br />
+			&lt;/target&gt;</blockquote>
+			<p align="justify">This example will publish any libraries built
+			in the directory specified by the <span
+				style="font-family: monospace;">dir.build</span> property (as well
+			as any corresponding ivy files), for example <span
+				style="font-family: monospace;">RatlBankModel.jar</span> and <span
+				style="font-family: monospace;">RatlBankModel.xml</span>. The
+			location to publish to is specified by the resolver, in this case it
+			is the &quot;<span style="font-style: italic;">buildmeister</span>&quot;
+			resolver which refers to the shared directory location containing the
+			organizations libraries -&nbsp; as described in the previous section.
+			To generate a unique version number for the library you can use Ant's
+			<a href="http://ant.apache.org/manual/CoreTasks/buildnumber.html">buildnumber</a>
+			task to automatically increment the version number (as referenced by
+			the <span style="font-family: monospace;">build.number</span>
+			property).</p>
+			<h3>Other capabilities and integrations</h3>
+			<p align="justify">The scenarios discussed above, only cover a
+			subset of the capabilities&nbsp;that Ivy possesses. There are more
+			wide ranging capabilties that can be used to support the majority of
+			projects. One that is certainly worth mentioning specifically is the
+			graphical dependency reports that the tool can automatically create -
+			as in the following:</p>
+			<p style="text-align: center;"><a href="/images/ivy-report.jpg"
+				target="_blank"><img
+				style="border: 0px solid; width: 299px; height: 212px;"
+				alt="Ivy Report" src="/images/ivy-report-small.jpg" /></a></p>
+			<p align="justify">More examples of reports such as these can be
+			seen on the Ivy <a href="http://jayasoft.org/ivy/features">website</a>.</p>
+			<p align="justify">Ivy also integrates well with a number of
+			popular open source tools. Obviously, it integrates seamlessly with
+			Apache Ant, however there is also a plugin for integrating Ivy into
+			the <a href="http://www.eclipse.org">Eclipse</a> development
+			environment (or any commercial tools based on it). This integration
+			gives you an editor for creating Ivy files as well as a really useful
+			capability for resolving libraries and adding the resultant set of
+			libraries&nbsp; to your Eclipse project's buildpath - as illustrated
+			in the following:</p>
+			<p style="text-align: center;"><img
+				style="width: 299px; height: 359px;" alt="Eclipse Integration"
+				src="/images/ivy-eclipse.jpg" /></p>
+			<p align="justify">Finally, Ivy can also integrate with <a
+				href="http://www.buildmeister.com/modules/content/index.php?id=9">CruiseControl</a>
+			&nbsp;- the popular open source Continuous Integration toolkit. This
+			allows you to automate the building of interdependent projects for
+			Continous Integration.</p>
+			<h3>Summary</h3>
+			<p align="justify">In summary, Ivy is an extremely powerful
+			addition to Apache Ant&nbsp;supporting dependency management. It is
+			quick and very straightforward to get up and running with (in a
+			matter of a few minutes) but is also powerful enough to ensure that
+			it is usable across large&nbsp;and multiple projects. Using Ant and
+			Ivy together you can do away with managing libraries manually in a
+			shared directory or in your version control system (although you
+			still might want to version control significant releases for
+			deployment purposes), and they certainly make a compelling
+			alternative to Apache Maven.</p>
+			<h3>References</h3>
+			<ul>
+				<li><a href="http://jayasoft.org/ivy">Ivy home page</a></li>
+				<li><a href="http://jayasoft.org/ivyde">IvyDE</a> - Ivy Eclipse
+				plugin</li>
+				<li><a href="http://jayasoft.org/ivycruise">IvyCruise</a> - Ivy
+				CruiseControl plugin</li>
+			</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>

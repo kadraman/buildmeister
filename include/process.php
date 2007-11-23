@@ -10,7 +10,7 @@
  * Written by: Jpmaster77 a.k.a. The Grandmaster of C++ (GMC)
  * Last Updated: August 19, 2004
  */
-include("include/session.php");
+include("session.php");
 
 class Process
 {
@@ -259,7 +259,7 @@ class Process
       global $session, $form;
       
       // submission attempt
-      $retval = $session->submitArticleComment($_POST['articleid'], $_POST['comment']);
+      $retval = $session->submitArticleComment($_POST['artid'], $_POST['comment']);
       
       // successful
       if ($retval == 0){

@@ -1,0 +1,446 @@
+<div class="article">
+<h1>Architecting the Build Process</h1>
+<p id="articlehead">This text is taken from the First Edition of <a
+	href="http://stores.lulu.com/buildmeisterbooks">The Buildmeister's
+Guide</a> by Kevin A. Lee.</p>
+<h2>Introduction</h2>
+<p>In a large number of software development projects, build process
+are still not systematically implemented. Instead they are usually
+created in an ad hoc fashion and evolve over time with limited effort
+and resources. If there is an Architect or <span
+	style="font-style: italic;">Buildmeister</span> involved in defining
+the build process, then they will usually implement the process based on
+past experience or instinct. Although some guidance and information is
+available on implementing build tools and environments (and that can be
+found on the Internet or in technical books),there is still very
+little industry standard guidance or techniques that can be applied to
+assess the relative merits of different build processes. Consequently,
+it is difficult to say whether any one build process is good or bad.
+Build processes also tend to get &quot;stale&quot; very quickly and
+often remain untouched because no one can understand them or dare risk
+changing them. In most projects, the only time that a build process will
+be changed is on certain key events, such as:</p>
+<ul>
+	<li>the initiation of a new project</li>
+	<li>a fundamental change in system architecture</li>
+	<li>a need to increase a project's delivery rate</li>
+	<li>a requirement to conform to a regulatory compliance mandate</li>
+</ul>
+<p>Whatever the reason, it can be really difficult to know where to
+start in either creating a new build process or to systematically assess
+the capability of your current build process and know how you could
+improve it. This article is therefore intended to help with this dilemma
+by describing how best to architect a typical build process and what a
+&quot;good&quot; build process might possibly look like. Obviously your
+own build process will also have some technology specific parameters,
+however the contents of this article should be generic enough for most
+environments.</p>
+<h2>SCM foundation</h2>
+<p>Any build process is wholly dependent on the environment in which
+it is implemented in and in particular the version control or Software
+Configuration Management (SCM) environment. Without control over the
+versions and baselines in your project you will have little chance of
+implementing a successful build process. One of the first things that
+you should do to create an effective SCM environment is to make sure you
+have drawn up an SCM Plan. Such a plan does not necessarily have to be a
+large tome (unless you are required to prove some adherence to a
+software process standard such as <a href="http://www.sei.cmu.edu/cmmi/"
+	target="_blank">CMMI</a> or <a href="http://www.sqi.gu.edu.au/spice/"
+	target="_blank">SPICE</a>); rather it needs to effectively convey the
+following information:</p>
+<ul>
+	<li>The definition of the roles on your project (such as
+	Configuration Manager, Build Manager, Release/Deployment Manager) and
+	who is responsible for them.</li>
+	<li>The set of tools to be used (such as CVS, Subversion,
+	ClearCase, Make or Ant) and their configuration; for example the SCM
+	server infrastructure.</li>
+	<li>The naming conventions for any metadate that is to be held in
+	the SCM tools, i.e. branch, baseline or tag names, workspace names and
+	so on.</li>
+	<li>The project directory structure; for example the composition
+	of source, build and intermediate directories.</li>
+	<li>The project branching strategy; for example how on-going
+	releases will be managed, whether build or release branches will be
+	used and so on.</li>
+	<li>The definition of the change request management process, i.e.,
+	what types of changes are to be captured (such as enhancements or
+	defects) and how they are to be related to builds and releases.</li>
+	<li>The definition of the release and deployment process, i.e.,
+	how releases are packaged and deployed to their run-time environments.</li>
+</ul>
+<p>Although the definition of a lot of this information might seem
+like overkill for defining a build or release process, it is very
+difficult to construct a reliable and automated build process without
+it. For example, if the project&rsquo;s baselines and branches are not
+created according to some convention, then how are you expected to
+automate the creation of them or hook into them for further automation?</p>
+<h2>Incremental build functions</h2>
+<p>In <a
+	href="viewarticle.php?id=5">Defining
+The Build Process</a>, I described a number of possible build functions such
+as Compilation, Unit Testing and Packaging. There is usually a minimal
+set of of these functions that you will need to implement for a
+&quot;useful&quot; build process. The rest you can implement when time
+allows. Doing sogives you the ability to plan and increase your
+build capability incrementally and over time. An example of
+incrementally implementing build functions in three phases is
+illustrated in the diagram below:</p>
+<div align="center"><img
+	alt="[Incremental Build Functions]"
+	src="%image_dir%/IncrementalBuildFunctions.gif" /></div>
+<p>Note that implementing a build function means that it is an
+automated process, not manual. There is little point in creating a
+wide-ranging and functionally rich build process if it consists of many
+manual and error prone steps. However there is a caveat to this. A
+common misconception in software development is that automation is good
+and everything that possibly can be automated should be. Although this
+is true to a degree, automating everything does take time and the
+question that you need to ask yourself is how often is the task that you
+are automating going to be run. If it is going to be run 100 times, then
+great the effort of automating it will be worth it; however, if it is
+going to be run just two or three times then is the level of investment
+in automation really worth it? As an example take the Deployment
+function. If you have a complex deployment process that requires an
+application to be installed in many different environments then it is
+essential to script it. However if your deployment process is simply the
+installation of a pre-packaged application - such as a Windows install
+file - then you should probably not spend too much time worrying about
+how to automate its deployment, and instead let users (such as Testers)
+browse to a known location and install it themselves.</p>
+<h2>Project rhythm</h2>
+<p>One of the most important decisions that you will need to make on
+your project is how often you will create an Integration or Release
+Build. There are at least three standard build schedules in use today:</p>
+<ul>
+	<li>The Weekly Build</li>
+	<li>The <a href="http://www.stevemcconnell.com/bp04.htm">Daily
+	Build and Smoke Test</a></li>
+	<li>The <a
+		href="http://www.martinfowler.com/articles/continuousIntegration.html">Continuous
+	Integration</a> Build</li>
+</ul>
+<p>In general the more often you build, the more integration
+problems you will discover at an early stage. Although most
+organizations recognise this basic premise it is still amazing the
+amount who do not carry out at least a Daily Build and Smoke Test. This
+is usually because they do not know or communicate their develop and
+delivery rate and so it is hard to say the optimal time of when a build
+should be carried out. To be able to define which build schedule would
+be more appropriate you can start by discovering your &quot;project
+rhythm&quot;.<br />
+</p>
+<p>To some degree your release schedule will already be defined by
+project and customer expectations. However, internal to the project you
+will have greater control over how changes are integrated and on what
+schedule. There is no pre-defined schedule; you need to find your own
+&ldquo;project rhythm&rdquo; that suits you best, typically by looking
+at patterns such as how long the build takes, how often developers can
+sensibly deliver and so on. If you are adopting a Continuous Integration
+approach, this can mean building many times a day: maybe every 20
+minutes or every hour. With more traditional forms of development this
+can mean building once a day (maybe as part of a nightly build). Your
+&ldquo;project rhythm&rdquo; will also be determined by any dependencies
+that exist between components or projects and how long the actual build
+process takes from beginning to end.</p>
+<p>The types of questions that you can ask to help determine your
+own &ldquo;project rhythm&rdquo; are as follows:</p>
+<ul>
+	<li>Are there any dependencies between internal components? If so,
+	do the components have to be built in any specific order?</li>
+	<li>Are there any dependencies on the output of external projects
+	or components? If so, how will these outputs be made available?</li>
+	<li>How many developers are working on the project? How often are
+	they expected to deliver changes into the integration area?</li>
+	<li>What are the inputs for the developer&rsquo;s Private Builds?
+	Will they build against the complete source code structure or against a
+	partial structure and pre-built binaries from the Integration or
+	Release Build?</li>
+	<li>How long does it take to execute a full Integration or Release
+	Build (including workspace population, compilation, unit-testing and
+	internal deployment)?</li>
+	<li>How often are Integration Builds expected to be carried out?
+	Where will the outputs be stored?</li>
+	<li>How often are Release Builds expected to be carried out? Where
+	will the outputs be stored?</li>
+</ul>
+<p>This is not an exhaustive list of questions but it should be
+enough to help you determine the set-up of your initial automated build
+and release environment. In the next section, I will answer some of
+these questions in the context of a working example.</p>
+<p>One important point to note is that any one project might have
+multiple frequencies, typically one for each scale of integration or
+type of build as illustrated in the diagram below:</p>
+<div align="center"><img alt="[Build Frequency]"
+	src="%image_dir%/FourLevelBuildFrequency.gif" /></div>
+<p>In this diagram as the scale of integration progresses builds are
+carried out less frequently. This is normally because each kind of build
+has a different type and level of visibility, and hence a more
+appropriate frequency to go with it as is illustrated in the table
+below:</p>
+<table id="nicewidth">
+	<tbody>
+		<tr>
+			<th>Build type</th>
+			<th>Consumers</th>
+			<th>Frequency between builds</th>
+		</tr>
+		<tr>
+			<td>
+			<p>Private Build</p>
+			</td>
+			<td>
+			<p>Developers</p>
+			</td>
+			<td>
+			<p>minutes/hours</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p>Component Integration Build</p>
+			</td>
+			<td>
+			<p>Individual Development Team</p>
+			</td>
+			<td>
+			<p>hours/days</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p>Multi-Component Integration Build</p>
+			</td>
+			<td>
+			<p>Multiple Development Teams</p>
+			</td>
+			<td>
+			<p>days/weeks</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p>System Integration Build</p>
+			</td>
+			<td>
+			<p>System Release Management</p>
+			</td>
+			<td>
+			<p>weeks/months</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p>Release Build</p>
+			</td>
+			<td>
+			<p>Customer and/or end-user</p>
+			</td>
+			<td>
+			<p>months/quarters</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>As the table shows, each type and scale of build has a direct
+consumer, and the consumer needs to be involved in deciding what the
+build frequency is. It should be as frequent as possible, but may also
+be subject to constraints within the tolerance level of the consumer,
+for example System Release Management, might not be able to tolerate a
+build per-day for each component, or customers might not be able to
+easily accept a new releases as often as monthly or even quarterly
+without significantly disrupting their own environment. The important
+thing is to plan and identify when the different types of builds will
+typically happen in your own environment.</p>
+<h2>Build componentization</h2>
+<p>The level of communication and control that a continual,
+repeatable build process can give to a project team cannot be
+understated. However if your build process takes too long you will be
+effectively delaying this feedback until the build has completed (with
+either success or failure). Exactly what &quot;too long&quot; is only
+you can define, however by assessing and finding your &quot;project
+rhythm&quot; as described in the section above you should be able to at
+least being to decide on this. You should also be able to easily
+(re)build composite parts of your complete application if and when
+necessary, for example if you need to implement and release a
+customerpatch or hotfix.In order to meet both of these
+requirements you should componentize your build process where possible.
+At the application level build componentization will typically be
+aligned with your high level system architecture, however there are a
+number of other areas where build componentization can be implemented as
+follows:</p>
+<ul>
+	<li><strong>decompose your build process into build
+	functions and steps<br />
+	</strong>There are typically many areas where you could thread your build
+	process - running different, unrelated parts in parallel. To do so you
+	can first break your build process down into discrete functions as
+	discussed in <a
+		href="viewarticle.php?id=5">Defining
+	The Build Process</a>. A typical build function should be able to be
+	applied to any software component for example Compilation of
+	theCredit Card Validation component.You can then break down
+	those functions into individual steps or commands, for example the step
+	to compile include files and the step to compile source
+	files.When you have achieved this you can either script the
+	execution of these steps in parallel yourself or used a framework such
+	as <a href="http://www.buildforge.com/">IBM Rational Build Forge</a> to
+	help achieve this.<br />
+	</li>
+	<li><strong>stage previously built objects to create a
+	build pipe-line <br />
+	</strong>Often software development teams build everything - the complete code
+	base - at each build. This obviously means that each build will take a
+	predictable but maximum amount of time. Although such a process might
+	still be required for Release Builds - when you are deploying the build
+	to external customers - for ongoing development and integration
+	purposes this can significantly slow things down. One of the ways to
+	mitigate this is to create a build pipeline and stage the outputs of
+	certain build components. You canthen consume them as binaries
+	rather than rebuilding them from scratch. This requires careful
+	management and composition but can also help in other areas such as
+	re-use and the prevention of developer workspace pollution.<br />
+	</li>
+	<li><strong>execute unit testing in phases <br />
+	</strong>If you have a comprehensive suite of unit tests - and I sincerely hope
+	you have - then executing the complete suite may take a significant
+	amount of time and increase the total build time. One of the ways to
+	mitigate this is execute unit testing in phases, for example you could
+	execute a core set of unit tests during the day so that development
+	could gain essential feedback and progress and then execute the
+	complete suite of tests overnight.</li>
+</ul>
+<p>Following some of these techniques as opposed to always carrying
+out a full rebuildmight introduce a degree of risk, however I
+believe that this risk is worth taking in the short term in order to
+rapidly progress development. Also, I prefer to only rebuild if strictly
+necessary - certainly at the component level. If a component has not
+changed then consume the previous built version rather than re-building
+it. Your customers will often make you do this too. Although you might
+feel thatit is as quick and more reliable to do a complete build,
+try giving a complete set of re-built binaries to a customer when only a
+minor change has been made!</p>
+<h2>Infrastructure consolidation</h2>
+<p>In <a
+	href="viewarticle.php?id=5">Defining
+the Build Process</a>, I discussed the typical components of a build
+infrastructure. Implementing and administeringsuch an
+infrastructure can be costly and time consuming for an
+individualproject. Therefore, from an organizational point of view
+it makes sense to consolidate and share this infrastructure across many
+projects. If your organization already has a central or virtual SCM team
+then suchconsolidation should be relatively straightforward to
+agree, implement and administer. However, one of the concerns of such an
+implementation for an individual project is ensuring that sufficient
+resource is available for them when they need to execute their builds,
+i.e. there is no gaurantee that other projects haven't already
+completely loaded the build infrastructure. In order to mitigate against
+this a number of strategies can be implemented:</p>
+<ul>
+	<li><strong>implement consolidation at the business unit
+	level</strong> - although some organizations agree with the concepts of build
+	infrastructure consolidation they prefer to implement it at the
+	organization or business unit level. By doing so they ensure that
+	anyresources are at least being utilised by the same nominal cost
+	centre.</li>
+	<li><strong>implement a mixture of dedicated and shared
+	infrastructure</strong> - in order to gaurantee that a minimum amount of build
+	servers are available you can allocate one or more dedicated servers to
+	a project. When you subsequently execute a build, it will be executed
+	on these servers first and then check the shared pool of servers to see
+	if resources are available. If so the build load will be spread to
+	these servers thus reducing total build time.</li>
+</ul>
+<p>In order to be able to implement these techniques you will need
+access to technology that manages load balancing and sharing across
+servers. There are many hardware and software solutions to achieve this
+as well as build specific solutions like <a
+	href="http://www.buildforge.com">IBM Rational BuildForge</a> or <a
+	href="http://www.electric-cloud.com/products/electricaccelerator.php">Electric
+Cloud ElectricAccelerator</a>. Note that as well as consolidating the actual
+build server infrastructure, it can also be cost effective to
+consolidate build server tools. However, since build processes are
+project-specific you will need to ensure that project's have sufficient
+access rights to the tools.</p>
+<h2>Model-view-controller design</h2>
+<p>Model-view-controller (<a
+	href="http://en.wikipedia.org/wiki/Model-view-controller">MVC</a>) is a
+well known software design pattern that separates an application's
+data model, user interface and control logic into three distinct
+components in order that modifications to one component can be made with
+minimal impact to the others. Adopting such an approach to the design of
+your build scripts enables you to raise the level of abstraction and
+visibility of your scripts and make maintenance easier. An example of
+how you could achieve this is as follows:</p>
+<ul>
+	<li><span style="font-weight: bold;">Model</span> - the core logic
+	of your build scripts, usually the discrete build functions that you
+	wish to carry out, e.g. steps to compile an application.<br />
+	</li>
+	<li><span style="font-weight: bold;">Controller</span> - an
+	overriding beginning to end process that calls the individual build
+	script functions, e.g. process to build a complete application.<br />
+	</li>
+	<li><span style="font-weight: bold;">View</span> - any mechanism
+	or tool that presents the build scripts functions and process so that
+	you can execute, view and report on its implementation, e.g. a tool
+	such as <a href="http://cruisecontrol.sourceforge.net">CruiseControl</a>
+	or <a href="http://www.buildforge.com">IBM Rational BuildForge.</a></li>
+</ul>
+<p>As well designing your build scripts in such a way, you should
+also aim to separate out configureable data from the core logic of the
+model. For example, instead of hard-coding values in your scripts such
+as directory names, environment variables and debugging parameters,
+place them in separate configuration files.</p>
+<p>Adopting this type of approach will raise the abstraction of your
+build process so that it is visible and executable by many members of
+your development team - not just buildmeisters and also allow you to
+re-use build functions in different processes.<br />
+</p>
+<h2>Build metrics</h2>
+<p>Most peopleuse the build process as the primary mechanism
+for capturing project metrics; for example, when executing a build you
+might gather metrics on unit tests passed, code coverage orlines
+of code. However very few people actuallycapture metrics about the
+build process itself, such as how many builds have passed or failed, the
+total/average time for builds and so on. An example of the types of
+metrics that can be captured are are as follows:</p>
+<ul>
+	<li>Number of passed/failed builds per project</li>
+	<li>Build confidence - the ratio of successful to failed builds</li>
+	<li>Average total build time per project</li>
+	<li>Components reused in a build</li>
+	<li>Change tasks and/or Defectsimplemented in each build</li>
+</ul>
+<p>Some of these metrics will be easy to capture, some more
+difficult. In particular &quot;Components reused in a build&quot;, is
+not a trivial metric to capture, however I believe this metric is vital
+if you developer shared or reusable components. Being able to illustrate
+how these components have been used will go a long way in justifying the
+cost of preparing/packaging components for reuse.</p>
+<p>I'm sure there are lots of other metrics for the build process
+that you could think of. However, the point with any set of metrics is
+to define a small set, automate their capture and continually assess
+them. If people are used to seeing certain metrics then it gets so much
+easier to recognize bad &quot;smells&quot; and to consequently do
+something to address them.</p>
+<h2>Summary</h2>
+<p>To summarize, architecting a build process is not fundamentally
+difficult however there are a few key concepts that you should consider
+if you are either implementing a new build process or refining an
+existing one. Most people tend to get involved straight away in the
+technology aspects of the build process, however their are other
+non-technology aspects that you should also consider and which I have
+discussed here. One of the keys to achieving a good build process is to
+continually assess, refactor and refine it just as you would any other
+software development artifact. Also, try and involve other members of
+the wider development team in its definition, for example ask Testers
+how they would like the build process to help them with reducing testing
+time and cycles, or ask Project Manager what kinds of metrics would be
+useful for them. Raising the profile of the build process in such a way
+will also make it easier to justify investment in time and resources
+when you need to change it. Finally, for a pragmatic list of tips that
+can help you define a complete, consistent and reproduceable build
+process see <a
+	href="viewarticle.php?id=7">here</a>.</p>
+</div>

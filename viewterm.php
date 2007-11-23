@@ -106,7 +106,7 @@ if ($numrows != 0) {
 ?>    
 
 <div align="center">
-<form name='gcomsubmit' id='gcomsubmit' action='process.php' method='post'>
+<form name='gcomsubmit' id='gcomsubmit' action='include/process.php' method='post'>
 <fieldset style="text-align:left;width:460px"><legend>Submit Comment</legend>
 <table>
 	<tr>

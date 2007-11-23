@@ -23,7 +23,7 @@ if (isset($_SESSION['forgotpass'])) {
     // display form
     ?>
 
-<form action='process.php' method='post'>
+<form action='include/process.php' method='post'>
 <fieldset style="width:300px"><legend>Forgotten Password</legend>
 <table>
 	<tr>

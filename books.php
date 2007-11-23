@@ -86,7 +86,7 @@ if ($numrows != 0) {
 ?>    
 
 <div align="center">
-<form name='booksubmit' id='booksubmit' action='process.php' method='post'>
+<form name='booksubmit' id='booksubmit' action='include/process.php' method='post'>
 <fieldset style="text-align:left;width:500px">
 <legend>Submit Book</legend>
 <table>

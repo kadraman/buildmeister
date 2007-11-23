@@ -70,7 +70,7 @@ if ($numrows != 0) {
 ?>    
 
 <div align="center">
-<form name='linksubmit' id='linksubmit' action='process.php' method='post'>
+<form name='linksubmit' id='linksubmit' action='include/process.php' method='post'>
 <fieldset style="text-align:left;width:480px"><legend>Submit Link</legend>
 <table>
 	<tr>

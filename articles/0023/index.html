@@ -1,0 +1,404 @@
+<div id="article">
+<h1>Introduction to Headless Ant Builds with IBM Rational
+Application Developer</h1>
+<p id="articlehead">This article
+describes how you can execute IBM Rational Application Developer (and
+related tools such as Rational Software Architect) in
+&quot;headless&quot; mode in order to execute Apache Ant scripted
+builds.</p>
+<h2>Introduction</h2>
+<p>IBM Rational Application Developer (IRAD) is a
+powerful Integrated Development Environment (IDE) for developing Java SE
+or Java EE based applications. Developers making use of the tool gain
+access to a powerful graphical environment for generating EJBs, Web
+Services, JSPs, Servlets and many other technologies. The IDE's
+automatic build capability can additionally be used by developers
+to incrementally build and deploy their changes to their embedded
+test server. This ultimately leads to a very rapid and productive
+development cycle. At some stage however, individual developer's work
+needs to be integrated and built for deployment onto test and/or
+production servers. In order to achieve this build scripting tools such
+as Apache Ant are used to script up a repeatable build process. Such
+scripts can be tedious to write and often error-prone, however IRAD can
+help you simplify the amount of scripting required by letting you run it
+in &quot;headless&quot; mode. </p>
+<p>Running in &quot;headless&quot; mode means that
+you still can access to all of the IDEs services but without the
+graphical user interface being started. This means you can execute a
+number of the IDE's &quot;services&quot; as a scripted process from the
+command line. One of the services that you get access to is IRADs built
+in version of Apache Ant and the extra Ant tasks that come with it for
+building workspaces, projects, exporting archives and so on. In the
+remainder of this article we will look at how to setup a working
+&quot;headless&quot; Ant build.</p>
+<h2>The &quot;headless&quot; mode script</h2>
+<p>If you navigate to the IRAD <span
+	style="font-weight: bold;">%INSTALL_DIR%\bin </span>directory, you will
+see two scripts: <span style="font-weight: bold;">runAnt.bat</span> and
+<span style="font-weight: bold;">runAnt.sh</span>. These are the files
+that are used to execute IRAD in &quot;headless&quot; mode for Windows
+or Linux/UNIX. The windows batch file is illustrated below:</p>
+<pre name="code" class="php">
+@echo off
+setlocal
+set AST_DIR=%~dp0..\eclipse
+
+:java
+if not $%JAVA_DIR%$==$$ goto workspace
+set JAVA_DIR=%AST_DIR%\jre\bin
+
+:workspace
+if not $%WORKSPACE%$==$$ goto check
+REM #######################################################
+REM ##### you must edit the &quot;WORKSPACE&quot; setting below #####
+REM #######################################################
+REM *********** The location of your workspace ************
+set WORKSPACE=X:\MyWorkspace
+			
+:check
+REM ************* The location of your workspace *****************
+if not exist &quot;%WORKSPACE%&quot; echo ERROR: incorrect workspace=%WORKSPACE%, edit this runAnt.bat and correct the WORKSPACE envar
+if not exist &quot;%WORKSPACE%&quot; goto done
+
+:run
+@echo on
+&quot;%JAVA_DIR%\java&quot; -Dwtp.autotest.noninteractive=true -cp &quot;%AST_DIR%\startup.jar&quot; org.eclipse.core.launcher.Main -application com.ibm.etools.j2ee.ant.RunAnt -data &quot;%WORKSPACE%&quot;  %*
+@if %ERRORLEVEL% EQU 0 goto done
+@if %ERRORLEVEL% EQU 13 echo runAnt BUILD FAILED.
+@if %ERRORLEVEL% EQU 13 goto done
+@if %ERRORLEVEL% EQU 15 echo WORKSPACE is already BEING USED.
+@if %ERRORLEVEL% EQU 15 goto done
+@if %ERRORLEVEL% EQU 23 echo totally clean (UNINITIALIZED) workspace, it is now setup.  will rerun...
+@if %ERRORLEVEL% EQU 23 goto run
+@echo runAnt FAILED? (return code %ERRORLEVEL%)
+:pause
+@pause
+			
+:done
+</pre>			
+<p>In this file you will notice that lines 26-28
+contain the actual commands to startup IRAD in headless mode, and run
+the <span style="font-weight: bold;">com.ibm.etools.j2ee.ant.RunAnt</span>
+plugin to start an Ant build. You will also notice that this file is
+essentially a template and needs to be configured to build your project.
+The first thing you will need to do therefore is take a copy of this
+file edit it for your project and store it in your version control
+system. </p>
+<p>As an example, I am going to build the IRAD
+reference application <span style="font-weight: bold;">Classified
+Ads</span>. The workspace I have created for this build is <span
+	style="font-weight: bold;">C:\Workspaces\HeadlessAnt</span>. You will
+need to initialize this workspace first by starting IRAD up and
+importing the projects that need to be built. For the Classified Ads
+example, the workspace contains the following two projects:</p>
+<div align="center"><img width="317" height="91"
+	style="width: 317px; height: 91px;" alt="Classified Ads projects"
+	src="%image_dir%/ClassifiedAds_Projects.gif" /></div>
+<p>Once this workspace has been created, the <span
+	style="font-weight: bold;">runAnt</span> script can then be configured.
+In my case I simplified the <span style="font-weight: bold;">runAnt.bat</span>
+file to be the following:</p>
+<pre name="code" class="php">
+@echo off
+setlocal
+set SDPDIR=&quot;C:\Program Files\IBM\SDP70&quot;
+set WORKSPACE=&quot;C:\Workspaces\HeadlessAnt&quot;
+set BUILDFILE=%WORKSPACE%\classifiedsEAR\build.xml
+
+set JAVA_HOME=%SDPDIR%\jdk
+set PATH=%JAVA_HOME%\bin;%PATH%
+set CLASSPATH=%JAVA_HOME%\lib;%CLASSPATH%
+
+@echo on
+cd %BUILDFILE%\..
+java -cp %SDPDIR%\startup.jar -Dwtp.autotest.noninteractive=true org.eclipse.core.launcher.Main -clean -data %WORKSPACE% -application com.ibm.etools.j2ee.ant.RunAnt -buildfile %BUILDFILE% %*
+</pre>
+<p>In this example I have specified the workspace I
+created on line 5 and the Ant build script that I will be using to
+control the build on line 6. This build script will be created next.</p>
+<h2>Common Ant build script</h2>
+<p>It is possible to create a single build script to
+compile and build the complete workspace as a unit, however I prefer a
+bit of flexibility and like to create build scripts per project. If you
+are going to create a number of build scripts with Ant, most of the time
+you will find that you are repeating the same targets in each one. In
+the spirit of the DRY (Don't Repeat Yourself) therefore, I always create
+a common build file. In this case I created a file called <span
+	style="font-weight: bold;">common-targets.xml</span> in the <span
+	style="font-weight: bold;">classifiedEARs</span> directory as follows:</p>
+<pre name="code" class="xml">
+&lt;project	name=&quot;common-targets&quot;&gt;
+
+    &lt;!-- macro to execute a specific target on a	project --&gt;
+    &lt;macrodef name=&quot;execProjectTarget&quot;&gt;
+        &lt;attribute name=&quot;target&quot; /&gt;
+        &lt;attribute name=&quot;project&quot; /&gt;
+        &lt;sequential&gt;
+            &lt;subant target=&quot;@{target}&quot;&gt;
+			    &lt;property name=&quot;project.name&quot; 
+			        value=&quot;@{project}&quot; /&gt;
+			    &lt;!-- assumes project root directory equals name	--&gt;
+			    &lt;fileset dir=&quot;../@{project}&quot; 
+			        includes=&quot;build.xml&quot; /&gt;			           
+            &lt;/subant&gt;
+        &lt;/sequential&gt;
+&lt;/macrodef&gt;
+
+&lt;target name=&quot;getProjectData&quot; description=&quot;get type of project&quot;&gt;
+	&lt;!-- headless Ant task to describe project --&gt;
+    &lt;getProjectData Basedir=&quot;${workspace.dir}/${project.name}&quot; /&gt;
+    &lt;condition property=&quot;EJB&quot;&gt;
+        &lt;equals arg1=&quot;${natureName}&quot; arg2=&quot;EJB&quot; /&gt;
+    &lt;/condition&gt;
+    &lt;condition property=&quot;WAR&quot;&gt;
+        &lt;equals arg1=&quot;${natureName}&quot; arg2=&quot;WAR&quot; /&gt;
+    &lt;/condition&gt;
+    &lt;condition property=&quot;EAR&quot;&gt;
+        &lt;equals arg1=&quot;${natureName}&quot; arg2=&quot;EAR&quot; /&gt;
+    &lt;/condition&gt;
+    &lt;condition property=&quot;AppClient&quot;&gt;
+        &lt;equals arg1=&quot;${natureName}&quot; arg2=&quot;AppClient&quot; /&gt;
+    &lt;/condition&gt;
+    &lt;condition property=&quot;Java&quot;&gt;
+        &lt;equals arg1=&quot;${natureName}&quot; arg2=&quot;Java&quot; /&gt;
+    &lt;/condition&gt;
+&lt;/target&gt;
+			
+&lt;target name=&quot;init&quot; description=&quot;create directory structure&quot;&gt;
+    &lt;mkdir dir=&quot;${dir.build}&quot; /&gt;
+    &lt;mkdir dir=&quot;${dir.dist}&quot; /&gt;
+    &lt;mkdir dir=&quot;${dir.doc}&quot; /&gt;
+&lt;/target&gt;
+			
+&lt;target name=&quot;clean&quot; description=&quot;remove generated files&quot;&gt;
+    &lt;delete dir=&quot;${dir.build}&quot; /&gt;
+    &lt;delete dir=&quot;${dir.dist}&quot; /&gt;
+    &lt;delete dir=&quot;${dir.doc}&quot; /&gt;
+&lt;/target&gt;
+			
+&lt;target name=&quot;importProject&quot; depends=&quot;init&quot;&gt;
+    &lt;projectImport projectname=&quot;${project.name}&quot; /&gt;
+&lt;/target&gt;
+			
+&lt;target name=&quot;compile&quot; depends=&quot;init&quot; description=&quot;compile source code&quot;&gt;
+    &lt;projectBuild ProjectName=&quot;${project.name}&quot;
+        DebugCompilation=&quot;${value.debug}&quot;
+        BuildType=&quot;${value.buildtype}&quot; /&gt;
+&lt;/target&gt;<br />
+
+&lt;target name=&quot;earExport&quot; if=&quot;EAR&quot; description=&quot;export EAR file&quot;&gt;
+    &lt;earExport EARProjectName=&quot;${project.name}&quot;
+        EARExportFile=&quot;${basedir}/${dir.dist}/${project.name}.ear&quot;
+        ExportSource=&quot;${value.exportsource}&quot; /&gt;
+&lt;/target&gt;
+
+&lt;target name=&quot;ejbExport&quot; if=&quot;EJB&quot; description=&quot;export EJB file&quot;&gt;
+    &lt;ejbDeploy EJBProject=&quot;${project.name}&quot; /&gt;   
+    &lt;ejbExport EJBProjectName=&quot;${project.name}&quot;
+        EJBExportFile=&quot;${basedir}/${dir.dist}/${project.name}.jar&quot;
+        ExportSource=&quot;${value.exportsource}&quot; /&gt;
+    &lt;/target&gt;
+			
+&lt;target name=&quot;warExport&quot; if=&quot;WAR&quot; description=&quot;export WAR file&quot;&gt;
+	&lt;warExport WARProjectName=&quot;${project.name}&quot;
+        WARExportFile=&quot;${basedir}/${dir.dist}/${project.name}.war&quot; 
+        ExportSource=&quot;${value.exportsource}&quot; /&gt;
+&lt;/target&gt;
+
+&lt;target name=&quot;appClientExport&quot; if=&quot;AppClient&quot; description=&quot;export App Client file&quot;&gt;
+    &lt;appClientExport AppClientProjectName=&quot;${project.name}&quot;
+        AppClientExportFile=&quot;${dir.dist}/${project.name}.jar&quot;
+        ExportSource=&quot;${value.exportsource}&quot; /&gt;
+&lt;/target&gt;
+
+&lt;target name=&quot;report&quot; description=&quot;report on build results&quot;&gt;
+    &lt;getJavacErrorCount ProjectName=&quot;${project.name}&quot;
+        PropertyName=&quot;JavacErrorCount&quot; /&gt;
+    &lt;echo&gt;
+        &gt;&gt;&gt; Number of javac errors for ${project.name}: ${JavacErrorCount}
+    &lt;/echo&gt;
+    &lt;condition property=&quot;BuiltOK&quot;&gt;
+        &lt;equals arg1=&quot;${JavacErrorCount}&quot; arg2=&quot;0&quot; /&gt;
+    &lt;/condition&gt;
+&lt;/target&gt;
+
+&lt;target name=&quot;export&quot; depends=&quot;ejbExport, warExport, appClientExport, earExport&quot;
+    description=&quot;export the project&quot; /&gt;
+
+&lt;target name=&quot;build&quot; depends=&quot;getProjectData, clean, compile, export, report&quot;
+    description=&quot;build the	project&quot; /&gt;
+
+&lt;/project&gt;
+</pre>
+<p>Although this looks like a complex file, it is
+reusable and can be used across projects for building and exporting any
+type of project. Most of this file uses the standard capabilities of
+Apache Ant - the IRAD specific Ant tasks are shown in bold. These tasks
+allow you to call workbench services, for example the <span
+	style="font-weight: bold;">&lt;projectBuild&gt;</span> task will build
+the project you specify exactly as if you had selected the option from
+the IRAD pull-down menu, whilst the <span style="font-weight: bold;">&lt;earExport&gt;</span>
+task will create a JavaEE EAR file exactly as if you had specified the
+IRAD <span style="font-weight: bold;">Export</span> option. There are a
+large number of tasks available; you can see them by opening the <span
+	style="font-weight: bold;">Preferences</span> window and select the <span
+	style="font-weight: bold;">Tasks</span> tab in <span
+	style="font-weight: bold;">Ant, Runtime</span> as follows:</p>
+<p style="text-align: center;"><img width="552" height="472"
+	style="width: 552px; height: 472px;" alt="IRAD Ant Tasks"
+	src="%image_dir%/RADAntTasks.gif" /></p>
+<p>There is also online documentation that describes
+these tasks in more detail.</p>
+<h2>Project specific Ant build scripts</h2>
+<p>Once you have created this common build script
+you can then create a specific build script per project. Fortunately
+most of these scripts will be relatively simple as they will use the
+pre-defined targets. For example the <span style="font-weight: bold;">classifieds</span>
+Web project build script is as follows:</p>
+<pre name="code" class="xml">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project name=&quot;classifieds&quot; basedir=&quot;.&quot;
+    default=&quot;build&quot;&gt;
+
+    &lt;property environment=&quot;env&quot; /&gt;
+    &lt;property name=&quot;dir.common&quot; value=&quot;../classifiedsEAR&quot; /&gt;
+    &lt;property file=&quot;${dir.common}/build.properties&quot; /&gt;
+    &lt;property file=&quot;build.properties&quot; /&gt;
+    &lt;property file=&quot;${dir.common}/default.properties&quot; /&gt;
+    &lt;property file=&quot;default.properties&quot; /&gt;
+
+    &lt;import file=&quot;${dir.common}/common-targets.xml&quot; optional=&quot;false&quot; /&gt;
+&lt;/project&gt;
+</pre>
+<p>In this example, the project build file simply
+reuses all of the targets of the common build file by importing it in
+line 12. It still has the possibility of changing the configuration
+however, by overriding properties. This is because property files are
+used as in lines 7-10. This is a convention which allows you to keep a
+central (default) property file - in this case called <span
+	style="font-weight: bold;">default.properties</span>  in the <span
+	style="font-weight: bold;">classifiedsEAR</span> project directory -
+but still be able to override it on a per project or per build basis.
+The contents of this file are as follows:</p>
+<div id="codeoutput">
+# default properties<br />
+dir.src            = src<br />
+dir.build          = build<br />
+dir.dist           = dist<br />
+dir.doc            = doc<br />
+value.debug        = false<br />
+value.buildtype    = full<br />
+value.exportsource = false
+</div>
+<h2>Controlling Ant build script</h2>
+<p>Finally you will also need a &quot;controlling&quot; build script. This is the
+entry point into the composite build process and in our case I have
+placed it inside the <span style="font-weight: bold;">classifiedsEAR</span>
+project directory. The contents of this file are as follows:</p>
+<pre name="code" class="xml">
+<&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project name=&quot;classifiedsEAR&quot; basedir=&quot;.&quot;
+    default=&quot;all&quot;&gt;
+
+&lt;property environment=&quot;env&quot; /&gt;
+&lt;property name=&quot;dir.common&quot; value=&quot;.&quot; /&gt;
+&lt;property name=&quot;project.target&quot; value=&quot;build&quot; /&gt;
+&lt;property file=&quot;${dir.common}/build.properties&quot; /&gt;
+&lt;property file=&quot;build.properties&quot; /&gt;
+&lt;property file=&quot;${dir.common}/default.properties&quot; /&gt;
+&lt;property file=&quot;default.properties&quot; /&gt;
+
+&lt;import file=&quot;${dir.common}/common-targets.xml&quot; optional=&quot;false&quot; /&gt;
+
+&lt;target name=&quot;setup&quot;&gt;
+    &lt;!-- import preferences --&gt;
+    &lt;workspacePreferenceFile	preferencefilename=&quot;classifieds.epf&quot; overwrite=&quot;true&quot; /&gt;
+    &lt;!-- import project set file --&gt;
+    &lt;projectSetImport projectsetfilename=&quot;classifieds.psf&quot; /&gt;
+&lt;/target&gt;
+
+&lt;target name=&quot;all&quot;&gt;
+    &lt;!-- uncomment if you have an EJB and/or AppClient project
+    &lt;execProjectTarget target=&quot;${project.target}&quot;
+        project=&quot;classifiedsEJB&quot;/&gt;
+    &lt;execProjectTarget target=&quot;${project.target}&quot;			           
+        project=&quot;classifiedsAppClient&quot;/&gt; --&gt;
+    &lt;execProjectTarget target=&quot;${project.target}&quot;
+        project=&quot;classifieds&quot; /&gt;
+    &lt;execProjectTarget target=&quot;${project.target}&quot;
+        project=&quot;classifiedsEAR&quot; /&gt;
+&lt;/target&gt;
+
+&lt;/project&gt;
+</pre>
+<p>In this example there are two additional targets
+&quot;setup&quot; and &quot;all&quot;, the &quot;setup&quot; target is
+used to ensure that the workspace is in sync by (re)importing the
+projects and workspace preferences, whilst the &quot;all&quot; target
+builds each of the sub projects. In this case there are only two sub
+projects the <span style="font-weight: bold;">classifieds</span> Web
+project and the <span style="font-weight: bold;">classifiedsEAR</span>
+EAR project (which is in fact this build file but called with a
+different target!).</p>
+<h2>Executing the build</h2>
+<p>Once you have create these build scripts,
+executing the build process is a simple matter of executing the <span
+	style="font-weight: bold;">runAnt</span> batch file from the command
+line:</p>
+<div id="codeoutput">&gt;runAnt.bat</div>
+<p>The build script is setup to call the
+&quot;all&quot; target by default so each of the projects will be built
+in turn. If you want to execute a different target in all of the build
+scripts then you can override the <span style="font-weight: bold;">${project.target}</span>
+property which is then reflected in to each of the build scripts. For
+example, to clean up all of the projects you would execute the
+following:</p>
+<div id="codeoutput">&gt;runAnt.bat -Dproject.target=clean all</div>
+<p>You could use this facility to run coordinated
+actions across the entire set of projects, for example running unit
+tests or gathering metrics.</p>
+<h2>What next?</h2>
+<p>In this article I have concentrated on the basics
+of setting up a &quot;headless&quot; build using IRAD and Apache Ant.
+There are a number of ways you could implement this solution, for
+example using a single controlling build script and building the
+complete workspace using the <span style="font-weight: bold;">&lt;workspaceBuild&gt;</span>
+task. </p>
+<p>You should also make sure that your version
+control tool is linked into this process. Probably the best way of doing
+this is to have a workspace which is essentially empty (except for its
+metadata) and the projects are referenced to a version control workspace
+(or a view in ClearCase terms). The version control workspace should be
+updated first to guarantee that the build scripts and code is up to
+date, then any changed preferences imported and then finally the build
+scripts executed. Even better would be if this process was automated
+using a build control tool such as CruiseControl or IBM Rational Build
+Forge.</p>
+<p>Of course the other way of implementing a build
+process is to disregard this &quot;headless&quot; capability and define
+the build scripts using standard Ant tasks such as <span
+	style="font-weight: bold;">&lt;javac&gt;</span>, <span
+	style="font-weight: bold;">&lt;war&gt;</span> and <span
+	style="font-weight: bold;">&lt;ear&gt;</span>. It is a matter of
+personal preference as to which approach to use. If all of the
+developers on your team are using IRAD then it makes sense to take
+advantage of the &quot;headless&quot; capability, however if your
+developer's use of IDEs is inconsistent or you have a number of legacy
+build scripts then the external Ant approach is probably more suitable.</p>
+<h2>References</h2>
+<ul>
+	<li><a
+		href="http://www.amazon.com/Introduction-IBM-Rational-Application-Developer/dp/1931182221/ref=pd_bbs_sr_1/102-4405737-3506522?ie=UTF8&amp;s=books&amp;qid=1173464898&amp;sr=8-1">An
+	Introduction to IBM Rational Application Developer</a></li>
+	<li><a
+		href="http://www.amazon.com/IBM-Rational-ClearCase-Ant-CruiseControl/dp/0321356993/ref=pd_bbs_sr_3/103-0476653-3834265?ie=UTF8&amp;s=books&amp;qid=1173177475&amp;sr=8-3">IBM
+	Rational ClearCase, Ant and CruiseControl - The Java Developer's Guide
+	to Accelerating and Automating the Build Process</a></li>
+	<li><a
+		href="http://www-128.ibm.com/developerworks/websphere/library/techarticles/0505_weisz/0505_weisz.html">Troubleshooting
+	headless Ant builds with Rational Application Developer</a></li>
+	<li><a
+		href="http://www-128.ibm.com/developerworks/websphere/library/techarticles/0404_bowker/0404_bowker3.html">Performing
+	unattended builds with WebSphere Studio and Ant</a></li>
+</ul>
+</div>

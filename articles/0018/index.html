@@ -1,0 +1,278 @@
+<div class="article">
+<h2>The 5 minute low-down on:<i> CruiseControl.NET</i></h2>
+<p><i>A brief introduction to the features and capabilities of
+CruiseControl.NET.</i></p>
+<h3>Introduction</h3>
+<p>CruiseControl.NET is a &quot;framework for a continuous build
+process&quot; that allows you to automate the execution of your builds
+and report on their results. CruiseControl.NET was written to realise
+the process of <b>Continuous Integration</b> - an eXtreme Programming
+(XP) practice for frequently, integrating small changes within a
+project. However, CruiseControl.NET does not dictate this process and
+you can use it for any project where integration builds are carried out
+frequently (usually at least once a day).</p>
+<p>There are two flavours of CruiseControl, one for Java - simply
+called <b>CruiseControl</b> - and one for .NET - which is funnily enough
+called <b>CruiseControl.NET</b>. Unfortunately, these two variants do
+not necessarily share the same code base and have different capabilities
+and configurations. The instructions and definitions contained in this
+document refer to the .NET version (for information on the Java version
+see <a href="http://www.buildmeister.com/modules/content/index.php?id=9">here</a>).
+The examples also use ClearCase as the source control provider.</p>
+<h3>Configuration</h3>
+<p>Once you have <a
+	href="http://sourceforge.net/project/showfiles.php?group_id=71179&amp;package_id=83198">downloaded</a>,
+and <a
+	href="http://confluence.public.thoughtworks.org/display/CCNET/Basic+Installation">installed</a>
+CruiseControl.NET, you must then configure its environment. The
+configuration for CruiseControl.NET is typically carried out in the
+directory where you chose to install it (i.e. <font face="Courier">C:\Program
+Files\CruiseControl.NET\server</font>). In this directory CruiseControl.NET
+will create logs and store artifacts for any of the projects that you
+setup to build it with. The actual configuration file to define the set
+of projects to build is also held here in an XML file called <font
+	face="Courier New">ccnet.config</font>.</p>
+<p>You can configure CruiseControl.NET to schedule build execution
+as frequently as you want, but you usually specify that a build be
+carried out only if something has changed - which obviously make sense!
+To achieve this there is a concept of a <b>triggers</b> and <b>modification
+sets</b>. The trigger defines the interval or time at which you can
+potentially build and the modification set defines the set of changes
+going into the build. Only if changes have been detected by
+CruiseControl.NET will a build be invoked. An example of a complete
+configuration file (<font face="Courier New">ccnet.config</font>) for
+CruiseControl.NET is detailed below:</p>
+<table width="733" height="613" cellspacing="0" cellpadding="0"
+	bordercolor="#111111" border="0" style="border-collapse: collapse;">
+	<tbody>
+		<tr>
+			<td width="67" valign="top" height="613"
+				style="font-family: courier new;">
+			<div style="margin-left: 40px;"><font size="2" color="#008080">01:</font><font
+				size="2"><br />
+			</font><font size="2" color="#008080">02:</font><font size="2"><br />
+			</font><font size="2" color="#008080">03:</font><font size="2"><br />
+			</font><font size="2" color="#008080">04:</font><font size="2"><br />
+			</font><font size="2" color="#008080">05:</font><font size="2"><br />
+			</font><font size="2" color="#008080">06:</font><font size="2"><br />
+			</font><font size="2" color="#008080">07:</font><font size="2"><br />
+			</font><font size="2" color="#008080">08:</font><font size="2"><br />
+			</font><font size="2" color="#008080">09:</font><font size="2"><br />
+			</font><font size="2" color="#008080">10:</font><font size="2"><br />
+			</font><font size="2" color="#008080">11:</font><font size="2"><br />
+			</font><font size="2" color="#008080">12:</font><font size="2"><br />
+			</font><font size="2" color="#008080">13:</font><font size="2"><br />
+			</font><font size="2" color="#008080">14:</font><font size="2"><br />
+			</font><font size="2" color="#008080">15:</font><font size="2"><br />
+			</font><font size="2" color="#008080">16:</font><font size="2"><br />
+			</font><font size="2" color="#008080">17:</font><font size="2"><br />
+			</font><font size="2" color="#008080">18:</font><font size="2"><br />
+			</font><font size="2" color="#008080">19:</font><font size="2"><br />
+			</font><font size="2" color="#008080">20:</font><font size="2"><br />
+			</font><font size="2" color="#008080">21:</font><font size="2"><br />
+			</font><font size="2" color="#008080">22:</font><font size="2"><br />
+			</font><font size="2" color="#008080">23:</font><font size="2"><br />
+			</font><font size="2" color="#008080">24:</font><font size="2"><br />
+			</font><font size="2" color="#008080">25:</font><font size="2"><br />
+			</font><font size="2" color="#008080">26:</font><font size="2"><br />
+			</font><font size="2" color="#008080">27:</font><font size="2"><br />
+			</font><font size="2" color="#008080">28:</font><font size="2"><br />
+			</font><font size="2" color="#008080">29:</font><font size="2"><br />
+			</font><font size="2" color="#008080">30:</font><font size="2"><br />
+			</font><font size="2" color="#008080">31:</font><font size="2"><br />
+			</font><font size="2" color="#008080">32:</font><font size="2"><br />
+			</font><font size="2" color="#008080">33:</font><font size="2"><br />
+			</font><font size="2" color="#008080">34:</font><font size="2"><br />
+			</font><font size="2" color="#008080">35:</font><font size="2"><br />
+			</font><font size="2" color="#008080">36:</font><font size="2"><br />
+			</font><font size="2" color="#008080">37:</font><font size="2"><br />
+			</font><font size="2" color="#008080">38:</font><font size="2"><br />
+			</font><font size="2" color="#008080">39:</font><font size="2"><br />
+			</font><font size="2" color="#008080">40:</font><font size="2"><br />
+			</font><font size="2" color="#008080">41:</font><font size="2"><br />
+			</font><font size="2" color="#008080">42:</font><font size="2"><br />
+			</font><font size="2" color="#008080">43:</font><font size="2"><br />
+			</font><font size="2" color="#008080">44:</font><font size="2"><br />
+			</font><font size="2" color="#008080">45:</font></div>
+			<div style="margin-left: 40px;"><font size="2" color="#008080">46:</font></div>
+			</td>
+			<td width="663" valign="top" height="613"
+				style="font-family: courier new;">
+			<div align="left" style="margin-left: 40px;"><font size="2"
+				color="#808080">&lt;cruisecontrol&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080"></font><font size="2"><br />
+			</font><font size="2" color="#808080">&lt;project
+			name=&quot;Example&quot;&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;
+			&lt;workingDirectory&gt;C:\Views\Example_V1_bld\Example&lt;/workingDirectory&gt;</font><font
+				size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;
+			&lt;webURL&gt;http://localhost:8080/ccnet/Example&lt;/webURL&gt;</font><font
+				size="2"><br />
+			</font><font size="2" color="#808080"></font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;
+			&lt;triggers&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;intervalTrigger seconds=&quot;600&quot;/&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;
+			&lt;/triggers&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080"></font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;
+			&lt;sourcecontrol type=&quot;ClearCase&quot;&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;viewPath&gt;C:\Views\Example_V1_bld\Example&lt;/viewPath&gt;</font><font
+				size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;branch&gt;Example_Int&lt;/branch&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;autoGetSource&gt;true&lt;/autoGetSource&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;useLabel&gt;false&lt;/useLabel&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;useBaseline&gt;true&lt;/useBaseline&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;projectVobName&gt;\MyProjects&lt;/projectVobName&gt;</font><font
+				size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;viewName&gt;Example_V1_bld&lt;/viewName&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;timeout&gt;50000&lt;/timeout&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;
+			&lt;/sourcecontrol&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080"></font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;
+			&lt;tasks&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;nant&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;executable&gt;C:\Program
+			Files\nant-0.84\bin\nant.exe&lt;/executable&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;baseDirectory&gt;C:\Views\Example_V1_bld\Example&lt;/baseDirectory&gt;</font><font
+				size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;buildFile&gt;Example.build&lt;/buildFile&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;targetList&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;target&gt;debug&lt;/target&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;/targetList&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;buildTimeoutSeconds&gt;300&lt;/buildTimeoutSeconds&gt;</font><font
+				size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;/nant&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;
+			&lt;/tasks&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080"></font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;
+			&lt;publishers&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;merge&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;files&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;file&gt;C:\Views\Example_V1_bld\Example\</font></div>
+			<div align="left" style="margin-left: 40px;"><font size="2"
+				color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			Example-Tests.xml&lt;/file&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;/files&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;/merge&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&lt;xmllogger/&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080">&nbsp;&nbsp;&nbsp;
+			&lt;/publishers&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080"></font><font size="2"><br />
+			</font><font size="2" color="#808080">&lt;/project&gt;</font><font size="2"><br />
+			</font><font size="2" color="#808080"></font><font size="2"><br />
+			</font><font size="2" color="#808080">&lt;/cruisecontrol&gt;</font><font
+				size="2"><br />
+			&nbsp;</font></div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>There are a number of entries worthy of explanation in this file.
+The <font face="Courier New">triggers</font> definition on lines 07-09,
+defines (in this case) an interval trigger with the potential for
+building every 600 seconds or 10 minutes. As an alternative you could
+specify a schedule trigger to define exactly when the build should
+happen, i.e. for nightly build.</p>
+<p>The <font face="Courier New">sourcecontrol</font> definition on
+lines 11-20 defines the ClearCase environment that is being monitored
+for changes. In this case we are checking the integration branch <font
+	face="Courier New">Example_Int</font> using the build view <font
+	face="Courier New">C:\Views\Example_V1_bld\Example</font>. In the
+ClearCase <font face="Courier New">sourcecontrol</font> block you can
+additionally specify settings such as whether the view should be updated
+before the build (useful for snapshot views) and whether a baseline or
+label should be automatically applied after the build.</p>
+<p>The <font face="Courier New">tasks</font> definition on lines
+22-32 define the guts of the build process. In this case, the build is
+executed using NAnt. The Nant build file is called <font
+	face="Courier New">Example.build</font> and the target that is being
+executed is <font face="Courier New">debug</font>. For more information
+on the use of NAnt for building VS.NET projects see <a
+	href="http://www.buildmeister.com/modules/content/index.php?id=15">here</a>.
+</p>
+<p>Since the NAnt build process will also execute some NUnit tests,
+the merge definition on lines 35-39 simply merges the contents of the
+NUnit test results file into the CruiseControl.NET log - this is so it
+is available from the web dashboard. Finally, the <font
+	face="Courier New">xmllogger</font> task simply formats the log file so
+that it is available for use by the <b>CruiseControl.NET web
+dashboard </b>(see next).</p>
+<h3>In Use</h3>
+<p>Once you have carried out configuration similar to the above then
+you can launch CruiseControl.NET and it should be self sustaining. You
+can configure CruiseControl.NET to send emails when things go wrong, but
+the recommended mode of use is to make use of the <b>CCTray</b>
+application. This&nbsp; is a windows application that sits directly in
+your system tray and notifies you directly of failed and fixed builds
+for a particular CruiseControl.NET project as in the following :</p>
+<p align="center"><img width="270" border="0"
+	src="/images/cc.net-toolbar.gif" alt="CruiseControl.NET toolbar" /></p>
+<p>For more information on the CCTray application see <a
+	href="http://ccnet.sourceforge.net/CCNET/CCTray.html">here</a>. The
+CCTray application also allows you to force builds for the project or
+navigate directly to its web page.</p>
+<p>Talking of web pages, information of every project and every
+build is available on the CruiseControl.NET web dashboard (as shown
+below). On this website you can see the details of all the builds
+carried out and what has changed in each build as well as unit test
+results and code coverage if you are using the NUnit or NCover tools.</p>
+<p align="center"><img width="512" height="371" border="0"
+	src="/images/cc.net-screenshot-small.gif" alt="" /></p>
+<p align="center"><a target="_blank"
+	href="/images/cc.net-screenshot.gif">larger image</a></p>
+<p>The web dashboard application will support multiple servers and
+is extendible and configurable through the use of plugins or custom
+style sheets. For more information see <a
+	href="http://ccnet.sourceforge.net/CCNET/Web%20Dashboard.html">here</a>.</p>
+<h3>Summary</h3>
+<p>Unlike other build management tools, <b>AntHill</b>, <b>BuildForge</b>
+and so forth, CruiseControl.NET has a limited set of features. It's
+configuration is actually quite simple and straightforward (especially
+in comparison with the Java version) however to get the benefits from it
+you will have to invest some time learning and using NAnt. What
+CruiseControl.NET does do it does well and of course as it is
+open-source, it is free and is and will be adopted widely by the
+software development community.</p>
+<h3>References</h3>
+<ul>
+	<li><a
+		href="http://www.amazon.com/gp/product/1590594851?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=1590594851">Expert
+	.NET Delivery Using NAnt and CruiseControl.NET (Expert's Voice in .Net)</a><img
+		width="1" height="1" border="0"
+		src="http://www.assoc-amazon.com/e/ir?t=thebuildmeist-20&amp;l=as2&amp;o=1&amp;a=1590594851"
+		alt="" style="border-style: none ! important; margin: 0px;" /></li>
+	<li><a
+		href="http://confluence.public.thoughtworks.org/display/CCNET/Welcome+to+CruiseControl.NET">CruiseControl.NET
+	home page</a>
+	<div>&nbsp;</div>
+	</li>
+</ul>
+</div>

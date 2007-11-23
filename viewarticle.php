@@ -81,7 +81,7 @@ if (isset($_SESSION['artcomsuccess'])) {
 ?>    
 
 <div align="center">
-<form name='artcomsubmit' id='artcomsubmit' action='process.php' method='post'>
+<form name='artcomsubmit' id='artcomsubmit' action='include/process.php' method='post'>
 <fieldset style="text-align:left;width:460px"><legend>Submit Comment</legend>
 <table>
 	<tr>

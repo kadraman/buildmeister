@@ -6,7 +6,7 @@ if ($session->logged_in) {
 	echo "<p><b>$session->username</b> is succesfully logged in.</p>"; 
 }
 ?>
-<form method="post" action="process.php">
+<form method="post" action="include/process.php">
     <fieldset style="width: 250px">
         <legend>User Login</legend> 
         <table>

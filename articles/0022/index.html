@@ -1,0 +1,1031 @@
+<table align="center"
+	style="border-top-width: 0px; border-left-width: 0px; width: 95%;">
+	<tbody>
+		<tr>
+			<td>
+			<h2>The 5<em>ish</em> minute low-down on:&nbsp;<span
+				style="font-style: italic;">IBM Rational Build Forge</span></h2>
+			<p align="justify" style="font-style: italic;">A brief
+			introduction to the features and capabilities of IBM Rational Build
+			Forge an enterprise build and release execution framework.</p>
+			<h3>Introduction</h3>
+			<p align="justify">IBM Rational Build Forge is a build and
+			release&nbsp;execution framework that allows development
+			organizations to standardize and automate repetitive tasks. It is not
+			a direct replacement for build scripting tools such as <span
+				style="font-style: italic;">make</span>, <span
+				style="font-style: italic;">ClearCase clearmake</span> or <span
+				style="font-style: italic;">Apache Ant</span>, rather it works in
+			combination with such tools to &quot;orchestrate&quot; an end-to-end
+			build, testing and release process. Indeed the Build Forge execution
+			engine is open enough to be able to manage and report on any process
+			consisting of a sequence of command line steps and/or scripts. Build
+			Forge has been designed to be technology and platform neutral. It
+			integrates with a number of version control tools to report on and
+			monitor changes that go into builds (including CVS, Subversion,
+			Perforce and ClearCase).</p>
+			<h3>Architecture<span style="font-family: monospace;"></span></h3>
+			<p align="justify">IBM Rational Build Forge has a typical 3-tier
+			system architecture as illustrated in the diagram below:</p>
+			<p style="text-align: center;"><img width="381" height="285"
+				style="width: 381px; height: 285px;"
+				alt="[BuildForge Architecture Diagram]"
+				src="/images/BuildForge-Architecture.gif" /></p>
+			<p align="justify">At the bottom is the Build Forge <span
+				style="font-weight: bold;">Database Server</span>. By default
+			BuildForge comes with a supported DB2 express database, however it
+			can be made to work with many other commercial databases include
+			MySQL, Sybase, Microsoft SQL Server and Oracle. In the middle is the
+			<span style="font-weight: bold;">Build Forge Server</span> itself.
+			This is the heart of the system and oversees all of the activities
+			that are executed on the Build Forge <span style="font-weight: bold;">Agents</span>,
+			including organizing projects, managing user access and permissions,
+			logging, notifications,&nbsp;audit trails and so on.</p>
+			<p align="justify">The agents can be deployed on practically any
+			environment, including Windows, Linux and UNIX variants. It is a very
+			small process that implements three basic functions:</p>
+			<ul>
+				<li>listen for instructions from the Build Forge Server</li>
+				<li>execute those instructions</li>
+				<li>send the results from those instructions back to the server
+				</li>
+			</ul>
+			<p align="justify">Finally, at the top are the Build Forge client
+			interfaces. The <span style="font-weight: bold;">Management
+			Console</span> is the main control user interface for the system. Through it
+			you organize the individual scripts or command line executions that
+			are part of your process into projects and manage the servers and
+			environments that they will be run on. An additional interface is
+			provided for <strong>Developer Self Service</strong>. This interface
+			integrates part of the Management Console into the <span
+				style="font-weight: bold;">Developers IDE</span> (Eclipse or .NET
+			based), allowing the developer to execute their own builds but using
+			the Build Forge infrastructure and viewing build projects, status and
+			results directly from within their IDE. There is&nbsp;also a unique
+			capability allows the developer to selectively choose local file
+			changes from within the IDE and &quot;reflect&quot; them into a
+			controlled Build Forge integration build. Thus developers can gain
+			confidence that the changes they are making will not break the team's
+			build when they commit them&nbsp;back into version control.</p>
+			<h3>Concepts</h3>
+			<p align="justify">There are a number of concepts that are
+			central to a Build Forge implementation and these are explained
+			below:</p>
+			<ul>
+				<li><span style="font-style: italic;">Projects</span><br />
+				A project is the name for the overall process flow that is to be
+				executed, for example you could create a project for the integration
+				build of an application. <br />
+				</li>
+				<li><span style="font-style: italic;">Steps</span><br />
+				Steps are the various tasks that are performed in the project. Each
+				step is one or more command line statements that are to be executed
+				on an agent. <br />
+				</li>
+				<li><span style="font-style: italic;">Environment</span><br />
+				An environment is a collection of environment variables for example
+				the <strong>PATH</strong> or <strong>JAVA_HOME</strong> setting.
+				These are maintained separately from both projects and steps and can
+				be assigned to projects and steps as needed. <br />
+				</li>
+				<li><span style="font-style: italic;">Servers</span><br />
+				A server is an encapsulation of a physical machine where an agent is
+				running, together with access permission and environment settings.
+				When you execute a project you can decide what server you wish to
+				execute it on. You can also use Build Forge's &quot;threading&quot;
+				capability to execute individual steps from a project across
+				multiple servers. <br />
+				</li>
+				<li><em>Manifests</em>, <em>Selectors</em>&nbsp;and <em>Collectors</em><br />
+				Rather than specifying the physical servers that you want steps to
+				execute on, you can use Build Forge selectors to specify the
+				criteria for the step, for example: &quot;<em>execute this step
+				on a machine with a JDK version 1.4 or greater and that is less than
+				50% loaded&quot;</em>. Buid Forge achieves this by capturing manifests of
+				each machine that an agent is installed on. You can also specify
+				your own collector variables to gather unique information about a
+				server, for example a version of a database or&nbsp;a third party
+				applications. <br />
+				</li>
+				<li><span style="font-style: italic;">Adaptors</span><br />
+				Adaptors are how you interface Build Forge with version control,
+				defect or test systems. Basically, the adaptor is the application of
+				an interface to a project. The interface is an XML file which
+				defines functionality available via the version control, defect or
+				test system, for example creating a baseline. There are a number of
+				supported interfaces however you can for the ultimate in
+				flexibility&nbsp;always write your own Adaptor (the documentation
+				explains how to do this in detail).</li>
+			</ul>
+			The relationship between a number these concepts is illustrated in
+			the diagram below:<br />
+			<div align="center" style="text-align: center;"><img
+				width="809" height="493" align="texttop"
+				style="width: 809px; height: 493px;"
+				alt="[BuildForge Concepts Diagram]"
+				src="/images/BuildForge-concepts.gif" /></div>
+			<p align="justify">As well as these core concepts, Build Forge
+			also has a number of other features including full permissioning and
+			security across all of its objects (projects, servers, steps etc),
+			fully configurable email notification, an API you can use for
+			accessing and manipulating the Build Forge database and also a
+			sophisticated reporting capability. For more information on these
+			capabilities see the <a href="#references">references</a> at the end
+			of this article.</p>
+			<h3>Install Build Forge</h3>
+			<p align="justify">The first decision to make with regards to
+			your Build Forge installation is which database server technology to
+			use. Build Forge 7.0 and onwards can be installed automatically with
+			a copy of DB2 Express, however if you have a preferred or existing
+			database server, such as Oracle, SQL Server or MySQL then you can
+			easily use them instead.&nbsp;Once you have decided on your database,
+			the general installation process is as follows:</p>
+			<ul>
+				<li>Install the<span style="font-weight: bold;">IBM
+				Rational FlexLM License Server</span> (if not already installed).</li>
+				<li>Request and install your Build Forge license keys from the
+				<a
+					href="https://www14.software.ibm.com/webapp/iwm/web/preLogin.do?source=rational">IBM
+				Rational Licensing Center</a>.</li>
+				<li>Create a database instance and database owner for Build
+				Forge to make use of.</li>
+				<li>Install the <span style="font-weight: bold;">Build
+				Forge Management Console</span> on a specific server and specific port.</li>
+				<li>Install the latest Build Forge interim fixes (see <a
+					href="http://www-306.ibm.com/software/awdtools/buildforge/support/">here</a>
+				for the latest versions).</li>
+				<li>Install the <span style="font-weight: bold;">Build
+				Forge Agents</span> on the machines you wish to execute your commands on,
+				i.e. your build, version control or test servers.</li>
+			</ul>
+			<p align="justify">The exact setup for each database will
+			vary,&nbsp;refer to the latest Build Forge release notes for further
+			information.&nbsp;Note: if the default DB2 Express database server is
+			used then a database will be created for you, however you will first
+			need to create a Windows/UNIX user account to &quot;own&quot; the
+			database.</p>
+			<p align="justify">To test that Build Forge has been installed
+			correctly, point your Internet Browser at the Build Forge server, for
+			example if you installed Build Forge on the server <span
+				style="font-weight: bold;">build-server</span> and the port <span
+				style="font-weight: bold;">8080</span>, you would enter the URL
+			address <i>http://build-server:8080/</i> in your Internet Browser.
+			You should see a screen similar to the one illustrated below:&nbsp;</p>
+			<p style="text-align: center;"><img alt="[BuildForge Login]"
+				src="/images/bfimages/bf-login.jpg" /><br />
+			</p>
+			<p align="justify">The default login for Build Forge is the
+			username <span style="font-weight: bold;">root</span> with a password
+			of <span style="font-weight: bold;">root</span>. Enter this login to
+			check that you successfully completed the installation. With this
+			setup complete, next we will walk through an example of configuring
+			Build Forge to build an example project called <em>RatlBankWeb</em>
+			(the source doe for this project is available <span
+				style="font-style: italic;"><a
+				href="http://www.buildmeister.com/downloads/RatlBankWeb_source_1.0.zip">here</a></span>).</p>
+			<h3>Create a Project Build Environment</h3>
+			<p align="justify">For each development project that you want
+			Build Forge to &quot;build&quot;, you need to create or make use of a
+			project build environment. For a Java project versioned in IBM
+			Rational ClearCase, this would typically include the following:</p>
+			<ul>
+				<li>An Ant script for Build Forge to execute.</li>
+				<li>A view for Build Forge to execute the build in (optional
+				see below).</li>
+				<li>A view which Build Forge will use to monitor ClearCase
+				changes for.</li>
+			</ul>
+			<p align="justify">For every project to be executed by Build
+			Forge, you can either create a single integration build view or
+			configure a step in the Build Forge project to create this view for
+			you. This is made practical with Build Forge because you can create
+			an additional Build Forge &ldquo;cleanup&rdquo; project that is
+			called after a certain number of builds so that old views are
+			removed. Whether you create a new view per build or reuse an existing
+			view is really a matter of personal choice. Creating a new view every
+			time will ensure a clean and repeatable build process and allow
+			developers to make use of the self service &quot;reflection&quot;
+			capability. However if you are creating a snapshot build view then
+			the view will have to be completely loaded &ndash; which could take a
+			significant amount of time for large projects. Updating an existing
+			snapshot view would therefore be recommended where build times are
+			significant - maybe for example when implementing continuous
+			integration. In this article&nbsp;we will be creating a new snapshot
+			view for every build. To be consistent we will be creating all of the
+			build views under the Windows <span lang="EN-US"
+				style="font-family: monospace;">C:\Builds </span>directory.</p>
+			<p align="justify">The Build Forge ClearCase integration makes
+			use of the capabilities of dynamic views and requires a specific view
+			to be created and monitored for the integration to function
+			correctly. You will therefore need to create and configure a Build
+			Forge view for each project. For our <span
+				style="font-style: italic;">RatlBankWeb</span> project,&nbsp;the
+			dynamic view <font face="Courier New">RatlBankWeb_BF</font> will be
+			created.</p>
+			<h3>Create Accounts</h3>
+			<p align="justify">One of the main differences between Build
+			Forge and tools like CruiseControl is security. Since Build Forge has
+			a database running behind it, permissions can be assigned to any of
+			its objects. In Enterprise environments this is very important in
+			that it enhances traceability and compliance. To create additional
+			Build Forge users, access groups and to assign permissions you would
+			click on&nbsp;<b>Administration, Users</b>&nbsp;in the Build Forge
+			Management Console. Subsequently clicking on&nbsp;<b>Access</b> <span
+				style="font-weight: bold;">Groups</span>&nbsp;lists the built-in
+			Access Groups that are available out of the box. This is illustrated
+			in the screenshot below:</p>
+			<p style="text-align: center;"><img
+				alt="[BuildForge Default Groups]"
+				src="/images/bfimages/bf-groups.jpg" /></p>
+			<p align="justify" class="Body">In this article we will be using
+			the <span style="font-weight: bold;">Build Engineer</span> and <span
+				style="font-weight: bold;">Developer</span> groups only. Clicking on
+			the <b>Users</b> button will allow you to add a new user, as in the
+			screenshot below which shows a new Developer account for a user
+			called &ldquo;<span lang="EN-US" style="font-family: monospace;">alex</span>&rdquo;
+			being created.</p>
+			<p style="text-align: center;">&nbsp;<img
+				alt="[BuildForge Add User]" src="/images/bfimages/bg-adduser.jpg" /></p>
+			<p align="justify">As well as a new user you will probably also
+			want to create at least one <b>Notification Group</b>. A notification
+			group is a set of users to be emailed on specific events. For
+			example, you could create a notification group called <span
+				style="font-weight: bold;">Integrators </span>to be notified if a
+			build succeeds or fails.</p>
+			<table width="95%" cellspacing="5" cellpadding="5" border="1"
+				style="border: medium none; margin-left: auto; margin-right: auto; border-collapse: collapse; text-align: left;">
+				<tbody>
+					<tr>
+						<td width="95%" bgcolor="#cccccc">
+						<p style="font-weight: bold;">BuildForge LDAP Authentication</p>
+						<p align="justify">In common with many other IBM Rational
+						tools, Build Forge also allows user authentication against a
+						supported LDAP database such as Microsoft Active Directory or
+						Tivoli Directory Server. This allows you to re-use corporate
+						accounts&nbsp;that have already been created rather than creating
+						and managing them in another database.</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p align="justify">Once you have created users and access groups
+			then you can use them to assign relevant permissions to many Build
+			Forge objects, for example you might want only Build Engineers to be
+			able to create new servers or projects. Alternately, you might only
+			want Developers to be able to execute certain tasks (or steps) within
+			a project. You could use this capability to define a Build Forge
+			project whose core was accessible and executable by Developers but
+			only certain steps (such as creating baselines or deploying to test
+			environments) were executable by Build Engineers.</p>
+			<h3>Create a Server</h3>
+			<p align="justify">A Build Forge <b>Server</b> is an
+			encapsulation of a physical machine on which a Build Forge Agent is
+			running together with particular access permissions and environment
+			settings. When you execute a Build Forge project - and the individual
+			steps within it - you can use Build Forge to &quot;find&quot; a
+			server for you via use of its <span style="font-weight: bold;">Manifests</span>,
+			<span style="font-weight: bold;">Collectors</span> and <span
+				style="font-weight: bold;">Selectors</span>.</p>
+			<h4>Create a Collector</h4>
+			<p align="justify">Build Forge automatically collects a <span
+				style="font-weight: bold;">Manifest</span> of every physical server
+			on which an Agent is installed; this includes attributes such as
+			memory, disk space, load, operating system and so on. Each attribute
+			in the manifest is collected by a <span style="font-weight: bold;">collector
+			variable</span> (as part of an overall <span style="font-weight: bold;">Collector</span>).
+			There are a large number of out-of-the-box collector variables as
+			illustrated in the screenshot below:&nbsp;</p>
+			<div style="text-align: center;"><img
+				alt="[BuildForge Collector Variables]"
+				src="/images/bfimages/bg-collectors.jpg" /><br />
+			</div>
+			<p align="justify">You can also add you own collectors variables,
+			for example to find out what version of a particular tool that is
+			installed on a machine. In our example we will be making use of the
+			out-of-the-box <span style="font-weight: bold;">Example</span>
+			Collector.</p>
+			<h4>Create a Selector</h4>
+			<p align="justify"><span style="font-weight: bold;">Selectors</span>
+			are used to specify the &quot;type&quot; of server you wish to use by
+			specifying what value particular collector variables should posses.
+			The Selector that&nbsp;we will be using for our example is a simple
+			one as illustrated in the screenshot below:</p>
+			<p style="text-align: center;"><img alt="[BuildForge Selector]"
+				src="/images/bfimages/bf-selector.jpg" /></p>
+			<p align="justify">This selector simply specifies that a server
+			should have at least the Java 1.4 environment and that it must be a
+			Windows XP machine.&nbsp;</p>
+			<h4>Create a Server</h4>
+			<p align="justify">To create a new Build Forge Server click on <b>Servers,&nbsp;</b><b>Add
+			Server</b>. This will display a form for entering the details of a the
+			server, an example of a completed form for a new server is
+			illustrated in the screenshot below:</p>
+			<p style="text-align: center;"><img alt="[BuildForge Add Server]"
+				src="/images/bfimages/bf-addserver.jpg" /></p>
+			<p align="justify">The example&nbsp;creates a new server called <span
+				style="font-weight: bold;">Build Server 1</span> for the physical
+			host <span style="font-weight: bold;">marmoset</span>. The directory
+			on this server where new builds will be created (or built) is <span
+				lang="EN-US" style="font-family: monospace;">C:\Builds</span> and
+			the user that commands will be executed as on this server is the
+			authenticated <span style="font-weight: bold;">ClearCase Admin
+			User </span>(which you can setup by clicking on <span
+				style="font-weight: bold;">Servers</span>,&nbsp; <span
+				style="font-weight: bold;">Server Auth</span>). The out-of-the-box <strong>Example</strong>
+			Collector will be used. Note that this server can only be changed by
+			users in the Build Engineer group.&nbsp;</p>
+			<p align="justify">A specific Environment Group has been
+			allocated to this server which contains the locations of all of the
+			Java tools that are installed on it, as illustrated in the screenshot
+			below (the next section will explain how to setup Environment
+			Groups).</p>
+			<p style="text-align: center;"><img
+				alt="[BuildForge Java Environment Group]"
+				src="/images/bfimages/bf-javaenv.jpg" /></p>
+			<p align="justify">Once you have created a server you should then
+			test that you can connect to it successfully. You can do this by
+			clicking on its <span style="font-weight: bold;">hostname</span> in
+			the server list and <span style="font-weight: bold;">Test
+			Connection</span>.</p>
+			<table width="95%" cellspacing="5" cellpadding="5" border="1"
+				style="border: medium none; margin-left: auto; margin-right: auto; border-collapse: collapse; text-align: left;">
+				<tbody>
+					<tr>
+						<td width="95%" bgcolor="#cccccc">
+						<p><strong>Build Distribution</strong></p>
+						<p align="justify">For large, time consuming builds you can
+						spread the build load by configuring Build Forge to build across
+						multiple processors and servers. Simply specify the criteria for
+						servers via Selectors, e.g. operating system and server load (the
+						load that a server needs to be under to determine whether it is a
+						candidate to be used or not). Although Java builds are typically
+						relatively short (less than an hour) and would have less use for
+						such a capability than say C or C++ builds, it can still be useful
+						to distribute some tasks.&nbsp;In addition this capability can be
+						used to support server redundancy.</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<h3>Create a Project Environment Group</h3>
+			<p align="justify">A Build Forge <b>Environment Group</b> is a
+			collection of environment variables, for example the <span
+				lang="EN-US" style="font-family: monospace;">PATH </span>or <span
+				style="font-family: monospace;">JAVA_HOME </span>setting. These are
+			maintained separately from Build Forge projects and can be assigned
+			to servers, projects and individual steps as and when needed. As well
+			as operating system environment variables you can also create
+			internal Build Forge environment variables which can then be used to
+			configure the flow and execution of your Build Forge project. To
+			create a new environment group click on&nbsp;<b>Environment</b><span
+				style="font-weight: bold;">s</span>, <span
+				style="font-weight: bold;">Add Environment</span>.&nbsp;&nbsp;Give
+			the environment a name, for example &ldquo;<span lang="EN-US"
+				style="font-family: monospace;">RatlBankWeb Env</span>&rdquo; and
+			define who can access or change it (typically the Build Engineer),
+			then start creating the variables that you require. The minimum set
+			of environment variables that will be required for the execution of
+			the <span style="font-style: italic;">RatlBankWeb</span> project is
+			illustrated in the screenshot below:</p>
+			<p style="text-align: center;"><img
+				alt="[BuildForge Project Environment]"
+				src="/images/bfimages/bf-projectenv.jpg" /></p>
+			<p align="justify">Note that there are a number of ways to
+			&ldquo;create&rdquo; environment variables. You can assign new ones
+			(as in the majority of the screenshot), clear or append to existing
+			ones (as in the <span lang="EN-US" style="font-family: monospace;">PATH
+			</span>variable for the Java Tools Environment) as well as specify what the
+			project can &ldquo;do&rdquo; to the variable, i.e. whether it is
+			changeable, or read-only.</p>
+			<h3>Define the Project</h3>
+			<p align="justify">A Build Forge <b>Project</b> is the name for
+			the overall process flow that is to be executed. Build Forge <b>Steps</b>
+			are the various tasks that are performed within the project. Each
+			step is basically one or more command line statements that are to be
+			executed on an Agent. A Build Forge project is typically created for
+			each application you wish to build. In our example&nbsp;we will
+			create a single Build Forge project for executing the <span
+				style="font-style: italic;">RatlBankWeb</span> Integration Build. To
+			create a new project click on&nbsp;<b>Projects</b>,&nbsp;<b>Add
+			Project.</b> Give the project a name, for example &ldquo;<span
+				style="font-family: monospace;">RatlBankWeb Int</span>&rdquo; and
+			define who can access or change it (typically the Build Engineer).
+			Select the Build Forge environment group that the project will make
+			use of (i.e. &ldquo;<span style="font-family: monospace;">RatlBankWeb
+			Env</span>&rdquo; as defined previously) and the Build Forge Selector that
+			will be used to find which server to&nbsp;run it on. You can also
+			select whether to notify groups of users on build success or failure
+			(via notification groups) and whether data will be kept or purged for
+			the project by selecting its class (<span
+				style="font-family: monospace;"><span
+				style="font-weight: bold;">Scratch</span> or <span
+				style="font-weight: bold;">Production</span></span><span
+				style="font-family: monospace;">).</span> Finally you can also
+			define the Build <b>Tag</b> <b>Format</b>. In this case we will
+			simply create a tag in the format&nbsp;<span
+				style="font-family: monospace;">BLD_<span
+				style="font-style: italic;">XXX</span></span><span
+				style="font-style: italic;">,</span> however you could specify
+			whatever tag format you liked for example <i
+				style="font-family: monospace;">MAJ</i><span lang="EN-US"
+				style="font-family: monospace;">.<i>MIN</i>.<i>FIX</i>.<i>BUILD
+			</i></span>and whether each component of the tag was fixed or incremented. An
+			example of the project created for execution of the <span
+				style="font-style: italic;">RatlBankWeb</span> builds is illustrated
+			in the screenshot below:</p>
+			<p style="text-align: center;"><img
+				alt="[BuildForge Add Project]"
+				src="/images/bfimages/bf-addproject.jpg" /></p>
+			<p align="justify">Once you have created a project you can then
+			define its steps. To do this, click on the <span
+				style="font-weight: bold;">Project</span> and then <b>Add Step</b>.
+			The first important thing to decide is what, where and how the step
+			will be executed. This can be broken down into a number of categories
+			as follows:</p>
+			<ul>
+				<li><span style="font-style: italic;">Command</span> &ndash;
+				the command line that the step is to execute &ndash; for example,
+				calls to the ClearCase <span lang="EN-US"
+					style="font-family: monospace;">cleartool</span> command, an Ant
+				build script or some other custom script. <br />
+				</li>
+				<li><span style="font-style: italic;">Selector</span> &ndash;
+				the type of machine that the step is to be executed on &ndash; this
+				defaults to the Build Forge Project Selector specified at the
+				project level.&nbsp; <br />
+				</li>
+				<li><span style="font-style: italic;">Access</span> &ndash; who
+				is allowed to change or execute the step &ndash; you can specify
+				that different users are allowed to run different steps, for example
+				you might not want Developers to be able to execute the step which
+				creates a new baseline.&nbsp; <br />
+				</li>
+				<li><span style="font-style: italic;">Directory</span> &ndash;
+				the file system directory in which the step is to be executed
+				&ndash; the step can be executed either from a directory at the
+				server level (i.e. <span style="font-family: monospace;">C:\Builds</span>
+				as we defined for our server) or at the project level (i.e. a
+				project specific directory off the server root -&nbsp;for the first
+				build this would be <span lang="EN-US"
+					style="font-family: monospace;">C:\Builds\RatlBankWeb_Int\1_INT</span>).
+				In our example we will be using the server level setting and then
+				specifying the subdirectory inside there where we wish the build to
+				be carried out.</li>
+			</ul>
+			<p align="justify">An example step to create the integration
+			build view for the <span style="font-style: italic;">RatlBankWeb</span>
+			project is illustrated in the screenshot below:</p>
+			<p style="text-align: center;"><img
+				alt="[BuildForge Example Step]"
+				src="/images/bfimages/bf-samplestep.jpg" /></p>
+			<p align="justify">Note that it is good practice to create a step
+			for each command line invocation or script rather than putting a
+			number of invocations in the same step. This is because Build Forge
+			assesses success or failure of the step from the exit code of the
+			commands that are being run. If a number of commands are in the same
+			step then it is only the exit value of the <i>last</i> commands that
+			would be used to determine the success or failure of the step.</p>
+			<p align="justify">The complete set of Build Forge steps required
+			to compile,&nbsp; test and deploy (to a development server) the <span
+				style="font-style: italic;">RatlBankWeb</span> project can be
+			implemented in a similar way. The screenshot below illustrates the
+			complete set of steps:</p>
+			<p class="Body" style="text-align: center;">&nbsp;<img
+				width="744" height="280" style="width: 744px; height: 280px;"
+				alt="[BuildForge All Steps]" src="/images/bfimages/bf-allsteps.jpg" />&nbsp;</p>
+			<table width="95%" cellpadding="5" border="0" class="MsoNormalTable">
+				<tbody>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p class="SH" style="font-weight: bold; page-break-after: auto;"><a
+							name="_Toc105376773">Defining Build Forge Filters</a></p>
+						<p align="justify">Not every command you wish to execute from
+						Build Forge will always terminate with an appropriate exit code.
+						One such example is the Windows Ant batch file which terminates
+						with a successful exit code irrespective of whether the build
+						passed or failed. In this case rather than determining success or
+						failure of the step based on exit code you can create a filter to
+						parse the output of the command by searching for appropriate text
+						in the build log. When an Ant build fails the build output always
+						includes the message &ldquo;<span lang="EN-US"
+							style="font-family: monospace;">BUILD FAILED</span>&rdquo;. It is
+						therefore safe to create a Build Forge filter which searches for
+						this string. Once you have created the filter, rather than
+						selecting&nbsp;<span style="font-weight: bold;">Exit Code</span>
+						in the <b>Result</b> field, you would select the name of your Ant
+						filter.</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="text-align: center;">&nbsp;</div>
+			The commands that would be required to execute each of these steps is
+			illustrated in the table below:<br />
+			<br />
+			<table width="95%" cellspacing="0" cellpadding="2" border="1">
+				<tbody>
+					<tr>
+						<td width="25%" bgcolor="#66ffff">
+						<p><strong>Build Forge Step</strong></p>
+						</td>
+						<td bgcolor="#66ffff">
+						<p><strong>Command</strong></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>Create Workspace</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">cleartool mkview -snapshot
+						-tag &quot;${PROJECT_NAME}_$BF_TAG&quot; -comment
+						&quot;${PROJECT_NAME} Build&quot; -stream
+						${PROJECT_NAME}_Int@${VOB_TAG} -vws
+						$VIEW_STG\${PROJECT_NAME}_$BF_TAG.vws
+						$BF_SERVER_ROOT\${PROJECT_NAME}_$BF_TAG</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>Update Workspace</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">cleartoolupdate
+						-add_loadrules RatlBankWeb</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>Clean Workspace</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">ant clean</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>Static Analysis</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">ant checkstyle</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>Compile Source Code</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">ant compile</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>Execute Unit Tests</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">ant junit-all</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>Create Documentation</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">ant javadoc</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>Create Web Archive</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">ant dist</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>Stage Web Archive</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">ant -Dbuild.num=$BF_TAG
+						stage</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>Create ClearCase Baseline</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">cleartool mkbl
+						&ndash;incremental $BF_TAG</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>UnDeploy Application</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">ant undeploy</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>ReDeploy Application</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">ant deploy</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>Remove Workspace</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p><font face="Courier New">cleartool rmview -f
+						$BF_SERVER_ROOT\${PROJECT_NAME}_$BF_TAG</font></p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p align="justify">&nbsp;<br />
+			You will notice that the majority of the steps in this project are
+			calls to Ant targets, although it would be possible to call a single
+			Ant target, i.e. &ldquo;<span lang="EN-US"
+				style="font-family: monospace;">ant release</span>&rdquo; to execute
+			all of these as dependencies, this would not take advantage of the
+			capabilities of Build Forge. By breaking them down as discrete steps,
+			if the build fails at a particular step, you can potentially fix the
+			problem and restart the build at that step. You can also thread a
+			number of these steps by executing them in parallel to save total
+			build time.&nbsp;</p>
+			<h3>Test the Project</h3>
+			<p align="justify">Once you have a suitable Build Forge project
+			you should then test it. To do this, click on <span
+				style="font-weight: bold;">Project Runs, Start</span> and select the
+			&quot;<span style="font-family: monospace;">RatlBankWeb Int</span>&quot;
+			project. You will be shown the environment variables, tag and
+			selector that will be used for this execution. Finally click on the <b>Execute</b>
+			button to start execution of the project. Click on the Build Tag to
+			see each step execute&nbsp; in turn as illustrated in the screenshot
+			below:</p>
+			<p style="text-align: center;">&nbsp;<img width="761"
+				height="279" style="width: 761px; height: 279px;"
+				alt="[BuildForge Project Execution]"
+				src="/images/bfimages/bf-execute.jpg" /></p>
+			<p align="justify">You can click on any of these steps to see
+			what commands have been executed and their output. Finally, you can
+			also click on the <span style="font-weight: bold;">Bill of
+			Materials</span> (BOM) link under <span style="font-weight: bold;">Project
+			Runs</span>. At this point, the contents of the BOM are not that interesting
+			as they will simply display the steps that have been executed.
+			However, once ClearCase and ClearQuest have been integrated with
+			Build Forge then the BOM can be used to display the source code
+			changes and defects that have gone into the build. In the next
+			section, we will discuss how to enable the ClearCase and ClearQuest
+			integration to achieve just that.</p>
+			<h3>Build Forge&nbsp;ClearCase Integration</h3>
+			<p align="justify">So far we have looked at how to execute a
+			simple Java Ant build using Build Forge. However one of the major
+			benefits of Build Forge comes when you integrate with a version
+			control provider to initiate and report on the software versions that
+			have gone into a build. This integration is enabled in Build Forge
+			through the use of an <b>Adaptor</b>. Adaptors are how you interface
+			Build Forge with version control, defect or test tools. Basically,
+			the adaptor is the application of an interface to a project. The
+			interface is an XML file which defines functionality available via
+			the version control, defect or test system, for example creating a
+			ClearCase baseline and reporting on its activities. There are a
+			number of supported interfaces, however you can for the ultimate in
+			flexibility,&nbsp;always write your own. In this section we will look
+			at how to create a <b>Source</b> adaptor interface to ClearCase and
+			then link it to our <span style="font-style: italic;">RatlBankWeb</span>
+			project.</p>
+			<h4>Add an Interface to ClearCase</h4>
+			<p>To add an interface to ClearCase click on the <b>Administration,
+			Adaptor</b>s button then click <span style="font-weight: bold;">Add
+			Adaptor</span><b>.</b> Give the interface a name, i.e. &ldquo;<span
+				lang="EN-US" style="font-family: monospace;">RatlBankWeb CC
+			IF</span>&rdquo;, select <span style="font-weight: bold;">Source</span> Mode
+			and the <b>ClearCase</b> template. Click on <b>Save Adaptor</b> to
+			complete the process. Once the interface has been created if you
+			click on its name you will see the contents of the XML file that has
+			been imported. This is illustrated in the screenshot below:</p>
+			<p style="text-align: center;">&nbsp;<img width="755"
+				height="258" style="width: 755px; height: 258px;"
+				alt="[ClearCase Adaptor]"
+				src="/images/bfimages/bf-clearcaseadaptor.jpg" /></p>
+			<p class="Body">You can also use this screen to make changes to
+			the interface, and add more functionality if required.&nbsp;we will
+			not be making any changes to the interface in this chapter, however
+			if you wish to do so then the process is described in detail in the
+			Build Forge Implementation Guide.</p>
+			<h4>Link the Interface to the Project</h4>
+			<p align="justify">In order to make use of an interface you can
+			either call one of its entry points as a step in your project
+			or&nbsp;link it directly to a&nbsp;project. To do the later, click on
+			<span style="font-weight: bold;">Adaptor Links</span> and <b>Add
+			Adaptor Link</b>. This will display a form for entering the details of
+			the link. An example of a completed form is illustrated in the
+			screenshot below. Make sure you select <strong>Populate Env</strong>
+			as this will add variables to your environment group that need to be
+			changed to make the adaptor work.</p>
+			<p style="text-align: center;">&nbsp;&nbsp;<img width="612"
+				height="134" style="width: 612px; height: 134px;"
+				alt="[ClearCase Adaptor Link]"
+				src="/images/bfimages/bf-addclearcaselink.jpg" /></p>
+			<p class="Body"><a name="_Toc105376774">In this&nbsp;example
+			a new source link to the &ldquo;</a><span lang="EN-US"
+				style="font-family: monospace;">RatlBankWeb Int</span>&rdquo;
+			project is created and the&nbsp;<b>ByDate&nbsp;</b>entry point is
+			used. Currently there are three entry points for the ClearCase
+			Adaptor as follows:</p>
+			<table width="95%" cellspacing="0" cellpadding="2" border="1">
+				<tbody>
+					<tr>
+						<td bgcolor="#66ffff">
+						<p><strong>Name</strong></p>
+						</td>
+						<td bgcolor="#66ffff">
+						<p><strong>Description</strong></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>ByDate</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p>Gather the list of source changes since the time of the
+						last build.</p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>ByLabel</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p style="text-align: justify;">Apply a Base ClearCase label
+						to your source and then find the difference between the new label
+						and the label that was applied in the previous execution of
+						thebuild.</p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>ByBaseline</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p style="text-align: justify;">Apply a ClearCase UCM baseline
+						to your source and then find the difference between the new
+						baseline and the baseline that was applied in the previous
+						execution of the build.</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p align="justify">The <span style="font-weight: bold;">ByDate
+			</span>entry point&nbsp;is more suitable for continuous integration as it
+			can be used to check for changes before initiating a build. The other
+			two entry points assume that changes have been made already and apply
+			metadata (a label or baseline) to find what out they are.</p>
+			<p align="justify">As well as specifying the entry point you will
+			need to configure the interface, for example specifying the ClearCase
+			view to be used to check for changes, the VOB path and so on. In
+			Build Forge this is carried out by creating new environment
+			variables. If you selected <span style="font-weight: bold;">Populate
+			Env</span> then these environment variables would have been created for you.
+			If you now go back and edit the environment group you will see that
+			it contains some new variables. You will need to configure these
+			appropriately. The screenshot below illustrates the configuration of
+			these variables for the <span style="font-style: italic;">RatlBankWeb</span>
+			project.</p>
+			<div style="text-align: center;"><img width="746" height="226"
+				style="width: 746px; height: 226px;"
+				alt="[ClearCase Adaptor Environment Variables]"
+				src="/images/bfimages/bf-adaptorenvs.jpg" /><br />
+			</div>
+			<p align="justify">The <span lang="EN-US"
+				style="font-family: monospace;">VIEW </span>variable refers to the
+			ClearCase dynamic view that is to be checked for changes. You should
+			also set the <span lang="EN-US" style="font-family: monospace;">LAST_RUN
+			</span>variable to the current time as Build Forge uses this variable to
+			determine the starting time to look for changes - it will
+			subsequently update this variable every time it executes a build.
+			With this interface in place you can execute a Build Forge project
+			build as described earlier - this time though, the build would only
+			execute if changes were found. Rather than execute builds manually
+			this particular capability is of more use if the project is scheduled
+			to execute. For example, you could schedule the project to execute,
+			say every 20 minutes, and build automatically if changes were found.
+			This is the mechanism that Build Forge uses to implement continuous
+			integration.</p>
+			<table width="95%" cellspacing="5" cellpadding="5" border="0">
+				<tbody>
+					<tr>
+						<td valign="top" bgcolor="#cccccc">
+						<p class="SH" style="font-weight: bold;">Debugging Adaptors</p>
+						<p align="justify">If source code changes are not found by the
+						adaptor, then the project will execute for just a couple of
+						seconds and disappear. This is expected but makes debugging very
+						difficult. You can enable adaptor debugging by clicking on the <b
+							style="font-weight: bold;">Administration</b> button then
+						clicking on <b>System</b> and then finally setting the variable <b>Link
+						Debug Mode</b> to <b>Yes</b>. This then allows you to run a project
+						linked to an adaptor but only execute the adaptor step. The build
+						will remain as a completed build whether changes are found or not.</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<h4>Schedule the Project</h4>
+			<p align="justify">To schedule the project click on&nbsp;<b>Schedule</b>
+			and then on <b>Add Schedule.</b> This will display a form for
+			entering the details of the schedule. An example of a completed form
+			is illustrated&nbsp;below. In this scenario the <span
+				style="font-style: italic;">RatlBankWeb</span> project has been
+			scheduled to build every 20 minutes.</p>
+			<p style="text-align: center;"><b>&nbsp;<img width="705"
+				height="164" style="width: 705px; height: 164px;"
+				alt="[BuildForge Schedule]" src="/images/bfimages/bf-schedule.jpg" /></b>&nbsp;</p>
+			<p align="justify">You can create as many schedules as you want;
+			other scenarios would include implementing daily or nightly builds at
+			specific times. You can also change the mode of a schedule to fire
+			only once or to be temporarily disabled.</p>
+			<h4>Test the Project</h4>
+			<p align="justify">Once you have created the ClearCase interface
+			and schedule, to test the project make a change in ClearCase. If you
+			then click on&nbsp;<span style="font-weight: bold;">Project
+			Runs</span>, <span style="font-weight: bold;">Running</span>&nbsp;you should
+			eventually see the build automatically start at the scheduled
+			interval. The project will execute each step in turn, when it has
+			completed click on <span style="font-weight: bold;">Completed</span>
+			then click on <span style="font-weight: bold;">Bill of
+			Materials</span>. This time you should see a section for <b>Source
+			Changes</b> as in the example below:</p>
+			<p align="center" style="text-align: center;">&nbsp;<img
+				width="752" height="289" style="width: 752px; height: 289px;"
+				alt="[Source Changes]" src="/images/bfimages/bf-sourcechanges.jpg" /></p>
+			<p align="justify">Information is displayed on both the version
+			of the file that has changed and the details of the change itself in
+			&ldquo;diff&rdquo; format. In this case a line has been changed. If a
+			lot of changes are implemented in a single build then checking for
+			the lines that have changed could take some time. You can disable
+			this capability in the ClearCase interface if this is an issue.</p>
+			<h3>Build Forge&nbsp;ClearQuest Interface</h3>
+			<p>As well as the ClearCase Interface, Build Forge can also be
+			integrated with ClearQuest. The ClearQuest interface enables you to
+			carry out the following:</p>
+			<ul>
+				<li>Report on the ClearQuest Defects that have been addressed
+				in a build and automatically resolve them.</li>
+				<li>Create a ClearQuest Build Record automatically as part of a
+				build.</li>
+			</ul>
+			<p align="justify">A ClearQuest interface is created by adding a
+			new <span style="font-weight: bold;">Defect</span> interface in a
+			similar way that the ClearCase <span style="font-weight: bold;">Source</span>
+			interface was added earlier. There are currently two interface entry
+			points as follows:</p>
+			<table width="95%" cellspacing="5" cellpadding="5" border="1"
+				style="border: medium none; margin-left: auto; margin-right: auto; border-collapse: collapse; text-align: left;">
+				<tbody>
+					<tr>
+						<td bgcolor="#66ffff">
+						<p><strong>Name</strong></p>
+						</td>
+						<td bgcolor="#66ffff">
+						<p><strong>Description</strong></p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>ClearCaseByDate</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p>Identify the Base ClearCase changes that have been
+						associated with ClearQuest records since the last build</p>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#cccccc">
+						<p><strong>ClearCaseByActivity</strong></p>
+						</td>
+						<td bgcolor="#cccccc">
+						<p>Identify the ClearCase UCM changes that have been
+						associated with ClearQuest activities since the last build</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p align="justify">To configure the interface, you will also need
+			to create a few new environment variables. You can populate an
+			existing environment with these variables, however, since these
+			variables are not project specific, you could also create a generic
+			environment variable group to contain them; for example:</p>
+			<p class="Body" style="text-align: center;">&nbsp;<img
+				width="741" height="164" style="width: 741px; height: 164px;"
+				alt="[ClearQuest Environment Group]"
+				src="/images/bfimages/bf-cqenv.jpg" /></p>
+			<p align="justify">Assuming that this group was called &quot;<span
+				style="font-family: monospace;">ClearQuest_Adaptor</span>&quot;, you
+			could then &quot;include&quot; these variables in the <span
+				style="font-family: monospace;">&quot;RatlBankWeb Env</span>&quot;
+			environment group by adding a new environment variable as follows:</p>
+			<p align="justify" style="margin-left: 40px;"><span
+				style="font-family: monospace;">.include ClearQuest_Adaptor</span></p>
+			<p align="justify">Since there is no mechanism to link a Defect
+			interface to a project - like there is with a Source interface - you
+			will need to create a specific step in a project to call your
+			required entry point. For example, if the interface created was
+			called &ldquo;<span lang="EN-US" style="font-family: monospace;">RatlBankWeb
+			CQ IF</span>&rdquo; and you wanted to call the <span lang="EN-US"
+				style="font-family: monospace;">ClearCaseByActivity</span> entry
+			point, you would use the following command in a step:</p>
+			<p class="C1" style="margin-left: 40px; font-family: monospace;">.defect
+			<span lang="EN-US">&quot;</span>RatlBankWeb CQ IF<span lang="EN-US">&quot;</span>
+			ClearCaseByActivity</p>
+			<p align="justify">This will basically call the interface entry
+			point (like a function call) and execute all of the commands
+			contained within it.</p>
+			<table width="95%" cellspacing="5" cellpadding="5" border="0">
+				<tbody>
+					<tr>
+						<td valign="top" bgcolor="#cccccc">
+						<p align="justify" style="font-weight: bold;">Build
+						Forge&nbsp;Dot Commands</p>
+						<p align="justify">The Build Forge system intercepts any
+						commands that are preceded by a period (dot) and uses them to
+						perform special functions. Examples include performing string
+						substitution, amending environment variables and importing or
+						exporting Build Forge projects. It is good practice to place a dot
+						command in its own step as the one and only command.&nbsp;For
+						information on the complete set of dot command see the Build Forge
+						Implementation guide.</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p align="justify">If you executed a project that called this
+			interface then information not just on source file changes but also
+			ClearQuest Defect activities would be displayed in the BOM as
+			illustrated below:</p>
+			<p class="Body" style="text-align: center;">&nbsp;<img
+				width="734" height="458" style="width: 734px; height: 458px;"
+				alt="[ClearQuest Changes]"
+				src="/images/bfimages/bf-clearquestchanges.jpg" /></p>
+			<p align="justify">As well as this extra information in the BOM,
+			Build Forge can also &quot;resolve&quot; the defects and
+			automatically create a Build Record in ClearQuest for you. This will
+			capture information on the status of the build (pass or failure), the
+			build tag, the build start and end time and so on. An example of a
+			Build Record created by Build Forge is illustrated below:</p>
+			<div style="text-align: center;">&nbsp;<img width="487"
+				alt="[ClearQuest Build Tracking]"
+				src="/images/bfimages/bf-buildtracking.jpg" /></div>
+			<p align="justify">As well as creating the Build Record, you
+			could also implement Build Forge steps to create and decorate a <strong>Deployment
+			Unit</strong> file using the ClearCase &ldquo;<span lang="EN-US"
+				style="font-family: monospace;">du_tool.pl</span>&rdquo; (available
+			in ClearCase/ClearQuest v7). This could be carried out via the <span
+				style="font-weight: bold;">Stage Web Archive</span> step in our
+			example. Once you have created a deployment unit file then you take
+			advantage of the new <a
+				href="http://publib.boulder.ibm.com/infocenter/cchelp/v7r0m0/index.jsp?topic=/com.ibm.rational.clearcase.books.cc_rrd.doc/introduction_to_deployment_tracking.htm">Build
+			and Deployment Tracking</a> capability to manage the application
+			deployment process and workflow.</p>
+			<h3>Summary</h3>
+			<p align="justify">IBM Rational Build Forge is a powerful
+			framework for managing, accelerating and improving your build
+			processes. It does not require you to throw away any of the scripts
+			or tools that you have patiently implemented, rather it allows you to
+			manage, expose and refine their execution. The real benefit of the
+			tool is that it allows you to start to consolidate and manage
+			disparate build processes across an organization and to extend your
+			existing build processes out into other areas or teams - ultimately
+			to create a complete end-to-end software delivery process. There
+			are&nbsp;many other capabilities of Build Forge which make it more
+			suitable for enterprise use, such as library projects, security,
+			build classes and&nbsp;metrics and reports. It is not possible to
+			discuss all of these&nbsp;in this article, however hopefully iy has
+			given you a flavor of what is possible with Build Forge and that the
+			value it can bring to an organization.</p>
+			<h3><a name="references"></a>References</h3>
+			<ul>
+				<li><a href="http://www.eclipse.org/">IBM Rational Build
+				Forge Homepage</a></li>
+				<li><a
+					href="http://www-128.ibm.com/developerworks/rational/library/jun06/bergeron/">Introducting
+				IBM Rational Build Forge</a></li>
+				<li><a
+					href="http://www-128.ibm.com/developerworks/rational/library/06/0801_bfdatasheet/">IBM
+				Rational Build Forge Datasheet</a></li>
+				<li><a
+					href="http://www-306.ibm.com/software/success/cssdb.nsf/CS/WJBN-6PEJB7?OpenDocument&amp;Site=software">IBM
+				Build Forge Case Study</a></li>
+				<li><a
+					href="http://www-128.ibm.com/developerworks/rational/library/jun06/lee/">Agile
+				SCM and the IBM Rational Toolset</a></li>
+			</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>

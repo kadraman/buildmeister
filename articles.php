@@ -42,7 +42,7 @@ your content using the form at the bottom of this page.</p>
 
 <?php
 // fetch build process articles
-$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 1 ORDER BY date_posted DESC;";
+$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 1 AND active = 1 ORDER BY date_posted DESC;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
@@ -60,7 +60,7 @@ if ($numrows != 0) {
 
 <?php
 // fetch build tools articles
-$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 2 ORDER BY date_posted DESC;";
+$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 2 AND active = 1 ORDER BY date_posted DESC;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
@@ -79,7 +79,7 @@ if ($numrows != 0) {
 
 <?php
 // fetch miscellaneous articles
-$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 3 ORDER BY date_posted DESC;";
+$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 3 AND active = 1 ORDER BY date_posted DESC;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
@@ -110,7 +110,7 @@ if ($numrows != 0) {
 ?>    
 
 <div align="center">
-<form name='articlesubmit' id='articlesubmit' action='process.php' method='post'>
+<form name='articlesubmit' id='articlesubmit' action='include/process.php' method='post'>
 <fieldset style="text-align:left;width:600px"><legend>Submit Article</legend>
 <table>
 	<tr>

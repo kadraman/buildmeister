@@ -322,6 +322,47 @@ class Session
          }
       }
    } // register
+
+   /**
+    * Submit a new article, checking the paramters supplied.
+    *
+    * @param string $articletitle
+    * @param string $articlesummary
+    * @param string $articlecontent
+    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+    */
+   function submitArticle($articletitle, $articlesummary, $articlecontent) {
+      global $database, $form, $mailer;  // the database, form and mailer object
+      
+      // article title error checking
+      $field = "title"; 
+      if (!$articletitle || strlen($articletitle = trim($articletitle)) == 0) {
+         $form->setError($field, "An article title is required.");
+      }
+           
+      // article summary error checking
+      $field = "summary"; 
+      if (!$articlesummary || strlen($articlesummary = trim($articlesummary)) == 0) {
+         $form->setError($field, "An article summary is required.");
+      }
+      
+      // article content error checking
+      $field = "summary"; 
+      if (!$articlecontent || strlen($articlecontent = trim($articlecontent)) == 0) {
+         $form->setError($field, "Article content is required.");
+      }
+      
+      // errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;  
+      } else {       
+         if ($database->addNewArticle($this->username, $articletitle, $articlesummary, $articlecontent)) {
+             return 0;      // new inactive article added succesfully
+         } else {
+             return 2;      // submission attempt failed
+         }
+      }
+   } // submitArticle   
    
    /**
     * Submit a new book, checking the paramters supplied.
@@ -480,7 +521,7 @@ class Session
      * @param string $comment
      * @return 0 if succesfull, 1 if form errors or 2 if submission failed
      */
-   function submitArticleComment($atrid, $comment) {
+   function submitArticleComment($artid, $comment) {
       global $database, $form, $mailer;  // the database, form and mailer object
       
       // comment error checking

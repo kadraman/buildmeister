@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="buildmeister.com" default="help" basedir=".">
+	
+	<property name="dir.lib"	value="lib"/>
+	<property name="dir.build"	value="build"/>
+	<property name="dir.dist"	value="dist"/>
+	<property name="dir.doc"	value="doc"/>
+	<property environment="env"/>
+		
+	<property file="build.properties"/>
+	<property file="default.properties"/>
+
+	<!-- define an internal classpath for -->
+	<path id="internal.classpath">
+    	<!-- include local libraries -->
+    	<fileset dir="${dir.lib}"/>
+	</path>
+	
+	<!-- create output directories -->
+	<target name="init" description="create directory structure">
+    	<mkdir dir="${dir.dist}"/>
+    	<mkdir dir="${dir.doc}"/>
+	</target>
+	
+	<!-- remove generated files -->
+	<target name="clean" description="remove generated files">
+    	<delete dir="${dir.dist}"/>
+    	<delete dir="${dir.doc}"/>
+	</target>
+
+	<!-- static analysis -->
+	
+	<!-- phpdoc -->
+	
+	<!-- get a formatted release number -->
+	<target name="get-relnum">
+		<input message="Enter release Number:" addproperty="rel.num"/>
+		<condition property="legal-relnum">
+			<matches pattern="^\d\.\d.\d(-rc\d|-alpha\d|-beta\d)*$"
+				 string="${rel.num}"/>
+		</condition>
+		<fail message="Error: the release number is not formatted correctly"
+	    	  unless="legal-relnum"/>
+		<propertyfile file="release.properties">
+        		<entry key="rel.num" value="${rel.num}"/>
+		</propertyfile>
+	</target>
+	
+	<!-- get a formatted Subversion commit message -->
+	<target name="get-relmess">
+		<loadproperties srcfile="release.properties"/>
+		<input message="Enter commit message:" addproperty="svn.message"
+	       defaultvalue="Delivering release ${rel.num}"/>
+	</target>
+
+	<!-- taskdef for SVNAnt -->
+	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"
+		classpathref="internal.classpath"/>
+
+	<!-- checkout a project from Subversion -->
+	<target name="svn-checkout" description="checkout a project from Subversion">
+		<svn username="${svn.username}" password="${svn.password}">
+			<checkout url="${svn.url}" destPath="${svn.dir}"/>
+		</svn>
+	</target>
+
+	<!-- update a project from Subversion -->
+	<target name="svn-update" description="update a project from Subversion">
+		<svn username="${svn.username}" password="${svn.password}">
+			<update dir="${svn.dir}"/>
+		</svn>
+	</target>
+
+	<!-- commit a project back into Subversion -->
+	<target name="svn-commit">
+		<svn username="${svn.username}" password="${svn.password}">
+			<commit dir="${svn.dir}" message="${svn.message}"/>
+			<info target="${svn.dir}"/>
+		</svn>
+		<echo>Last Revision = ${svn.info.lastRev} by ${svn.info.author} on ${svn.info.lastDate}</echo>
+	</target>
+
+	<!-- create a Subversion release tag/directory  -->
+	<target name="svn-copy">
+		<loadproperties srcfile="release.properties"/>
+		<fail message="Error: property rel.num has not been set"
+			unless="rel.num"/>
+		<property name="svn.url-rel" value="${svn.url-base}/tags/${rel.num}/"/>
+		<svn username="${svn.username}" password="${svn.password}">
+			<copy srcurl="${svn.url}" desturl="${svn.url-rel}"
+				message="${svn.message}"/>
+			</svn>
+	</target>	
+			
+	<!-- prepare a release -->
+	<target name="release-package" depends="get-relnum">
+		<zip destfile="${ant.project.name}-${rel.num}.zip">
+ 			<fileset dir="${basedir}/..">
+ 				<include name="**/**/*"/>
+ 				<exclude name="**/build.properties"/>
+ 				<exclude name="**/release.properties"/>
+			</fileset>
+		</zip>
+		<checksum file="${ant.project.name}-src-${rel.num}.zip"/>
+	</target>
+
+	<!-- commit release into Subversion -->
+	<target name="release-commit" depends="get-relmess, svn-commit, svn-copy"/>
+	
+	<!-- help -->
+	<target name="help" description="display help">
+    	<echo>build file for ${ant.project.name}</echo>
+    	<echo>please type ant -p for description of all targets</echo>
+	</target>
+
+</project>

@@ -20,8 +20,31 @@
     color: #008080;
     margin-left: 40px;
 }
-h1 { margin-bottom: 0.5em; font: 1.5em; letter-spacing: 2px;
-	padding: 0.5em; border-left: 3px solid #B2B2B2;}
+h1 { 
+	margin-bottom: 0.5em; 
+	text-align:left; 
+	font-size:14pt; 
+	letter-spacing: 2px;
+	padding: 0.5em; 
+	border-left: 3px solid #B2B2B2;
+}
+h2 { 
+	padding-left: 0.5em; 
+	text-align:left; 
+	font-size:12pt; 
+	letter-spacing: 2px; 
+	border-left: 1px solid #B2B2B2;
+}
+h3 { 
+	text-align:left; 
+	font-size:10pt; 
+	letter-spacing: 2px; 
+}
+h4 { 
+	text-align:left; 
+	font-size:8pt; 
+	letter-spacing: 2px; 
+}	
 p#articlehead {
   text-align: justify; font: 1.2em; margin-top: 1em;
   padding: 0.5em; background: #F8F7EF;
@@ -42,19 +65,27 @@ p#codeoutput {
 }
 table#fullwidth {
     cellspacing: 0px;
-    cellpadding: 0px;
+    cellpadding: 5px;
     width: 100%;
     border: 0;
+    border-color: #02F;
+    margin-left: auto;
+    margin-right: auto;
+    background-color:#BBBEEE;
 }
 table#nicewidth {
     cellspacing: 0px;
-    cellpadding: 0px;
+    cellpadding: 5px;
     width: 95%;
-    border: 0;
+    border-color: #02F;
     margin-left: auto;
     margin-right: auto;
+    background-color:#BBBEEE;
 }
-table#code {
+p { text-align: justify; }
+table#nicewidth th { background-color:#CCDDEE; padding: 5px;}
+table#nicewidth td { background-color:#FFF; padding: 5px; text-align: left; }
+/*table#code {
     width: 90%;
     BORDER-COLLAPSE: collapse;
     bordercolor: #111111;
@@ -78,4 +109,4 @@ td#codecontent {
     valign: top;
     width: 700px;
     align: left;
-}   
+}   */

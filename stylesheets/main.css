@@ -388,6 +388,8 @@ input.formInputText:focus {
 #content h4 {margin: 0.25em 0 0.5em;}
 #dashed-spacer { margin-top: 1em; border-bottom: 1px dashed #B2B2B2;}
 
+td.glossitem { width:50%; padding: 1.0em; text-align:justify }
+
 /* blank line spacer */
 #spacer {
 	position:relative;

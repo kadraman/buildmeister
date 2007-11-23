@@ -1,0 +1,285 @@
+<div id="article">
+<h1>Integrating Apache Ant and Subversion</h1>
+<p id="articlehead" class="article">A discussion on how to use
+and configure Subversion and related tools to implement an
+integrated build process with Apache Ant.</p>
+<h2>Introduction</h2>
+<p><span style="font-weight: bold;">Subversion</span>
+is an open source version control tool and was designed as a replacement
+for CVS. There are a number of integration libraries that can be used to
+integrate Ant and Subversion and which are summarised as follows:</p>
+<ul>
+	<li><a href="http://ant.apache.org/antlibs/svn/index.html">The
+	&ldquo;official&rdquo; Subversion Ant library</a> &ndash; the default
+	integration library with support for Subversion via an
+	&ldquo;antlib&rdquo; library that wraps the svn command line
+	executable. The library is available in Ant's own Subversion source
+	repository, and works with Ant 1.7. At the time of writing you still
+	need to check out and build this library for yourself.</li>
+	<li><a href="http://subclipse.tigris.org/svnant.html">SvnAnt</a> -
+	The SvnAnt project at Tigris is an Ant task that integrates to
+	Subversion. It uses a JNI (Java Native Interface) binding to Ant if
+	possible for speed, falling back to the Subversion command line if not.
+	</li>
+	<li><a href="http://www.statsvn.org/">StatSvn</a> &ndash; The
+	StatSvn project at SourceForge is a library that generates a set of
+	statistical reports and graphs from Subversion metadata. An Ant task is
+	available for integrating the execution of StatSvn into your build
+	process.</li>
+</ul>
+<p>Currently, I recommend the use of SvnAnt and StatSvn. In this
+article I will therefore be describing how to use these tools as part of
+your Ant build process.</p>
+<h2>Installing SvnAnt</h2>
+<p>Although SvnAnt is available to download as a binary, at the time
+of writing a new binary has not been released for a while and is
+significantly out of date with respect to the source code. I therefore
+recommend that you rebuild this project from the source code to get the
+most up-to-date features. Although this is obviously a risk, the library
+is small enough that the risk is limited. To download the source you
+will need a working Subversion command line (the <span
+	style="font-family: monospace;">svn</span>command).
+I will assume that you have already set this up, if not visit the
+Subversion website for instructions on how to download Subversion for
+your environment.</p>
+<p>The Subversion command you need to execute to initiate the
+download is as follows:</p>
+<div id="codeoutput">svn co
+&gt;http://subclipse.tigris.org/svn/subclipse/trunk/svnant/ svnant<br/>&nbsp;&nbsp;--username guest --password &quot;&quot;</div>
+<p>This will create a svnant directory in you current directory,
+navigate into this directory and start the build, specifying the version
+of the Java Development Kit (JDK) that you are running. For example, if
+you are running JDK 1.4 then you would execute the following:</p>
+<div id="codeoutput">&gt;cd svnant<br />
+&gt;ant -DtargetJvm=1.4</div>
+<p>Once the build has completed you should copy the following files
+to a directory inside your project:</p>
+<div id="codeoutput">build/lib/svnant.jar<br />
+lib/svnClientAdapter.jar<br />
+lib/svnjavahl.jar<br />
+lib/svnkit.jar<br />
+</div>
+<p>I typically create a <span style="font-family: monospace;">lib
+</span>directory at the top-level of my project&rsquo;s build directory to
+contain libraries such as these. However you could also copy them to
+your Ant home directory (<span style="font-family: monospace;">%ANT_HOME%\lib</span>).</p>
+<h2>Using SvnAnt &ndash; creating or updating a workspace</h2>
+<p>SvnAnt executes most Subversion commands via a single Ant task.
+However, before you can execute this task you need to make sure that it
+can be located from within your build script. To achieve this, youcan
+add the following lines to your build script:</p>
+<pre name="code" class="xml">
+&lt;taskdef name=&quot;svn&quot; classname=&quot;org.tigris.subversion.svnant.SvnTask&quot;&gt;
+  &lt;classpath&gt;
+    &lt;fileset dir=&quot;${dir.lib}&quot;&gt;
+      &lt;include name=&quot;**/svn*.jar&quot;/&gt;
+    &lt;/fileset&gt;
+  &lt;/classpath&gt;
+&lt;/taskdef&gt;
+</pre>
+<p>This example creates a new task called <span
+	style="font-family: monospace;">&lt;svn&gt;</span> which can be used to
+access the library. Now that this task is available, to create a new
+workspace you could implement a target similar to the following:</p>
+<pre name="code" class="xml">
+&lt;property name=&quot;svn.url-base&quot;
+    value=&quot;https://hoteldejava.svn.sourceforge.net/svnroot/hoteldejava&quot;/&gt;
+&lt;property name=&quot;svn.url&quot;
+    value=&quot;${svn.url-base}/trunk/&quot;/&gt;
+&lt;property name=&quot;svn.dir&quot; value=&quot;hoteldejava&quot;/&gt;
+
+&lt;target name=&quot;svn-checkout&quot; description=&quot;checkout a project from Subversion&quot;&gt;
+  &lt;svn username=&quot;${svn.username}&quot; password=&quot;${svn.password}&quot;&gt;
+    &lt;checkout url=&quot;${svn.url}&quot; destPath=&quot;${svn.dir}&quot;/&gt;
+  &lt;/svn&gt;
+&lt;/target&gt;
+</pre>
+<p>This example will create a new workspace (a Subversion working
+copy) in the directory <span style="font-family: monospace;">hoteldejava</span>.
+It will download the latest files from the URL specified by the <span
+	style="font-family: monospace;">svn.url</span> property and using the
+login credentials specified by the <span style="font-family: monospace;">${svn.username}</span>
+and <span style="font-family: monospace;">${svn.password}</span>
+properties. Login credentials are not always required to checkout a
+project, however if you need to supply them then the best approach to
+use is to add the properties to your personal <span
+	style="font-family: monospace;">build.properties</span> file, for
+example:</p>
+<div id="codeoutput">
+svn.username=guest<br/>
+svn.username=password
+</div>
+<p>To update an existing workspace you could implement a target
+similar to the following:</p>
+<pre name="code" class="xml">
+&lt;target name=&quot;svn-update&quot; description=&quot;update a project from Subversion&quot;&gt;
+  &lt;svn username=&quot;${svn.username}&quot; password=&quot;${svn.password}&quot;&gt;
+    &lt;update dir=&quot;${svn.dir}&quot;/&gt;
+  &lt;/svn&gt;
+&lt;/target&gt;
+</pre>
+<p>The update approach is really only acceptable if you create a
+workspace specifically for building in or releasing from.</p>
+<h2>Using SvnAnt &ndash; committing changes</h2>
+<p>In controlled build environments, it is likely that files will
+get changed or generated as part of the build process and which you want
+committed to version control. Although I don&rsquo;t recommend adding
+intermediate files such as Java classes to version control, you might
+want to add built libraries for sharing and reuse. If you need to add
+new files into the repository then you could implement a target similar
+to the following:</p>
+<pre name="code" class="xml">
+&lt;target name=&quot;svn-add-dist&quot;&gt;
+  &lt;svn username=&quot;${svn.username}&quot; password=&quot;${svn.password}&quot;&gt;
+    &lt;add dir=&quot;${dir.dist}&quot; force=&quot;true&quot;&gt;
+      &lt;fileset&gt;<br />
+        &lt;include name=&quot;**/*.jar&quot;/&gt;
+      &lt;/fileset&gt;
+    &lt;/add&gt;
+  &lt;/svn&gt;
+&lt;/target&gt;
+</pre>
+<p>This example will add the contents of Java libraries in the <span
+	style="font-family: monospace;">dir.dist</span> directory into the
+repository.</p>
+<p>If you have added files to the repository or are updating files
+already in version control then you could implement a target similar to
+the following:</p>
+<pre name="code" class="xml">
+&lt;target name=&quot;svn-commit&quot;&gt;
+  &lt;svn username=&quot;${svn.username}&quot; password=&quot;${svn.password}&quot;&gt;
+    &lt;commit dir=&quot;${svn.dir}&quot; message=&quot;${svn.message}&quot;/&gt;
+    &lt;info target=&quot;${svn.dir}&quot;/&gt;
+  &lt;/svn&gt;
+  &lt;echo&gt;
+    Last Revision = ${svn.info.lastRev} by ${svn.info.author} on ${svn.info.lastDate}
+  &lt;/echo&gt;
+&lt;/target&gt;
+</pre>
+<p>In this example you would need to set <span
+	style="font-family: monospace;">svn.message</span> to an appropriate
+value as it will be recorded in the repository. The example also runs
+the <span style="font-family: monospace;">&lt;info&gt;</span> task to
+get the latest information about the repository. Information from this
+command is placed in Ant properties, such as <span
+	style="font-family: monospace;">svn.info.lastRevision</span> for the
+last repository revision. This information can be used and recorded for
+auditing purposes.</p>
+<h2>Using SvnAnt &ndash; creating a baseline</h2>
+<p>In Subversion, baselines are usually created by copying a
+repository directory on your trunk to the tags directory. This assumes
+that you are following the well known convention of creating a <span
+	style="font-weight: bold;">trunk</span>, <span
+	style="font-weight: bold;">branches</span> and <span
+	style="font-weight: bold;">tags</span> directory at the top level of
+your repository. If so then to effectively create a new baseline for
+your build, you could implement a target similar to the following:</p>
+<pre name="code" class="xml">
+&lt;target name=&quot;svn-copy&quot;&gt;
+  &lt;fail message=&quot;Error: rel.num has not been set&quot; unless=&quot;rel.num&quot;/&gt;
+  &lt;property name=&quot;svn.url-rel&quot; value=&quot;${svn.url-base}/tags/${rel.num}/&quot;/&gt;
+  &lt;svn username=&quot;${svn.username}&quot; password=&quot;${svn.password}&quot;&gt;
+    &lt;copy srcurl=&quot;${svn.url}&quot; desturl=&quot;${svn.url-rel}&quot;
+        message=&quot;${svn.message}&quot;/&gt;
+  &lt;/svn&gt;
+&lt;/target&gt;
+</pre>
+<p>This example requires the property <span
+	style="font-family: monospace;">rel.num</span> to be set with an
+appropriate release number (for example <span
+	style="font-family: monospace;">1.0.0</span>). A check using the <span
+	style="font-family: monospace;">&lt;fail&gt;</span> task has been
+implemented to ensure this is the case as you do not really want to risk
+creating random directories in your Subversion repository. Again, you
+would need to set <span style="font-family: monospace;">svn.message</span>
+to an appropriate value as it will be recorded in the repository.</p>
+<h2>Installing StatSvn</h2>
+<p>StatSvn is a metrics analysis tool for Subversion repositories.
+It can automatically generate a number of useful reports including:</p>
+<ul>
+	<li>Source Lines of Code timelines</li>
+	<li>Source Lines of Code for each developer</li>
+	<li>Developer activity</li>
+	<li>Developer activity per module</li>
+	<li>Developer most recent commits with links to ViewVc for web
+	browsing</li>
+</ul>
+<p>An example of a Source Lines of Code timeline is illustrated
+below.</p>
+<div align="center">
+<img src="%image_dir%/statsvnexample.gif"
+	alt="StatSvn example" />
+</div>
+<p>To install StatSvn simply download the binary Zip file from the
+SourceForge project website. Extract the Zip file and copy the Java
+library <span style="font-family: monospace;">statsvn.jar</span> to your
+<span style="font-family: monospace;">lib</span> directory.</p>
+<h2>Using StatSvn</h2>
+<p>StatSvn can be executed via a single Ant task. However, before
+you can execute this task you need to make sure that it can be located
+from within your build script. To achieve this, you can add the
+following lines to your build script:</p>
+<pre name="code" class="xml">
+&lt;taskdef name=&quot;statsvn&quot; classname=&quot; net.sf.statsvn.ant.StatSvnTask&quot;&gt;
+  &lt;classpath&gt;
+    &lt;fileset dir=&quot;${dir.lib}&quot;&gt;
+      &lt;include name=&quot;**/statsvn.jar&quot;/&gt;
+    &lt;/fileset&gt;
+  &lt;/classpath&gt;
+&lt;/taskdef&gt;
+</pre>
+<p>This example creates a new task called <span
+	style="font-family: monospace;">&lt;statsvn&gt;</span> which can be
+used to access the library.</p>
+<p>StatSvn relies on the execution of the Subversion <span
+	style="font-family: monospace;">log</span> command to output
+information on the history of the repository and its changes. You
+therefore need to execute this command before executing the <span
+	style="font-family: monospace;">&lt;statsvn&gt;</span> task.
+Unfortunately, the <span style="font-family: monospace;">log</span>
+command is not currently supported by SvnAnt so you will have to call
+the Subversion command line. To run both of these commands you could
+implement a target similar to the following:</p>
+<pre name="code" class="xml">
+&lt;target name=&quot;svn-statreport&quot;&gt;
+  &lt;property name=&quot;svnstat.log&quot; value=&quot;svn.log&quot;/&gt;
+  &lt;property name=&quot;svnstat.dir&quot; value=&quot;statsvn&quot;/&gt;
+  &lt;property name=&quot;svnstat.title&quot; value=&quot;${ant.project.name} Report&quot;/&gt;
+  &lt;exec executable=&quot;svn&quot; output=&quot;${svnstat.log}&quot;&gt;
+    &lt;arg line=&quot;log ${svn.url} --xml -v&quot;/&gt;
+  &lt;/exec&gt;
+  &lt;statsvn path=&quot;.&quot; log=&quot;${svnstat.log}&quot; 
+      outputDir=&quot;${svnstat.dir}&quot; title=&quot;${svnstat.title}&quot;/&gt;
+&lt;/target&gt;
+</pre>
+<p>In this example a Subversion log file called <span
+	style="font-family: monospace;">svn.log</span> is first created using
+the Ant <span style="font-family: monospace;">&lt;exec&gt;</span> task
+to call the Subversion command line. The <span
+	style="font-family: monospace;">&lt;statsvn&gt;</span> task is then
+executed to turn this log file into more useful metrics and graphs. The
+output is placed in the <span style="font-family: monospace;">statsvn</span>
+directory as HTML and PNG files. There will be an <span
+	style="font-family: monospace;">index.html</span> file that you can
+open to navigate between all of the reports.</p>
+<p>In practice, you should execute this task on a regular basis,
+maybe as part of a nightly build. You can then publish the results to an
+internal project Intranet. This information can then be used by all
+members of your project team.</p>
+<h2>References</h2>
+<ul>
+	<li><a
+		href="http://www.amazon.com/Pragmatic-Version-Control-Using-Subversion/dp/0974514063"><span
+		style="text-decoration: underline;">Pragmatic Version Control
+	using Subversion</span></a><a href="link"></a></li>
+	<li><a href="http://svnbook.red-bean.com/">Version
+	Control with Subversion</a></li>
+	<li><a href="http://subversion.tigris.org/">Subversion home
+	page</a></li>
+	<li><a href="http://ant.apache.org/antlibs/svn/index.html">The
+	&ldquo;official&rdquo; Subversion Ant library</a></li>
+	<li><a href="http://subclipse.tigris.org/svnant.html">SvnAnt
+	home page</a></li>
+	<li><a href="http://www.statsvn.org/">StatSvn home page</a></li>
+</ul>
+</div>

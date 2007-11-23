@@ -27,7 +27,7 @@ if ($session->logged_in) {
     // fill out the registration form
 ?>
 
-<form name='userinfo' id='userinfo' action='process.php' method='post' onsubmit='return validate_userinfo();'>
+<form name='userinfo' id='userinfo' action='include/process.php' method='post' onsubmit='return validate_userinfo();'>
 <fieldset style="width:580px"><legend>User Registration</legend>
 <table>
 <tr>

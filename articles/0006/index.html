@@ -1,0 +1,118 @@
+<div class="article">
+<h1>Version Control Requirements for the Build Process</h1>
+<p id="articlehead">This article describes a set of
+requirements that any version control tool should meet in order for it
+to successfully enable repeatability, reliability and scalability of the
+Build Process.</p>
+<h2>Introduction</h2>
+<p>Version control tools are chosen for many reasons but rarely
+is the impact of such a choice assessed in terms of how it would affects
+your build processes - both current and future. Obviously, it is
+fundamental that your build processes are as efficient as possible,
+and there is no reason for them to be constrained by limitations of
+your version control toolset. Indeed, it has repeatedly been seen in
+many organizations that when version control tools do not enable
+development teams to develop and build software in the manner in which
+they would like, alternative version tools are chosen instead.
+This article therefore attempts to summarize a basic set of requirements
+that any version control tool should fulfill in order to satisfy the
+requirements of a generic build process. There might be a few extra
+requirements depending on the technology that you are using but the
+majority of these requirements should be both technology and process
+agnostic.</p>
+<h2>Requirements</h2>
+<p>The following requirements are given in no specific order:</p>
+<ul>
+	<li><b>Namespace Refactoring</b>
+	<p>During active development files will inevitably get refactored -
+	i.e. renamed, moved or deleted. In effect this involves a change in the
+	directory - or namespace - in which they are referenced. Builds are
+	carried out at discrete points in time, if you need to reproduce a
+	build you need to guarantee that all the files that existed at that
+	point in time are present - and nothing more or less. If a version
+	control tool fully supports namespace refactoring then it will track
+	changes over time and allow you to revert back to an exact point,
+	guaranteeing that the files and versions that it presents it to you are
+	as they existed. Some version controls achieve this by versioning
+	directories, others by versioning the complete repository. Other
+	version control tools however have been know to fail miserably with
+	this requirement; when you delete a file using such tools for example,
+	not only does it delete the version of the file at the current point in
+	time but it also destroys its complete history.<br />
+	</p>
+	</li>
+	<li><b>Immutable Baselines</b>
+	<p>At some stage in your build process you will need to create a
+	baseline, this can be before or after your build. Baselines have
+	different names in different tools: tags, labels, configurations and so
+	on. The point is that by creating a baseline you have to decided to
+	mark a composite set of versions of files as compatible. Placing down a
+	baseline enables you to revert back to this composite set of versions
+	quickly and easily, for example if you wanted to reproduce an old build
+	or fix a defect. Baselines should be immutable, that is the composite
+	set of versions that they refer to cannot be changed or the baseline
+	deleted. Doing so would compromise your ability to rebuild. Immutable
+	baselines are often supported by <b>Namespace Refactoring</b> and <b>Enforceable
+	Security</b>.</p>
+	</li>
+	<li><b>Effective Branching</b>
+	<p>It is almost inevitable that some point in time you will need to
+	branch your code base - although the amount of branching that you carry
+	out will be dependent on the environment in which you are
+	working and the development processes which you are following.
+	Branching also directly affects your build process, for example if you
+	are fixing a defect you need to ensure that a build workspace can be
+	setup to look at a historical baseline and the branched (fixed) code
+	as quickly as possible. In some circumstances branching can
+	directly support your build process, for example you can create a
+	branch for release stabilization - allowing you to carry out quick and
+	minor fixes during the build whilst active development continues.
+	Consequently, branching when it is needed, should be as effective as
+	possible. Branches should also be created just-in-time using the
+	version control tool, with branches only being applied to those
+	versions of files that need to be changed.</p>
+	</li>
+	<li><b>Enforceable Security</b>
+	<p>How much security you need is really dependent on the
+	environment in which you are working. However, even in open
+	environments you will steed need a degree of security - even if only to
+	prevent users from making mistakes. From a build point of view you
+	would not want unauthorized users to be able to delete, rename, or
+	change your build baselines. Neither would you want them using any
+	build-specific branches or workspaces that you have created for
+	building in. From the build point of view therefore, enforceable
+	security should look at how any supporting version control
+	metadata (branches, baselines etc) can be prevented from changes by
+	unauthorized users. It should included capabilities to say what the set
+	of authorized users are, as well as be able to display customized error
+	or warning information which the security restrictions are met.</p>
+	</li>
+	<li><b>Accessible Reporting</b>
+	<p>A large part of any build process is reporting on its outcome.
+	This could be reporting on why it has failed or reporting on what
+	exactly has gone into and been created by the build in terms of
+	versions, changes and binaries. Version control tools should allow you
+	to readily access this kind of information, allowing you to report on
+	differences between builds - usually through baseline reports - and to
+	list the new uncontrolled files that have been created in the workspace
+	as an output of the build. They should also allow you to customize this
+	information - to allow it conform to your organizational
+	requirements. Although version control tools can be <b>Easily
+	Integrated</b> to - via the command line for example - this presumes a
+	degree of skill and effort that it is often not available. Therefore
+	out of the box, <b>Accessible Reporting</b> from your version
+	control tool is really what is required to support your build process
+	from a reporting point of view.</p>
+	</li>
+	<li><b>Easily Integrated</b>
+	<p>A build process is not just about compiling code, there will be
+	many ways in which you will want to use your build and version control
+	tool as part of your overall build process. For example scheduling
+	builds on changes, producing release reports, integrating with other
+	tools such as bug tracking or testing tools. A version control should
+	therefore be open enough to support such requests. At a minimum this
+	should be in the form of a command line interface, but also preferably
+	in the form of a supported API or reusable (web) service.</p>
+	</li>
+</ul>
+</div>

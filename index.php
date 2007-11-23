@@ -43,10 +43,13 @@ include("include/header.php");
 </table>
 </div>
 
+<div id="boxedtitle">Buildmeister Books</div>
+<p>The home of Buildmeister Books</p>
+
 <div id="boxedtitle">Selected Articles</div>
 <?php
 # fetch latest articles
-$sql = "SELECT * from " . TBL_ARTICLES . " where active = 1 ORDER BY date_posted DESC;";
+$sql = "SELECT * from " . TBL_ARTICLES . " where active = 1 ORDER BY date_posted DESC LIMIT 5;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
@@ -58,6 +61,8 @@ if ($numrows != 0) {
 }   
 
 ?>
+
+<div id="dashed-spacer"></div>
 
 <?php
 include("include/footer.php");

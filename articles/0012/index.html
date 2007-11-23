@@ -1,0 +1,214 @@
+<div class="article">
+<h2>The 5 minute low-down on: <i>NAnt</i></h2>
+<p><i>A brief introduction to the features and capabilities of
+NAnt.</i></p>
+<h3>Introduction</h3>
+<p>NAnt is a Microsoft .NET build tool, although based on <a
+	href="http://www.buildmeister.com//modules/content/index.php?id=13">Apache
+Ant</a> (the de-facto standard for building Java projects) it is <b>N</b>ot
+<b>Ant</b> (hence the name) and has subsequently evolved in its own
+unique way. Where Ant is Java-centric, NAnt is .NET-centric and has
+built in support for compiling C#, VB.NET, J# languages as well as for
+building Visual Studio .NET solutions. Since NAnt is written for the
+.NET platform it is also extensible via use of any .NET languages,
+allowing you to build on its features and facilities to integrate it
+with all manner of tools and systems.</p>
+<p>All NAnt builds are driven by an XML formatted build file (the
+equivalent of a make &ldquo;<font face="Courier New">makefile</font>&rdquo;).
+By default this is typically called <font face="Courier">NAnt.build</font>
+and located in the project root directory. However, there is no reason
+why a project can&rsquo;t contain a number of build files of any given
+name. NAnt allows you to call or chain these files together, if for
+example you want to build recursively down a directory structure
+containing multiple projects.</p>
+<p>The build file always references a single <b>project</b>, i.e. an
+application. The project has a number of <b>targets</b> that can be
+called. These targets are the core parts of a build process, i.e.
+compile, test, generate distribution (<font face="Courier New">.zip</font>
+or <font face="Courier New">.msi</font>) files, deploy and so on. Each
+of the targets can be called individually or they can be
+&quot;chained&quot; together as <span style="font-weight: bold;">dependencies</span>
+to orchestrate an end-to-end build. For example, to build a release
+version of an application you could use the following command line
+invocation:</p>
+<div class="codeoutput">&gt;nant release</div>
+<p align="justify">Each of the targets can make reference to any of
+NAnt's built-in <b>tasks</b><i>. </i>A task is basically an interface to
+a .NET class written to carry out a predefined operation, i.e. compile a
+set of source files, delete a directory structure and so on. Attributes
+are specified for the tasks, defining their exact invocation. There are
+a large number of built-in tasks (see the <a
+	href="http://nant.sourceforge.net/release/latest/help/tasks/index.html">NAnt
+manual</a> for details), however since the tasks are interfaces to .NET
+classes,&nbsp;you can quite easily extend NAnt by creating new tasks
+yourself.</p>
+<h3>An Example</h3>
+<p>A simple example of an NAnt build file to compile and test a
+Visual Studio .NET solution is given below:</p>
+<div style="font-family: monospace;" class="codelisting">01:
+&nbsp;&lt;?xml version=&quot;1.0&quot;?&gt;<br />
+02:<br />
+03: &nbsp;&lt;project name=&quot;NAntDemo&quot;
+default=&quot;build&quot;&gt;<br />
+04: &nbsp; &nbsp;&nbsp; &lt;property name=&quot;project.name&quot;
+value=&quot;NAntDemo&quot;/&gt;<br />
+05: &nbsp; &nbsp;&nbsp; &lt;property name=&quot;project.version&quot;
+value=&quot;1.0.0&quot;/&gt;<br />
+06: &nbsp; &nbsp;&nbsp; &lt;property name=&quot;dir.nunit&quot;
+value=&quot;C:\Program Files\NUnit 2.2\bin&quot;/&gt;<br />
+07: &nbsp; &nbsp;&nbsp; &lt;property name=&quot;configuration&quot;
+value=&quot;debug&quot;/&gt;<br />
+08:<br />
+09: &nbsp;&lt;!-- remove generated files --&gt;<br />
+10: &nbsp;&lt;target name=&quot;clean&quot; description=&quot;remove all
+generated files&quot;&gt;<br />
+11: &nbsp; &nbsp;&nbsp; &lt;delete&gt;<br />
+12: &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;fileset&gt;<br />
+13: &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;include name=&quot;**/bin/**&quot; /&gt;<br />
+14: &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;include
+name=&quot;**/obj/**&quot; /&gt;<br />
+15: &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;include
+name=&quot;**/*.user/**&quot; /&gt;<br />
+16: &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/fileset&gt;<br />
+17: &nbsp; &nbsp;&nbsp;&nbsp;&lt;/delete&gt;<br />
+18: &nbsp;&lt;/target&gt;<br />
+19:<br />
+20: &nbsp;&lt;!-- execute a debug build --&gt;<br />
+21: &nbsp;&lt;target name=&quot;debug&quot; description=&quot;execute a
+debug build&quot;&gt;<br />
+22: &nbsp; &nbsp;&nbsp; &lt;property name=&quot;configuration&quot;
+value=&quot;debug&quot;/&gt;<br />
+23: &nbsp; &nbsp;&nbsp; &lt;call target=&quot;test&quot;/&gt; <br />
+24: &nbsp;&lt;/target&gt;<br />
+25:<br />
+26: &nbsp;&lt;!-- execute a release build --&gt;<br />
+27: &nbsp;&lt;target name=&quot;release&quot; description=&quot;execute
+a release build&quot;&gt;<br />
+28: &nbsp; &nbsp;&nbsp; &lt;property name=&quot;configuration&quot;
+value=&quot;release&quot;/&gt;<br />
+29: &nbsp; &nbsp;&nbsp; &lt;call target=&quot;test&quot;/&gt; <br />
+30: &nbsp;&lt;/target&gt;<br />
+31:<br />
+32: &nbsp;&lt;!-- compile source code --&gt;<br />
+33: &nbsp;&lt;target name=&quot;build&quot; depends=&quot;clean&quot;
+description=&quot;compile the source code&quot;&gt;<br />
+34: &nbsp; &nbsp;&nbsp; &lt;solution
+configuration=&quot;${configuration}&quot;
+solutionfile=&quot;${project.name}.sln&quot; /&gt;<br />
+35: &nbsp;&lt;/target&gt;<br />
+36:<br />
+37: &nbsp;&lt;!-- execute unit tests --&gt;<br />
+38: &nbsp;&lt;target name=&quot;test&quot; depends=&quot;build&quot;
+description=&quot;run unit tests.&quot;&gt; <br />
+39: &nbsp; &nbsp;&nbsp; &lt;exec
+program=&quot;${dir.nunit}\nunit-console.exe&quot; <br />
+40: &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+commandline=&quot;${project.name}.nunit /xml=${project.name}-test.xml
+/nologo&quot; /&gt; <br />
+41: &nbsp;&lt;/target&gt;<br />
+42:<br />
+43: &nbsp;&lt;!-- run the application --&gt;<br />
+44: &nbsp;&lt;target name=&quot;run&quot; depends=&quot;test&quot;&gt;<br />
+45: &nbsp; &nbsp;&nbsp; &lt;exec program=&quot;${project.name}.exe&quot;
+<br />
+46: &nbsp; &nbsp;&nbsp;&nbsp;
+basedir=&quot;${project.name}\bin\${configuration}\&quot;/&gt;<br />
+47: &nbsp;&lt;/target&gt;<br />
+48:<br />
+49: &nbsp;&lt;/project&gt;</div>
+<p>In this example we have have a project named <i>NAntDemo</i>,
+there are six targets: <span style="font-weight: bold;">clean,</span> <span
+	style="font-weight: bold;">debug,</span> <span
+	style="font-weight: bold;">release,</span> <span
+	style="font-weight: bold;">build,</span> <span
+	style="font-weight: bold;">test </span>and <span
+	style="font-weight: bold;">run.</span> Sometimes a target will have a
+dependency on another target, for example before you test an
+application, you would obviously need to build the application first!
+These dependencies are easily specified via a <span
+	style="font-weight: bold;">depends </span>attribute in the target. We
+can see this with the <span style="font-weight: bold;">test </span>target
+on line 40 (where the target requires the <span
+	style="font-weight: bold;">build </span>target to be executed first).
+NAnt will automatically execute any dependencies.</p>
+<p>You will see that in the example on lines 4-7 we also makes
+reference to property values, <span style="font-weight: bold;">properties</span>
+are equivalent to variables in NAnt. Here they are being used to define
+directory names or project settings. You make references to properties
+by using the <font face="Courier New"><i>${property_name}</i></font><i>
+syntax</i> (see line 34 for an example). An interesting feature of
+properties is that they can be overridden from the command line. For
+example, if you wanted to override the <font face="Courier New">dir.build</font>
+property, you could use the following:</p>
+<div class="codeoutput">&gt;<span>nant </span>-D:dir.nunit=c:\tools\bin
+debug</div>
+<p>To built this example, we are using the Nant <font
+	face="Courier New">&lt;solution&gt;</font> task, which will basically
+use the .NET solution file specified and built all its projects and
+dependencies. For more flexibility you can execute the individual .NET
+compilers (such as the C# compiler using the <font face="Courier">&lt;csc&gt;</font>
+task).</p>
+<h3>NAnt for Ant users</h3>
+<p>If you have used Ant before than NAnt should feel comfortable but
+as the NAnt web-site says &quot;NAnt is only compatible with Ant in
+spirit&quot;. Some of the differences between the two tools are as
+follows:</p>
+<ul>
+	<li>Tasks in Nant do not have to be in a target, tasks that appear
+	directly in the project are executed in order before any tasks in
+	targets are executed.</li>
+	<li>The <font face="Courier New">nant.onsuccess </font>and <font
+		face="Courier New">nant.onfailure</font> properties can be defined as
+	explicit target names in NAnt, these will be executed at the end of the
+	build on success or failure.</li>
+	<li>NAnt looks for the first file ending in <font face="Courier">.build</font>
+	instead of <font face="Courier New">build.xml</font><font
+		face="Courier">.</font></li>
+	<li>NAnt properties are by default read-write, although they can
+	be read-only if desired</li>
+	<li>NAnt supports global properties that are defined in a central
+	file</li>
+	<li>Nant supports embedded scripts that are defined in any .NET
+	language</li>
+</ul>
+<p>There are more differences, these are just the most obvious ones
+that you will probably&nbsp;encounter.</p>
+<h3>Summary</h3>
+<p align="justify">This article was intended as a rapid introduction
+to some of NAnt's capabilities. NAnt is a powerful but sometimes complex
+tool. Fortunately, there are many references, books and articles
+describing NAnt, some of these are detailed below.</p>
+<h3>References</h3>
+<ul>
+	<li><a
+		href="http://www.amazon.com/gp/product/1590594851?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=1590594851">Expert
+	.NET Delivery Using NAnt and CruiseControl.NET (Expert's Voice in .Net)</a><img
+		width="1" height="1" border="0"
+		src="http://www.assoc-amazon.com/e/ir?t=thebuildmeist-20&amp;l=as2&amp;o=1&amp;a=1590594851"
+		alt=""
+		style="border: medium none ! important; margin: 0px ! important;" /></li>
+	<li><a
+		href="http://www.amazon.com/gp/product/0596527543?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0596527543">Windows
+	Developer Power Tools: Turbocharge Windows development with more than
+	170 free and open source tools (Power Tools)</a><img width="1" height="1"
+		border="0"
+		src="http://www.assoc-amazon.com/e/ir?t=thebuildmeist-20&amp;l=as2&amp;o=1&amp;a=0596527543"
+		alt=""
+		style="border: medium none ! important; margin: 0px ! important;" /></li>
+	<li><a
+		href="http://www.amazon.com/gp/product/0321228103?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0321228103">Open
+	Source .NET Development: Programming with NAnt, NUnit, NDoc, and More</a><img
+		width="1" height="1" border="0"
+		src="http://www.assoc-amazon.com/e/ir?t=thebuildmeist-20&amp;l=as2&amp;o=1&amp;a=0321228103"
+		alt=""
+		style="border: medium none ! important; margin: 0px ! important;" /></li>
+	<li><a href="http://nant.sourceforge.net/">NAnt home page</a></li>
+	<li><a href="http://nantcontrib.sourceforge.net/">NAnt
+	contributed tasks and types</a></li>
+	<li><a href="http://nant.sourceforge.net/release/latest/help/">The
+	NAnt manual</a></li>
+</ul>
+</div>

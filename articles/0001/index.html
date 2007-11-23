@@ -57,9 +57,9 @@ can quite easily extend Ant by creating new tasks yourselves.</p>
 </div>
 <p>Here the &quot;-f&quot; option is used to specify the name of the
 build script that you wish to use (<strong>atm.xml</strong>) and the
-target which will be executed is the &quot;release&quot; target.&nbsp;</p>
+target which will be executed is the &quot;release&quot; target.</p>
 <p>One of the most important things to note is that Ant in
-itself&nbsp;is not a compiler, rather it invokes your Java compiler
+itselfis not a compiler, rather it invokes your Java compiler
 &quot;javac&quot; through its built-in <strong>&lt;javac&gt;</strong>
 task. This task, recursively scans source and destination directories to
 look for Java classes that need to be (re)built and optimizes calls to
@@ -86,7 +86,7 @@ file is given below:</p>
         &lt;/fileset&gt;
     &lt;/path&gt;
 
-    &lt;!-- initialise directory structure --&gt;&nbsp;
+    &lt;!-- initialise directory structure --&gt;
     &lt;target name=&quot;init&quot; description=&quot;initialise directory structure&quot;&gt;
         &lt;mkdir dir=&quot;${dir.build}&quot;/&gt;
         &lt;mkdir dir=&quot;${dir.dist}&quot;/&gt;
@@ -130,11 +130,11 @@ Total time: 0 seconds<br />
 Buildfile atm.xml<br />
 <br />
 init:<br />
-&nbsp;&nbsp;&nbsp;&nbsp;[mkdir] Created dir:C:\Build\ATM\build<br />
-&nbsp;&nbsp;&nbsp;&nbsp;[mkdir] Created dir:C:\Build\ATM\dist<br />
+[mkdir] Created dir:C:\Build\ATM\build<br />
+[mkdir] Created dir:C:\Build\ATM\dist<br />
 <br />
 compile:<br />
-&nbsp;&nbsp;&nbsp;&nbsp;[javac] Compiling 4 source files to
+[javac] Compiling 4 source files to
 C:\Build\ATM\build<br />
 <br />
 BUILD SUCCESSFUL<br />
@@ -155,7 +155,7 @@ dependencies.</p>
 values. In Ant, properties are equivalent to most programming language's
 concept of variable constants; that is to say they are immutable and
 once properties have been assigned a value they cannot be
-changed.&nbsp;Here they are being used to define directory names. You
+changed.Here they are being used to define directory names. You
 make references to properties by using the <font face="Courier New">${property_name}</font>
 symbols (see line 11 for an example). An interesting feature of
 properties is that they can be overridden from the command line. For
@@ -165,27 +165,32 @@ property, you could use the following:</p>
 <p><b>&gt;ant -f atm.xml compile -Ddir.build=bin</b></p>
 </div>
 <p>If you are compiling source code in Java you will need to define
-a <strong>classpath.</strong>&nbsp;This is the combination of libraries
+a <strong>classpath.</strong>This is the combination of libraries
 containing pre-built classes, that you need to build against. In lines
 10-16 a classpath is defined which looks at the <font face="Courier New">build</font>
 directory as well as a set of third party <strong>.jar</strong> files
 held at the location <font face="Courier New">C:\JavaTools\lib.</font></p>
 <p>One final point worthy of note is the use of Ant's built in
-variables. In this example, on line 41 we are using the <font
+variables. In this example, on line 40 we are using the <font
 	face="Courier New">${ant.project.name}</font> variable when creating a
-jar file, this refers to the project name <strong>atm</strong>&nbsp;as
+jar file, this refers to the project name <strong>atm</strong>as
 defined in line 3, so the name of jar file will be <strong>atm.jar</strong>.</p>
 <h2>Summary</h2>
 <p>This article was intended as a rapid introduction to some of
 Ant's capabilities. Ant is a powerful but sometimes complex tool. It is
 relatively easy to get started using Ant and there are many tutorials
 and examples available on the Internet. However, Ant can become quite
-complex for large projects and&nbsp;therefore there are a number of good
+complex for large projects andtherefore there are a number of good
 practices, such as creating reuseable macros and libraries that can be
 implemented to make Ant more practical in such environments. For more
 information on how to achieve this, refer to the references given below.</p>
 <h2>References</h2>
 <ul>
+	<li><a
+		href="http://www.amazon.com/gp/product/193239480X?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=193239480X">Ant
+	in Action</a><img width="1" height="1" border="0"
+		src="http://www.assoc-amazon.com/e/ir?t=thebuildmeist-20&amp;l=as2&amp;o=1&amp;a=193239480X"
+		alt="" style="border-style: none ! important; margin: 0px;" /></li>
 	<li><a href="http://www.lulu.com/content/1022721">Apache Ant -
 	The Buildmeister's Guide, Second Edition</a></li>
 	<li><a
@@ -199,11 +204,6 @@ information on how to achieve this, refer to the references given below.</p>
 		href="http://www.amazon.com/gp/product/0596006098?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0596006098">Ant:
 	The Definitive Guide, 2nd Edition</a><img width="1" height="1" border="0"
 		src="http://www.assoc-amazon.com/e/ir?t=thebuildmeist-20&amp;l=as2&amp;o=1&amp;a=0596006098"
-		alt="" style="border-style: none ! important; margin: 0px;" /></li>
-	<li><a
-		href="http://www.amazon.com/gp/product/193239480X?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=193239480X">Ant
-	in Action</a><img width="1" height="1" border="0"
-		src="http://www.assoc-amazon.com/e/ir?t=thebuildmeist-20&amp;l=as2&amp;o=1&amp;a=193239480X"
 		alt="" style="border-style: none ! important; margin: 0px;" /></li>
 	<li><a
 		href="http://www.amazon.com/gp/product/1584502487?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=1584502487">ANT:
@@ -225,7 +225,5 @@ information on how to achieve this, refer to the references given below.</p>
 		href="http://www.ibm.com/developerworks/rational/library/may06/reader/lee.html">Apache
 	Ant Best Practices (Book Excerpt)</a></li>
 </ul>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
 </div>
 

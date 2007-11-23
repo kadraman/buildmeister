@@ -37,9 +37,26 @@ missing and should be included then please <a href="#submit">submit</a>
 it for inclusion using the form at the end of this page.</p>
 </div>
 
+<div align="center">
+
+<p style="font-size:14pt">
 <?php
+for ($i = 65; $i <= 90; $i++) {
+    echo "<a href='#" . chr($i) . "'>"
+        . chr($i) . "</a>&nbsp;";
+}        
+?>
+</p>
+        
+<?php
+for ($i = 65; $i <= 90; $i++) {
+    echo "<h2><a id='" . chr($i) . "'></a>"
+        . chr($i) . "</h2>";
+ 
 # fetch glossary
-$sql = "SELECT * from " . TBL_GLOSSARY . " where active = 1 ORDER BY title;";
+$sql = "SELECT * from " . TBL_GLOSSARY 
+    . " where active = 1 AND title REGEXP '^"
+    . chr($i) . "' ORDER BY title;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
@@ -50,7 +67,7 @@ if ($numrows != 0) {
         if (($count % 2) == 0) {
             echo "<tr>\n";
         } 
-        echo "<td align='left'><strong><a id='#" . $row['title'] . "'></a>"
+        echo "<td class='glossitem' valign='top'><strong><a id='#" . $row['title'] . "'></a>"
         	. "<a href='viewterm.php?term=" . $row['title'] . "'>" 
             . $row['title'] . "</a></strong><br/>"
 		    . $row['summary'] . "</td>\n";
@@ -60,10 +77,15 @@ if ($numrows != 0) {
 		
     }
     echo "</table>\n";
-    echo "</div>\n";
+   
 }   
+
+}
 ?>
 
+</div>
+
+</div>
 <a id="submit"></a>
 
 <div id="dashed-spacer">&nbsp;</div>
@@ -82,7 +104,7 @@ if ($numrows != 0) {
 ?>    
 
 <div align="center">
-<form name='glosssubmit' id='glosssubmit' action='process.php' method='post'>
+<form name='glosssubmit' id='glosssubmit' action='include/process.php' method='post'>
 <fieldset style="text-align:left;width:460px"><legend>Submit Glossary Item</legend>
 <table>
 	<tr>

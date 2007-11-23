@@ -12,7 +12,7 @@ if (isset($_SESSION['useredit'])) {
     if($session->logged_in) {
 ?>
 
-<form action="process.php" method="post">
+<form action="include/process.php" method="post">
 	<fieldset style="width:280px">
 	<legend>Edit Account: <?php echo $session->username; ?></legend>
 	<table>

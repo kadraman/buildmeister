@@ -1,0 +1,455 @@
+<table align="center"
+	style="border-top-width: 0px; border-left-width: 0px; width: 95%;">
+	<tbody>
+		<tr>
+			<td>
+			<h2>Extending Apache Ant</h2>
+			<span style="font-style: italic;">This article describes how
+			you can extend Apache Ant to support&nbsp;new capabilities or tool
+			integrations.</span><br />
+			<p align="justify">One of main advantages of Apache Ant is its
+			extensibility; since it is written in Java you can extend it by
+			simply writing new Java classes. The obvious question here is why
+			would you want to extend it? Does it not do everything that you need
+			to already? Well, if you are using a set of well established tools:
+			IDEs, compilers, application servers, databases and so on, then yes
+			it probably will. However, what if you want to integrate with a tool
+			that there is no current Ant integration for? Similarly, what if you
+			want to extend an existing integration to a tool, maybe you have your
+			own in-house tools or you simply just want to add some new features
+			to Ant? In this article, I will not be describing all the many facets
+			of Ant extensibility (as this would warrant half a book in its own
+			right - see the references at the end for more information). Rather
+			the point of this article is to show you what is possible.</p>
+			<p align="justify">In this article, I will walk through how to
+			extend Ant and recompile its source code.&nbsp;For the purposes of
+			our implementation, I will be creating a simple integration to the
+			ClearCase <span style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+			command. However, the basic process is the same no matter what
+			implementation you will be carrying out.</p>
+			<h3>An example task - <span style="font-family: monospace;">&lt;</span><span
+				style="font-family: monospace;">ccexec&gt;</span></h3>
+			<p align="justify">Apache Ant already comes with a set of
+			pre-integrated ClearCase tasks which you could use quite happily for
+			integrating Ant and ClearCase together. However one of the problems
+			with this set of tasks is that a Java class exists for each <span
+				style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+			command. This sounds fine in practice and allows a degree of argument
+			checking, however the caveat is that whenever a <span
+				style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+			subcommand is added or updated by IBM, then this integration becomes
+			out of date and needs to be reworked. An alternative approach is to
+			create a new Ant task that is a simple refactored integration to the
+			<span style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+			command, and that meets the following requirements:</p>
+			<ul type="square">
+				<li>The task shall support all current and future <span
+					style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+				commands and arguments.</li>
+				<li>The task shall be able to send its output to or read its
+				input from a specified file.</li>
+				<li>It shall be possible to specify the location of the <span
+					style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+				command executable.</li>
+				<li>It shall be possible to specify whether failure of an
+				individual <span style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+				command fails the build or not.</li>
+			</ul>
+			<p align="justify">For example, if you wanted to execute a <span
+				style="font-size: 10pt; font-family: &amp; quot;">&quot;cleartool
+			describe&quot;</span> on a ClearCase file from Ant and send the output to a
+			file you could write an Ant&nbsp; <span
+				style="font-size: 10pt; font-family: &amp; quot;">build.xml</span>
+			file as shown below.</p>
+			<p
+				style="margin-left: 40px; color: rgb(102, 102, 102); font-family: monospace;">&lt;?xml
+			version=&quot;1.0&quot;?&gt;<br />
+			&lt;project name=&quot;cc-ant&quot; default=&quot;main&quot;&gt;<br />
+			&nbsp; &nbsp; &lt;target name=&quot;main&quot;&gt;<br />
+			&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &lt;ccexec
+			failonerror=&quot;true&quot; output=&quot;ccexec.out&quot;&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
+			cleartoolpath=&quot;C:\Program Files\Rational\ClearCase\bin&quot;&gt;<br />
+			&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+			value=&quot;describe&quot; /&gt;<br />
+			&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &lt;arg
+			value=&quot;-long&quot; /&gt;<br />
+			&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+			value=&quot;build.properties&quot; /&gt;<br />
+			&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;
+			&lt;/ccexec&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+			&nbsp; &nbsp; &lt;/target&gt;<br />
+			&lt;/project&gt;</p>
+			<p align="justify">As you can see from this example, this new Ant
+			task is called <span style="font-family: monospace;">&lt;</span><span
+				style="font-size: 10pt; font-family: &amp; quot;">ccexec&gt;;</span>
+			it takes any number of nested elements representing the arguments to
+			the ClearCase <span style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+			command. The task also has an attribute called <span
+				style="font-size: 10pt; font-family: &amp; quot;">failonerror</span>
+			which in this example is set to <span
+				style="font-size: 10pt; font-family: &amp; quot;">true</span>. This
+			is used to indicate that Ant should terminate the build if this
+			particular command fails. There is also an additional attribute <span
+				style="font-size: 10pt; font-family: &amp; quot;">cleartoolPath</span>
+			which you can use to specify the directory location where the
+			ClearCase <span style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+			command can be found.</p>
+			<p align="justify">Given that this is what you might want to
+			achieve how would you go about it? Well fortunately, you can reuse a
+			significant amount of existing Ant functionality to achieve this.
+			There is already an Ant task called <span
+				style="font-size: 10pt; font-family: &amp; quot;">Exec</span> which
+			works in a similar manner and allows you to execute any command line
+			program. In this case, you simply need to extend the Java class
+			responsible for this task, specify the new attributes and hardcode
+			the executable that is to be run as <span
+				style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>.
+			</p>
+			<h3>Create a new Java class</h3>
+			<p align="justify">The first step in creating a new Ant task is
+			deciding what the name of your task should be and what existing Ant
+			class you want to extend. Most of the time you will extend <span
+				style="font-size: 10pt; font-family: &amp; quot;">org.apache.tools.ant.Task</span>,
+			however there are a number of other useful classes that you can
+			extend; in our case I am extending the <span
+				style="font-size: 10pt; font-family: &amp; quot;">Exec</span> task
+			which is represented by the class <span
+				style="font-size: 10pt; font-family: &amp; quot;">org.apache.tools.ant.ExecTask</span>.
+			You can extend this class by implementing the following skeleton
+			code:</p>
+			<blockquote
+				style="color: rgb(102, 102, 102); font-family: monospace;">
+			<p>package org.apache.tools.ant.taskdefs.optional;</p>
+			<p>import org.apache.tools.ant.taskdefs.ExecTask;</p>
+			<p>public class ClearToolExec extends ExecTask {<br />
+			&nbsp;&nbsp;&nbsp;public ClearToolExec() {<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br />
+			&nbsp;&nbsp;&nbsp; }</p>
+			<p>&nbsp;</p>
+			<p>&nbsp;</p>
+			<p>&nbsp;...</p>
+			</blockquote>
+			<p align="justify">I will call this class <span
+				style="font-size: 10pt; font-family: &amp; quot;">ClearToolExec.java</span>
+			and place it in the directory:</p>
+			<p
+				style="margin-left: 40px; color: rgb(102, 102, 102); font-family: monospace;">src\main\org\apache\tools\ant\taskdefs\optional</p>
+			<h3>Write attribute setter methods</h3>
+			<p align="justify">For each attribute that the task is to
+			support, you need to write a <i>setter</i> method (note, it is good
+			practice to write <i>getter</i> methods as well). Attributes can be
+			thought of as parameters to the task in question. In the <span
+				style="font-family: monospace;">build.xml</span> file above, I used
+			attributes called <span
+				style="font-size: 10pt; font-family: &amp; quot;">failonerror</span>
+			and <span style="font-size: 10pt; font-family: &amp; quot;">cleartoolPath</span>.
+			The <span style="font-size: 10pt; font-family: &amp; quot;">failonerror</span>
+			attribute is already implemented by the <span
+				style="font-size: 10pt; font-family: &amp; quot;">ExecTask</span>
+			class so it will be inherited, however I will need to implement the <span
+				style="font-size: 10pt; font-family: &amp; quot;">cleartoolPath</span>
+			attribute myself. At the same time I will also implement an attribute
+			called <span style="font-size: 10pt; font-family: &amp; quot;">cleartoolCmd</span>
+			which specifies the name of the ClearCase <span
+				style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+			executable program. It will probably always be set to <span
+				style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+			but you never know!</p>
+			<p align="justify">Any setter method that is implemented must be
+			a <span style="font-size: 10pt; font-family: &amp; quot;">&quot;public
+			void&quot;</span> method which take a single argument. The name of the
+			method must begin with <span
+				style="font-size: 10pt; font-family: &amp; quot;">set</span>,
+			followed by the attribute name. It is recommended that the first
+			character of the name must be in uppercase, and the rest in
+			lowercase, for example <span
+				style="font-size: 10pt; font-family: &amp; quot;">setCleartoolpath</span>.
+			The <span style="font-size: 10pt; font-family: &amp; quot;">set</span>
+			methods take a single parameter representing the value of the
+			attribute to be set. In our case the Java type for both of the
+			arguments will be <span
+				style="font-size: 10pt; font-family: &amp; quot;">String</span>. I
+			also need to create some private variables to hold the values of the
+			attributes. To implement the setter (and getter) methods you would
+			therefore write the following:</p>
+			<blockquote
+				style="color: rgb(102, 102, 102); font-family: monospace;">
+			<p>/* the name of the cleartool command */<br />
+			private String ct_cmd;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+			<p>/* the path to where it resides */<br />
+			private String ct_path;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+			<p>public String getCleartoolcmd() {<br />
+			&nbsp; &nbsp; return ct_cmd;<br />
+			}</p>
+			<p>public void setCleartoolcmd(String ct_cmd) {<br />
+			&nbsp;&nbsp;&nbsp; this.ct_cmd = ct_cmd;<br />
+			}</p>
+			<p>public String getCleartoolpath() {<br />
+			&nbsp;&nbsp;&nbsp; return ct_path;<br />
+			}</p>
+			<p>public void setCleartoolpath(String ct_path) {<br />
+			&nbsp;&nbsp;&nbsp; this.ct_path = ct_path;<br />
+			}</p>
+			</blockquote>
+			<h3>Add support for nested elements and character data</h3>
+			<p align="justify">If the task that you are implementing is
+			allowed to contain Ant types or other tasks then you need to
+			implement some additional functionality. If the task will contain
+			nested tasks, for example <span
+				style="font-size: 10pt; font-family: &amp; quot;">&lt;parallel&gt;</span>
+			then your class must implement the interface <span
+				style="font-size: 10pt; font-family: &amp; quot;">org.apache.tools.ant.TaskContainer</span>.
+			If your task will contain nested types, for example&nbsp;<span
+				style="font-size: 10pt; font-family: &amp; quot;">&lt;fileset&gt;</span>
+			then you will need to implement an <span
+				style="font-size: 10pt; font-family: &amp; quot;">add</span> or <span
+				style="font-size: 10pt; font-family: &amp; quot;">addConfigured</span>
+			method.</p>
+			<h3>Using the Ant <span style="font-family: monospace;">&lt;apply&gt;</span>
+			task</h3>
+			<p align="justify">Ant already has a task called <span
+				style="font-family: monospace;">&lt;apply&gt;</span> which supports
+			nested <span style="font-family: monospace;">&lt;fileset&gt;</span>
+			elements being invoked against an executable. Therefore, rather than
+			re-inventing the wheel, you could also extend the <span
+				style="font-family: monospace;">&lt;apply&gt;</span> task. For
+			example, let us assume that you wanted your <span
+				style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+			task to support the <span
+				style="font-size: 10pt; font-family: &amp; quot;">&lt;fileset&gt;</span>
+			type so that you could specify a set of files as arguments, as in the
+			following:</p>
+			<blockquote
+				style="color: rgb(102, 102, 102); font-family: monospace;">
+			<p>&lt;ccexec&gt;<br />
+			&nbsp;&nbsp;&nbsp; &lt;arg value=&quot;checkout&quot; /&gt;<br />
+			&nbsp;&nbsp;&nbsp; &lt;arg value=&quot;-nc&quot; /&gt;<br />
+			&nbsp;&nbsp;&nbsp; &lt;fileset dir=&quot;${dir.src}&quot;&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;include
+			name=&quot;**/*.java&quot;/&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;exclude
+			name=&quot;**/*Test*&quot;/&gt;<br />
+			&nbsp;&nbsp;&nbsp; &lt;/fileset&gt;<br />
+			&lt;/ccexec&gt;</p>
+			</blockquote>
+			<p align="justify">In this case you would have to implement a new
+			<span style="font-size: 10pt; font-family: &amp; quot;">add</span>
+			method that must be a <span
+				style="font-size: 10pt; font-family: &amp; quot;">&quot;public
+			void&quot;</span> method and takes a <span
+				style="font-size: 10pt; font-family: &amp; quot;">FileSet</span> as
+			a parameter. The name of this method must begin with <span
+				style="font-size: 10pt; font-family: &amp; quot;">add</span>
+			followed by the element name, in this case <span
+				style="font-size: 10pt; font-family: &amp; quot;">addFileset</span>.
+			Example code to achieve this would be as follows:</p>
+			<blockquote
+				style="color: rgb(102, 102, 102); font-family: monospace;">
+			<p>import org.apache.tools.ant.types.FileSet</p>
+			<p>private Vector filesets = new Vector();</p>
+			<p>&nbsp;&nbsp;&nbsp; ...</p>
+			<p>&nbsp;</p>
+			<p>&nbsp;&nbsp;&nbsp; public void addFileset(FileSet set) {<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			this.filesets.addElement(set);<br />
+			&nbsp;&nbsp;&nbsp; }</p>
+			<p>&nbsp;&nbsp;&nbsp; public void execute() throws BuildException
+			{<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (filesets.size() &gt;
+			0) {<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			for (int i = 0; i &lt; filesets.size(); i++) {<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			...<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<i>add entry to argument list</i><br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			...<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+			&nbsp;&nbsp;&nbsp; }</p>
+			</blockquote>
+			<p align="justify">In this case the <span
+				style="font-size: 10pt; font-family: &amp; quot;">execute</span>
+			method would iterate over the <span
+				style="font-size: 10pt; font-family: &amp; quot;">fileset</span>,
+			adding each entry as an argument to the <span
+				style="font-size: 10pt; font-family: &amp; quot;">cleartool</span>
+			command. I am not going to include the functionality required to
+			complete this example, as doing so would require the addition of a
+			large amount of code.</p>
+			<h3>Supporting character data</h3>
+			<p align="justify">If your task is to support character data
+			between its start and end tags, for example as in the <span
+				class="CD1">echo</span> task: &ldquo;<span class="CD1"><span
+				style="font-family: monospace;">&lt;echo&gt;here is some
+			text&lt;/echo&gt;</span>&rdquo; </span>then you will also need to write a <span
+				class="CD1" style="font-family: monospace;">&quot;public void
+			addText(String)&quot;</span> method.</p>
+			<p align="justify">For more information on how to include nested
+			elements refer to the Ant manual or <a
+				href="http://www.amazon.com/gp/product/1930110588/qid=1140802915/sr=1-2/ref=sr_1_2/103-7501078-8855804?s=books&amp;v=glance&amp;n=283155">Hatcher</a>.</p>
+			<h3>Write an execute method</h3>
+			<p align="justify">Next you would need to write an <span
+				style="font-size: 10pt; font-family: &amp; quot;">execute</span>
+			method, this should be a <span
+				style="font-size: 10pt; font-family: &amp; quot;">public void</span>
+			method, that takes no arguments and that throws a <span
+				style="font-size: 10pt; font-family: &amp; quot;">BuildException</span>.
+			You throw a <span style="font-size: 10pt; font-family: &amp; quot;">BuildException</span>
+			in your own code if something goes wrong, for example the required
+			attributes have not been initialized. In our case we do not need to
+			throw this exception, instead I will leave it to the superclass. The
+			<span style="font-size: 10pt; font-family: &amp; quot;">execute</span>
+			method is where I will be implementing the core of the task. In our
+			example I would write the following:</p>
+			<blockquote
+				style="color: rgb(102, 102, 102); font-family: monospace;">
+			<p>public ClearToolExec() {<br />
+			&nbsp; &nbsp; setCleartoolcmd(&quot;cleartool&quot;);<br />
+			&nbsp;&nbsp;&nbsp; setCleartoolpath(&quot;&quot;);<br />
+			}</p>
+			<p>&nbsp;</p>
+			<p>public void execute() throws BuildException {<br />
+			&nbsp; &nbsp; if (getCleartoolpath().equals(&quot;&quot;)) {<br />
+			&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; setResolveExecutable(true);<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setExecutable(getCleartoolcmd());<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;} else {<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			setExecutable(getCleartoolpath() +<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			System.getProperty(&quot;file.separator&quot;) +<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; getCleartoolcmd());<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;super.execute();<br />
+			}</p>
+			</blockquote>
+			<p align="justify">Note that I have included the constructor for
+			<span style="font-size: 10pt; font-family: &amp; quot;">ClearToolExec</span>
+			here as well to help demonstrate the logic. Basically, this task
+			looks to see if a <span
+				style="font-size: 10pt; font-family: &amp; quot;">cleartoolPath</span>
+			attribute has been supplied, if so it will try to find the executable
+			on that path, if not it will let the <span
+				style="font-size: 10pt; font-family: &amp; quot;">ExecTask</span>
+			method try and resolve it (where it will look in the current
+			directory, the <span
+				style="font-size: 10pt; font-family: &amp; quot;">PATH</span>
+			environment variable and so on).</p>
+			<h3>Register the task</h3>
+			<p align="justify">If the task that is being created is a
+			completely new task then you will need to register it with <place
+				w:st="on"></place> Ant. This is done by including an entry in the
+			file:</p>
+			<div style="margin-left: 40px; color: rgb(102, 102, 102);"><span
+				style="font-family: monospace;">src/main/org/apache/tools/ant/taskdefs/default.properties</span></div>
+			<p align="justify">In this file you need to add an entry that
+			maps the name of the Ant task as it will be used in the <span
+				style="font-size: 10pt; font-family: &amp; quot;">build.xml</span>
+			file to its Java implementation class. For example, I would map our
+			class to the name <span
+				style="font-size: 10pt; font-family: &amp; quot;">ccexec</span> as
+			follows:</p>
+			<p
+				style="margin-left: 40px; color: rgb(102, 102, 102); font-family: monospace;">ccexec=org.apache.tools.ant.taskdefs.optional.ClearToolExec</p>
+			<h3>Re-compile the source code</h3>
+			<p align="justify">Once this is complete, to compile the new
+			task, you would then build and install the Ant distribution in the
+			standard manner, usually by re-running the <span
+				style="font-size: 10pt; font-family: &amp; quot;">build.bat</span>
+			or <span style="font-size: 10pt; font-family: &amp; quot;">build.sh</span>
+			file in the top level directory.The completed source code for our
+			simple <span style="font-family: monospace;">cleartool</span> task is
+			given below::</p>
+			<span style="font-size: 10pt; font-family: &amp; quot;"></span>
+			<blockquote
+				style="color: rgb(102, 102, 102); font-family: monospace;">
+			<p>package org.apache.tools.ant.taskdefs.optional;</p>
+			<p>&nbsp;</p>
+			<p>import org.apache.tools.ant.BuildException;<br />
+			import org.apache.tools.ant.taskdefs.ExecTask;</p>
+			<p>public class ClearToolExec extends ExecTask {<br />
+			&nbsp;&nbsp;&nbsp; /* the name of the cleartool command */<br />
+			&nbsp;&nbsp;&nbsp; private String
+			ct_cmd;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+			&nbsp;&nbsp;&nbsp; /* the path to where it resides */<br />
+			&nbsp;&nbsp;&nbsp; private String
+			ct_path;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+			<p>&nbsp;&nbsp;&nbsp; public ClearToolExec() {<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			setCleartoolcmd(&quot;cleartool&quot;);<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			setCleartoolpath(&quot;&quot;);<br />
+			&nbsp;&nbsp;&nbsp; }</p>
+			<p>&nbsp;&nbsp;&nbsp; public String getCleartoolcmd() {<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return ct_cmd;<br />
+			&nbsp;&nbsp;&nbsp; }</p>
+			<p>&nbsp;</p>
+			<p>&nbsp;&nbsp;&nbsp; public void setCleartoolcmd(String ct_cmd)
+			{<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.ct_cmd = ct_cmd;<br />
+			&nbsp;&nbsp;&nbsp; }</p>
+			<p>&nbsp;&nbsp;&nbsp; public String getCleartoolpath() {<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return ct_path;<br />
+			&nbsp;&nbsp;&nbsp; }</p>
+			<p>&nbsp;&nbsp;&nbsp; public void setCleartoolpath(String
+			ct_path) {<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.ct_path = ct_path;<br />
+			&nbsp;&nbsp;&nbsp; }</p>
+			<p>&nbsp;&nbsp;&nbsp; public void execute() throws BuildException
+			{<br />
+			&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;if
+			(getCleartoolpath().equals(&quot;&quot;)) {<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			setResolveExecutable(true);<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			setExecutable(getCleartoolcmd());<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			setExecutable(getCleartoolpath() +<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			System.getProperty(&quot;file.separator&quot;) +<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			getCleartoolcmd());<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super.execute();<br />
+			&nbsp;&nbsp;&nbsp; }</p>
+			</blockquote>
+			<p style="color: rgb(102, 102, 102); font-family: monospace;">&nbsp;
+			&nbsp; }</p>
+			<p align="justify">As you can see this is a relatively
+			straightforward examples, with a limited amount of coding required.
+			However if your task needs to be more complicated, then you obviously
+			have the full capabilities of Java at your disposal.&nbsp;</p>
+			<p align="justify">A completed <span
+				style="font-family: monospace;">&lt;ccexec&gt;</span> task, plus
+			many others tasks for integrating with ClearCase is available in the
+			Ant <a href="http://clearantlib.sourceforge.net/"><span
+				style="font-style: italic;">clearantlib</span></a> library.</p>
+			<h3>References</h3>
+			<ul>
+				<li><a
+					href="http://www.amazon.com/gp/product/0321356993/qid=1133710512/sr=1-5/ref=sr_1_5/104-1622633-2035145?s=books&amp;v=glance&amp;n=283155">ClearCase,
+				Ant, and CruiseControl : The Java Developer's Guide to Accelerating
+				and Automating the Build Process</a> [Lee]</li>
+				<li><a
+					href="http://www.amazon.com/gp/product/1930110588/qid=1140802915/sr=1-2/ref=sr_1_2/103-7501078-8855804?s=books&amp;v=glance&amp;n=283155">Java
+				Development with Ant</a> [Hatcher]</li>
+				<li><a
+					href="http://www.amazon.com/gp/product/1584502487/qid=1140802915/sr=1-4/ref=sr_1_4/103-7501078-8855804?s=books&amp;v=glance&amp;n=283155">Ant:
+				The Java Build Tool in Practice</a> [Matzke]</li>
+				<li><a
+					href="http://www.amazon.com/gp/product/0596003870/qid=1140803004/sr=2-1/ref=pd_bbs_b_2_1/103-7501078-8855804?s=books&amp;v=glance&amp;n=283155">Java
+				Extreme Programming Cookbook</a> [Burke/Coyner]</li>
+				<li><a
+					href="http://www.amazon.com/gp/product/0672324261/qid=1140802915/sr=1-10/ref=sr_1_10/103-7501078-8855804?s=books&amp;v=glance&amp;n=283155">Ant
+				Developers Handbook</a> [Williamson]</li>
+				<li><a href="http://ant.apache.org/manual/">Ant home page</a></li>
+				<li><a href="http://ant.apache.org/manual/">The Ant manual</a>
+				</li>
+			</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>
