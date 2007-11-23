@@ -16,9 +16,11 @@
 }
 #codeoutput {
     text-align: left;
-    font-family: monospace;
+    font-family: Courier New;
     color: #008080;
     margin-left: 40px;
+    line-height:1.5;
+    font-size:9pt;
 }
 h1 { 
 	margin-bottom: 0.5em; 

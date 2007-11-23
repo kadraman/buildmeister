@@ -1,318 +1,132 @@
-<table align="center"
-	style="border-top-width: 0px; border-left-width: 0px; width: 95%;">
-	<tbody>
-		<tr>
-			<td>
-			<h2 align="left">Ant dependency checking</h2>
-			<p align="justify"><i>This article describes how Ant
-			dependency checking works and how to make use of it in your build
-			scripts.</i></p>
-			<h3>Introduction</h3>
-			<p align="justify">By defaut, Apache Ant&nbsp;uses a simple Build
-			Avoidance mechanism whereby&nbsp;it works out what to compile based
-			on basic date and time out-of-date rules: only <strong>.java</strong>
-			files that have no corresponding .<strong>class</strong> file or
-			where the <strong>.class</strong> file is older than the <strong>.java</strong>
-			file will be compiled. It will not, however, rebuild classes where
-			the files that they depend upon change, such as a parent class, an
-			imported class or a change in interface. This can lead to runtime
-			errors &ndash; something you obviously want to try to avoid. Most
-			projects accept this situation and subsequently create and make
-			judicious use of an Ant <strong>clean</strong> target to remove all
-			the<strong> .class</strong> files before compilation. Although this
-			is good practice every now and again and also for specific builds,
-			such as when a Release Build is being created, it can be a bit of
-			overkill for projects where the compilation process takes a
-			significant amount of time and builds are required frequently.</p>
-			<p align="justify">One of the ways to reduce the compilation time
-			and improve Java dependency checking is to use Ant&rsquo;s <strong>&lt;depend&gt;</strong>
-			task. Rather than looking at simple date and time stamps, the <strong>&lt;depend&gt;</strong>
-			task analyses the .class files passed to it to determine which of
-			them are out of date with respect to their source code. It then
-			subsequently removes the .<strong>class</strong> files of any classes
-			which depend on an out-of-date class.</p>
-			<h3>An example</h3>
-			<p align="justify">As a simple example, consider the following
-			two classes (which would be held in the source files<strong>
-			A.java</strong> and <strong>B.java</strong>:</p>
-			<blockquote dir="ltr" style="margin-right: 0px;">
-			<div
-				style="border-left: medium none; border-right: medium none; border-bottom: medium none; padding: 1pt 0cm 0cm;"><span
-				lang="EN-US"><font size="2" face="Courier New"
-				color="#808080">public class A {</font></span></div>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>protected
-			void sayHello(String name) {</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			</span>System.out.println(name);</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>}</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">}</font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080"></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080"></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">public class B
-			extends A {</font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>public void
-			test() {</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			</span>sayHello(&quot;Kevin&quot;);</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>}</font></font></font></span></p>
-			<div
-				style="border-top: medium none; border-left: medium none; border-right: medium none; padding: 0cm 0cm 1pt;">
-			<p class="CDTX" style="margin: 0cm 0cm 12pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">}</font></span></p>
-			</div>
-			</blockquote>
-			<p align="justify">If you compiled this source code and then
-			subsequently introduced a change in class A&rsquo;s interface, for
-			example:</p>
-			<blockquote dir="ltr" style="margin-right: 0px;">
-			<div
-				style="border-left: medium none; border-right: medium none; border-bottom: medium none; padding: 1pt 0cm 0cm;"><span
-				lang="EN-US"><font size="2" face="Courier New"
-				color="#808080">public class A {</font></span></div>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp; </span><span>&nbsp;</span>protected
-			void sayHello(String salutation, String name) {</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			</span>System.out.println(salutation + &quot; &quot; + name);</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>}</font></font></font></span></p>
-			<div
-				style="border-top: medium none; border-left: medium none; border-right: medium none; padding: 0cm 0cm 1pt;">
-			<p class="CDTX" style="margin: 0cm 0cm 12pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">}</font></span></p>
-			</div>
-			</blockquote>
-			<p align="justify">then without executing a clean build first,
-			Ant by default would only recompile one file as follows:</p>
-			<blockquote dir="ltr" style="margin-right: 0px;">
-			<div
-				style="border-left: medium none; border-right: medium none; border-bottom: medium none; padding: 1pt 0cm 0cm;"><font
-				color="#808080"><b><span lang="EN-US"><font
-				size="2"><font face="Courier New">&gt;ant
-			compile&nbsp;</font></font></span></b>&nbsp;</font></div>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">Buildfile:
-			build.xml</font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">init:</font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>[echo]
-			creating directory structure</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>[mkdir]
-			Created dir: C:\code\build</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">compile:</font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>[javac]
-			Compiling 1 source files to</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>[ccc]C:\code\build</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080"></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">BUILD SUCCESSFUL</font></span></p>
-			<div
-				style="border-top: medium none; border-left: medium none; border-right: medium none; padding: 0cm 0cm 1pt;">
-			<p class="CDTX" style="margin: 0cm 0cm 12pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">Total time: 1
-			second</font></span></p>
-			</div>
-			</blockquote>
-			<p align="justify">In this case only <strong>A.java</strong>
-			would be recompiled as it is the only class whose date and time had
-			changed. If you cleaned out all the classes first and then compiled,
-			the compiler would notify you of the error that has been made by
-			changing the interface in once class and not in another. However,
-			there are other more insidious dependencies which might not cause a
-			compiler error and pose some seriously difficult to find runtime
-			bugs.</p>
-			<p align="justify">To enable dependency checking, simply pass the
-			.java source and .<strong>class</strong> build files to the <strong>&lt;depend&gt;</strong>
-			task as shown below. In this example I have also made a reference to
-			a cache called <strong>depcache</strong>. This is used to cache the
-			dependency information; a cache can be utilised because the
-			dependencies for a class only change when the class itself changes
-			and only those class files that change will have their dependency
-			information re-analysed.</p>
-			<p class="LN" style="margin: 12pt 0cm 0pt;"><span lang="EN-US"></span></p>
-			<blockquote dir="ltr" style="margin-right: 0px;">
-			<div
-				style="border-left: medium none; border-right: medium none; border-bottom: medium none; padding: 1pt 0cm 0cm;">
-			<p class="LC" style="margin: 6pt 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">&lt;project&nbsp;
-			name=&quot;ant-depend&quot; default=&quot;compile&quot;
-			basedir=&quot;.&quot;&gt;</font></span></p>
-			</div>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">&nbsp;&nbsp;&nbsp;
-			&lt;property name=&quot;dir.src&quot;<span>&nbsp;&nbsp;&nbsp;
-			</span>value=&quot;src&quot;/&gt;</font></span></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">&nbsp;&nbsp;&nbsp;
-			&lt;property name=&quot;dir.build&quot;<span>&nbsp; </span>value=&quot;build&quot;/&gt;</font></span></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><font color="#808080"></font><span
-				lang="EN-US">
-			<p><span lang="EN-US"><font size="2" face="Courier New"
-				color="#808080">&lt;target name=&quot;init&quot;
-			description=&quot;initialise directory structure&quot;&gt;<br />
-			</font></span><font color="#808080"><span lang="EN-US"><font size="2"><font
-				face="Courier New"><span>&nbsp;&nbsp;&nbsp; </span>&lt;mkdir
-			dir=&quot;${dir.build}&quot;/&gt;<br />
-			</font></font></span><span lang="EN-US"><font size="2" face="Courier New">&lt;/target&gt;</font></span></font></p>
-			</span></p>
-			<p>&nbsp;</p>
-			<p><span lang="EN-US"><font size="2" face="Courier New"
-				color="#808080">&lt;target name=&quot;clean&quot;
-			description=&quot;remove generated files&quot;&gt;<br />
-			&nbsp;&nbsp;&nbsp; </font></span><span lang="IT"><font size="2"><font
-				face="Courier New"><font color="#808080">&lt;delete
-			dir=&quot;${dir.build}&quot;/&gt;<br />
-			&nbsp;&nbsp;&nbsp; </font></font></font></span><span lang="IT"><font size="2"><font
-				face="Courier New"><font color="#808080">&lt;delete
-			dir=&quot;depcache&quot;/&gt;<br />
-			</font></font></font></span><span lang="EN-US"><font size="2" face="Courier New"
-				color="#808080">&lt;/target&gt;</font></span></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080"></font></span></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">&lt;target
-			name=&quot;compile&quot; depends=&quot;init&quot; </font></span></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><font color="#808080"><span
-				lang="FR"><font size="2"><font face="Courier New"><span>&nbsp;&nbsp;&nbsp;
-			</span>description=&quot;compile source code&quot;&gt;&nbsp;&nbsp;<br />
-			</font></font></span><b><span lang="FR"><font size="2"><font
-				face="Courier New"><span>&nbsp;&nbsp;&nbsp; </span>&lt;depend
-			srcdir=&quot;${dir.src}&quot;&nbsp;</font></font></span></b>&nbsp;</font></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><b><span
-				lang="FR"><font size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp;&nbsp; </span>destdir=&quot;${dir.build}&quot;
-			</font></font></font></span></b></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><b><span
-				lang="FR"><font size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp;&nbsp; </span>cache=&quot;depcache&quot;&gt;
-			</font></font></font></span></b></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><b><span
-				lang="FR"><font size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			</span>&lt;include name= &quot;**/*.java&quot;/&gt; </font></font></font></span></b></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><b><span
-				lang="FR"><font size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>&lt;/depend&gt;
-			</font></font></font></span></b></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><span lang="FR"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>&lt;javac
-			destdir=&quot;${dir.build}&quot; &gt; </font></font></font></span></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><span lang="FR"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			</span>&lt;src path=&quot;${dir.src}&quot;/&gt; </font></font></font></span></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><font size="2"><font
-				face="Courier New"><font color="#808080"><span
-				lang="FR"><span>&nbsp;&nbsp;&nbsp; </span></span><span lang="EN-US">&lt;/javac&gt;</span></font></font></font></p>
-			<p class="LC2" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">&lt;/target&gt;<br />
-			<br />
-			</font></span></p>
-			<div
-				style="border-top: medium none; border-left: medium none; border-right: medium none; padding: 0cm 0cm 1pt;">
-			<p class="LCX" style="margin: 0cm 0cm 12pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">&lt;/project&gt;</font></span></p>
-			</div>
-			</blockquote>
-			<p align="justify">With dependency checking in place, compiling
-			the example from above would mean the automatic deletion of the
-			dependent &nbsp;<strong>.class</strong> files and the exposure of the
-			interface compilation problem as follows:</p>
-			<blockquote dir="ltr" style="margin-right: 0px;">
-			<div
-				style="border-left: medium none; border-right: medium none; border-bottom: medium none; padding: 1pt 0cm 0cm;"><b><span
-				lang="EN-US"><font size="2"><font face="Courier New"
-				color="#808080">&gt;ant compile </font></font></span></b></div>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">Buildfile:
-			build.xml</font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">init:</font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>[echo]
-			creating directory structure</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">compile:</font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span><b>[depend]
-			Deleted 2 out of date files in 0 seconds </b></font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>[javac]
-			Compiling 2 source files to </font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>[cc]C:\code\build</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><font color="#808080"><span
-				lang="FR"><font size="2"><font face="Courier New"><span>&nbsp;&nbsp;&nbsp;
-			</span>[javac] C:\code\src\B.java:7: </font></font></span><font size="2"><font
-				face="Courier New"><span lang="EN-US">sayHello(java.lang.String,java.lang.String
-			</span></font></font><span lang="EN-US"><font size="2"><font
-				face="Courier New">in A cannot be applied to
-			(java.lang.String)</font></font></span></font></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>[javac]<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			</span>sayHello(&quot;Kevin&quot;);</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>[javac]<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			</span>^</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2"><font face="Courier New"><font
-				color="#808080"><span>&nbsp;&nbsp;&nbsp; </span>[javac] 1
-			error</font></font></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080"></font></span></p>
-			<p class="CDT" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">BUILD SUCCESSFUL</font></span></p>
-			<div
-				style="border-top: medium none; border-left: medium none; border-right: medium none; padding: 0cm 0cm 1pt;">
-			<p class="CDTX" style="margin: 0cm 0cm 12pt;"><span lang="EN-US"><font
-				size="2" face="Courier New" color="#808080">Total time: 1
-			second</font></span></p>
-			</div>
-			</blockquote>
-			<p align="justify">Because of the intricacies of Java coding,
-			dependency checking will never be infallible, therefore it is good
-			strategy to carry out a clean build every now and again. This is
-			something you can automatically setup with a tool such as
-			CruiseControl&nbsp;where you can create a schedule so that&nbsp;one
-			in every five builds is a clean build.</p>
-			</td>
-		</tr>
-	</tbody>
-</table>
+<div id="article">
+<h1>Ant dependency checking</h1>
+<p id="articlehead">This article describes how Ant dependency
+checking works and how to make use of it in your build scripts.</p>
+<h2>Introduction</h2>
+<p>By defaut, Apache Ant uses a simple Build
+Avoidance mechanism whereby it works out what to compile based on
+basic date and time out-of-date rules: only <strong>.java</strong> files
+that have no corresponding .<strong>class</strong> file or where the <strong>.class</strong>
+file is older than the <strong>.java</strong> file will be compiled. It
+will not, however, rebuild classes where the files that they depend upon
+change, such as a parent class, an imported class or a change in
+interface. This can lead to runtime errors &ndash; something you
+obviously want to try to avoid. Most projects accept this situation and
+subsequently create and make judicious use of an Ant <strong>clean</strong>
+target to remove all the<strong> .class</strong> files before
+compilation. Although this is good practice every now and again and also
+for specific builds, such as when a Release Build is being created, it
+can be a bit of overkill for projects where the compilation process
+takes a significant amount of time and builds are required frequently.</p>
+<p>One of the ways to reduce the compilation time
+and improve Java dependency checking is to use Ant&rsquo;s <strong>&lt;depend&gt;</strong>
+task. Rather than looking at simple date and time stamps, the <strong>&lt;depend&gt;</strong>
+task analyses the .class files passed to it to determine which of them
+are out of date with respect to their source code. It then subsequently
+removes the .<strong>class</strong> files of any classes which depend on
+an out-of-date class.</p>
+<h2>An example</h2>
+<p>As a simple example, consider the following two
+classes (which would be held in the source files<strong> A.java</strong>
+and <strong>B.java</strong>:</p>
+<pre name="code" class="java">
+public class A {
+    protected void sayHello(String name) {
+        System.out.println(name);
+    }
+    
+    public class B extends A {
+        public void test() {
+            sayHello(&quot;Kevin&quot;);
+        }
+}
+</pre>        
+<p>If you compiled this source code and then
+subsequently introduced a change in class A&rsquo;s interface, for
+example:</p>
+<pre name="code" class="java">
+public class A {
+    protected void sayHello(String salutation, String name) {
+        System.out.println(salutation + &quot; &quot; + name);
+    }
+}
+</pre>
+<p>then without executing a clean build first, Ant
+by default would only recompile one file as follows:</p>
+<div id="codeoutput">&gt;ant compile <br/>
+Buildfile: build.xml<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[echo] creating directory structure<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[mkdir] Created dir: C:\code\build<br/>
+compile:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[javac] Compiling 1 source files to C:\code\build<br/>
+BUILD SUCCESSFUL<br/>
+Total time: 1 second
+</div>
+
+<p>In this case only <strong>A.java</strong> would
+be recompiled as it is the only class whose date and time had changed.
+If you cleaned out all the classes first and then compiled, the compiler
+would notify you of the error that has been made by changing the
+interface in once class and not in another. However, there are other
+more insidious dependencies which might not cause a compiler error and
+pose some seriously difficult to find runtime bugs.</p>
+<p>To enable dependency checking, simply pass the
+.java source and .<strong>class</strong> build files to the <strong>&lt;depend&gt;</strong>
+task as shown below. In this example I have also made a reference to a
+cache called <strong>depcache</strong>. This is used to cache the
+dependency information; a cache can be utilised because the dependencies
+for a class only change when the class itself changes and only those
+class files that change will have their dependency information
+re-analysed.</p>
+<pre name="code" class="xml">
+&lt;project name=&quot;ant-depend&quot; default=&quot;compile&quot; basedir=&quot;.&quot;&gt;
+
+&lt;property name=&quot;dir.src&quot; value=&quot;src&quot;/&gt;
+&lt;property name=&quot;dir.build&quot; value=&quot;build&quot;/&gt;
+
+&lt;target name=&quot;init&quot; description=&quot;initialise directory structure&quot;&gt;
+    &lt;mkdir dir=&quot;${dir.build}&quot;/&gt;
+&lt;/target&gt;
+
+&lt;target name=&quot;clean&quot; description=&quot;remove generated files&quot;&gt;
+    &lt;delete dir=&quot;${dir.build}&quot;/&gt;
+    &lt;delete dir=&quot;depcache&quot;/&gt;
+&lt;/target&gt;
+
+&lt;target name=&quot;compile&quot; depends=&quot;init&quot; description=&quot;compile source code&quot;&gt;
+    &lt;depend srcdir=&quot;${dir.src}&quot; destdir=&quot;${dir.build}&quot; cache=&quot;depcache&quot;&gt; 
+        &lt;include name= &quot;**/*.java&quot;/&gt; 
+    &lt;/depend&gt; </font></font></font></span></b></p>
+    &lt;javac destdir=&quot;${dir.build}&quot; &gt;
+        &lt;src path=&quot;${dir.src}&quot;/&gt;
+    &lt;/javac&gt;
+&lt;/target&gt;
+
+&lt;/project&gt;
+</pre>
+<p>With dependency checking in place, compiling the
+example from above would mean the automatic deletion of the dependent
+ <strong>.class</strong> files and the exposure of the interface
+compilation problem as follows:</p>
+<div id="codeoutput">
+&gt;ant compile<br/>
+Buildfile: build.xml<br/>
+init:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[echo] creating directory structure<br/>
+compile:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[depend] Deleted 2 out of date files in 0 seconds <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[javac] Compiling 2 source files to C:\code\build<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[javac] C:\code\src\B.java:7: sayHello(java.lang.String,java.lang.String<br/>in A cannot be applied to (java.lang.String)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[javac] sayHello(&quot;Kevin&quot;);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[javac] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[javac] 1 error<br/>
+BUILD FAILED<br/>
+Total time: 1 second
+</div>
+<p>Because of the intricacies of Java coding,
+dependency checking will never be infallible, therefore it is good
+strategy to carry out a clean build every now and again. This is
+something you can automatically setup with a tool such as
+CruiseControl where you can create a schedule so that one in
+every five builds is a clean build.</p>
+</div>

@@ -1,8 +1,8 @@
-<div class="article">
-<h2>The 5 minute low-down on:<i> CruiseControl</i></h2>
-<p><i>A brief introduction to the features and capabilities of
-CruiseControl - an open source Continuous Integration toolkit.</i></p>
-<h3>Introduction</h3>
+<div id="article">
+<h1>Introduction to CruiseControl</h1>
+<p id="articlehead">A brief introduction to the features and capabilities of
+CruiseControl - an open source Continuous Integration toolkit.</p>
+<h2>Introduction</h2>
 <p><a href="http://cruisecontrol.sourceforge.net">CruiseControl</a>
 is a &quot;framework for a continuous build process&quot; that allows
 you to automate the execution of your builds and report on their
@@ -14,10 +14,10 @@ not dictate this process and you can use it for any project where
 integration builds are carried out frequently (usually at least once a
 day).</p>
 <p>There are now three flavours of CruiseControl: one for Java, one
-for Microsoft&nbsp;.NETapplications (<a
+for Microsoft .NETapplications (<a
 	href="http://ccnet.thoughtworks.com/">CruiseControl.NET</a>) and one
 for Ruby (<a href="http://cruisecontrolrb.thoughtworks.com/">CruiseControl.rb</a>).
-Unfortunately, these&nbsp;variants do not&nbsp;share the same code base
+Unfortunately, these variants do not share the same code base
 and have different capabilities and configurations. The instructions and
 definitions contained in this document refer to the open source
 &quot;Java&quot; edition. This is the oldest and most mature version of
@@ -26,7 +26,7 @@ since it provides a number of different builder plugins.</p>
 <p>The examples use <a href="http://ant.apache.org">Apache Ant</a>
 as the build tool and <a href="http://subversion.tigris.org">Subversion</a>
 as the version control provider.</p>
-<h3>Installing CruiseControl</h3>
+<h2>Installing CruiseControl</h2>
 <p>You can download the latest version of CruiseControl from its
 SourceForge <a href="http://cruisecontrol.sourceforge.net/download.html">website</a>.
 There are three types of downloads:</p>
@@ -44,22 +44,22 @@ Files\CruiseControl</span>, however you can select an alternate installation
 directory. If you choose the binary Zip file then simply extract the
 contents to you chosen installation directory. In this article I will
 assume you install CruiseControl to the following directory on Windows:</p>
-<div class="codeoutput">C:\JavaTools\cruisecontrol-bin-2.7</div>
+<div id="codeoutput">C:\JavaTools\cruisecontrol-bin-2.7</div>
 <p>Or the following directory on Linux or UNIX:</p>
-<div class="codeoutput">/opt/javatools/cruisecontrol-bin-2.7</div>
+<div id="codeoutput">/opt/javatools/cruisecontrol-bin-2.7</div>
 <p>If you have chosen the Windows installer then CruiseControl is
 installed as a service, to start it for the first time, enter the
 following from the command line:</p>
-<div class="codeoutput">net start cruisecontrol</div>
+<div id="codeoutput">&gt;net start cruisecontrol</div>
 <p>If you have chosen the binary Zip version then navigate to the
 install directory and execute the CruiseControl start-up script. On
 Windows this would be:</p>
-<div class="codeoutput">cd C:\JavaTools\cruisecontrol-bin-2.7\bin<br />
-cruisecontrol.bat</div>
+<div id="codeoutput">&gt;cd C:\JavaTools\cruisecontrol-bin-2.7\bin<br />
+&gt;cruisecontrol.bat</div>
 <p>Or on Linux or UNIX:</p>
-<div class="codeoutput">cd
+<div id="codeoutput">&gt;cd
 /opt/javatools/cruisecontrol-bin-2.7/bin<br />
-cruisecontrol.sh</div>
+&gt;cruisecontrol.sh</div>
 <p>CruiseControl should start up successfully and build its sample
 project &ldquo;connectfour&rdquo;. You can examine the build results by
 pointing your browser at the CruiseControl dashboard &ndash; the default
@@ -67,7 +67,7 @@ URL is <span style="font-family: monospace;">http://localhost:8080/dashboard</sp
 You can also examine the CruiseControl log file (<span
 	style="font-family: monospace;">cruisecontrol.log</span>) to see if
 there have been any errors.</p>
-<h3>The CruiseControl configuration file</h3>
+<h2>The CruiseControl configuration file</h2>
 <p>The input to CruiseControl is also an XML configuration file. By
 default it is called <span style="font-family: monospace;">config.xml</span>
 and is located in the CruiseControl home directory. If you examine this
@@ -80,26 +80,28 @@ find the one that you require, you can always write a Java class to
 implement your own.</p>
 <p>The configuration file can be amended to build many related or
 independent projects. Its general multi-project format is as follows:</p>
-<div class="codelisting">&lt;cruisecontrol&gt;<br />
-<br />
-&nbsp; &nbsp; &lt;property name=&hellip;&gt;<br />
-&nbsp; &nbsp; &lt;plugin name=&hellip;&gt;<br />
-<br />
-&lt;project name=&quot;project1&quot;&gt;<br />
-&nbsp; &nbsp; &lt;property name=&hellip;&gt;<br />
-&nbsp; &nbsp; &lt;listeners/&gt;<br />
-&nbsp; &nbsp; &lt;bootstrappers/&gt;<br />
-&nbsp; &nbsp; &lt;modificationset/&gt;<br />
-&nbsp; &nbsp; &lt;schedule/&gt;<br />
-&nbsp; &nbsp; &lt;log/&gt;<br />
-&nbsp; &nbsp; &lt;publishers/&gt;<br />
-&lt;/project&gt;<br />
-<br />
-&lt;project name=&quot;project2&quot;&gt;<br />
-&nbsp; &nbsp; &hellip;<br />
-&lt;/project&gt;<br />
-&hellip;<br />
-&lt;/cruisecontrol&gt;</div>
+<pre name="code" class="xml">
+&lt;cruisecontrol&gt;
+
+&lt;property name=&hellip;&gt;
+&lt;plugin name=&hellip;&gt;
+
+&lt;project name=&quot;project1&quot;&gt;
+    &lt;property name=&hellip;&gt;
+    &lt;listeners/&gt;
+    &lt;bootstrappers/&gt;
+    &lt;modificationset/&gt;
+    &lt;schedule/&gt;
+    &lt;log/&gt;
+    &lt;publishers/&gt;
+&lt;/project&gt;
+
+&lt;project name=&quot;project2&quot;&gt;
+    &hellip;
+&lt;/project&gt;
+&hellip;
+&lt;/cruisecontrol&gt;
+</pre>
 <p>Every CruiseControl plugin takes a number of attributes; some in
 fact can take a significant amount. Fortunately, you can pre-configure
 plugins with common attributes, and then override (re-configure) them at
@@ -108,16 +110,14 @@ the project level if necessary. As an example to pre-configure the <span
 could place the following definition at the top of your configuration
 file &ndash; outside of any <span style="font-family: monospace;">&lt;project&gt;</span>
 elements:</p>
-<div class="codelisting">&lt;plugin name=&quot;htmlemail&quot;
-mailhost=&quot;smtp.mailhost.com&quot;&nbsp;returnaddress=&quot;bldadmin&quot;<br />
-&nbsp; &nbsp;
-xsldir=&quot;${dir.javatools}/cruisecontrol-bin-2.7/xsl&quot;<br />
-&nbsp; &nbsp;
-css=&quot;${dir.javatools}/cruisecontrol-bin-2.7/css/cruisecontrol.css&quot;<br />
-&nbsp; &nbsp; subjectprefix=&quot;[CruiseControl]: &quot;/&gt;</div>
+<div id="codeoutput">&lt;plugin name=&quot;htmlemail&quot;
+mailhost=&quot;smtp.mailhost.com&quot; returnaddress=&quot;bldadmin&quot;<br />
+&nbsp;&nbsp;xsldir=&quot;${dir.javatools}/cruisecontrol-bin-2.7/xsl&quot;<br />
+&nbsp;&nbsp;css=&quot;${dir.javatools}/cruisecontrol-bin-2.7/css/cruisecontrol.css&quot;<br />
+&nbsp;&nbsp;subjectprefix=&quot;[CruiseControl]: &quot;/&gt;</div>
 <p>Whenever you wanted to call this plugin from within a project you
 could then simply include:</p>
-<div class="codelisting">&lt;htmlemail/&gt;</div>
+<div id="codeoutput">&lt;htmlemail/&gt;</div>
 <p>However there are probably additional project specific attributes
 which you would set too (see the example later).</p>
 <p>CruiseControl properties are specified and used in the same way
@@ -128,10 +128,9 @@ global properties with project specific properties. As an example, to
 create properties for the location of an installed version of Ant, you
 could create the following properties at the top level of your build
 script:</p>
-<div class="codelisting">&lt;property
+<div id="codeoutput">&lt;property
 name=&quot;dir.javatools&quot; value=&quot;C:\JavaTools&quot;/&gt;<br />
-&lt;property name=&quot;dir.ant&quot;
-value=&quot;${dir.javatools}\apacheant-1.7.0&quot;/&gt;</div>
+&lt;property name=&quot;dir.ant&quot; value=&quot;${dir.javatools}\apacheant-1.7.0&quot;/&gt;</div>
 <p>Implementing these two simple practices - pre-configuring
 plug-ins and re-using properties - can significantly reduce the size of
 your CruiseControl configuration file. Although you will undoubtedly not
@@ -139,7 +138,7 @@ need to use every single CruiseControl plugin there are a common set
 that most projects will use. I will discuss these plugins in the section
 which follows, however before I do so you need to understand how
 CruiseControl defines its build workspace.</p>
-<h3>The CruiseControl workspace</h3>
+<h2>The CruiseControl workspace</h2>
 <p>CruiseControl is designed to execute a build from an existing
 version control workspace. Although you could configure CruiseControl to
 create a new workspace, I recommend that that you create a CruiseControl
@@ -148,17 +147,16 @@ installer and binary versions of CruiseControl, build workspaces are
 typically held in its <span style="font-family: monospace;">projects</span>
 directory. Therefore, to create a new build workspace for Subversion in
 this workspace, you could execute a command similar to the following:</p>
-<div class="codeoutput">cd
+<div id="codeoutput">&gt;cd
 c:\JavaTools\cruisecontrol-bin-2.7\projects<br />
-svn co https://hoteldejava.svn.sourceforge.net/svnroot/hoteldejava/trunk
-hoteldejava</div>
+&gt;svn co https://hoteldejava.svn.sourceforge.net/svnroot/hoteldejava/trunk hoteldejava</div>
 <p>This will create a workspace called <span
 	style="font-family: monospace;">hoteldejava</span> containing the
 latest files from the Subversion trunk. Note <a
 	href="http://hoteldejava.sourceforge.net">HotelDeJava</a> is a working
 reference application that you can use for testing build processes with
 Apache Ant or Apache Maven.</p>
-<h3>CruiseControl Configuration</h3>
+<h2>CruiseControl Configuration</h2>
 <p>You can configure CruiseControl to schedule a build execution as
 frequently as you want, but you usually specify that a build be carried
 out only if something has changed - which obviously make sense! To
@@ -172,77 +170,58 @@ builders, including support for Ant, Maven, Rake as well as calling any
 command line executable.</p>
 <p>.An example of a configuration file for CruiseControl is detailed
 below:</p>
-<div class="codelisting">01: &lt;cruisecontrol&gt; <br />
-02: <br />
-03: &lt;property name=&quot;dir.javatools&quot;
-value=&quot;C:\JavaTools&quot;/&gt;<br />
-04: &lt;property name=&quot;dir.ant&quot;
-value=&quot;${dir.javatools}\apacheant-1.7.0&quot;/&gt;<br />
-05: &lt;plugin
-name=&quot;htmlemail&quot;&nbsp;mailhost=&quot;smtp.mailhost.com&quot;
-returnaddress=&quot;bldadmin&quot;<br />
-06: &nbsp; &nbsp;
-xsldir=&quot;${dir.javatools}/cruisecontrol-bin-2.7/xsl&quot;<br />
-07: &nbsp; &nbsp;
-css=&quot;${dir.javatools}/cruisecontrol-bin-2.7/css/cruisecontrol.css&quot;<br />
-08: &nbsp; &nbsp; subjectprefix=&quot;[CruiseControl]: &quot;/&gt;<br />
-09:<br />
-10: &lt;project name=&quot;HotelDeJava&quot;&gt; <br />
-11:&nbsp; &nbsp;&nbsp; &lt;labelincrementer
-defaultLabel=&quot;HDJ.1&quot; separator=&quot;-&quot;/&gt; <br />
-12:<br />
-13:&nbsp; &nbsp;&nbsp; &lt;listeners&gt; <br />
-14:&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&lt;currentbuildstatuslistener
-file=&quot;logs\${project.name}\buildstatus.txt&quot;/&gt; <br />
-15:&nbsp; &nbsp;&nbsp; &lt;/listeners&gt; <br />
-16:<br />
-17: &nbsp; &nbsp; &lt;bootstrappers&gt;<br />
-18: &nbsp; &nbsp; &nbsp; &nbsp; &lt;svnbootstrapper
-file=&quot;projects/${project.name}/build.xml&quot;/&gt;<br />
-19: &nbsp; &nbsp; &nbsp; &nbsp; &lt;svnbootstrapper
-file=&quot;projects/${project.name}/default.properties&quot;/&gt;<br />
-20: &nbsp; &nbsp; &lt;/bootstrappers&gt;<br />
-21:<br />
-22: &nbsp; &nbsp; &lt;modificationset quietperiod=&quot;30&quot;&gt;<br />
-23: &nbsp; &nbsp; &nbsp; &nbsp; &lt;svn
-localWorkingCopy=&quot;projects/${project.name}&quot;/&gt;<br />
-24: &nbsp; &nbsp; &lt;/modificationset&gt;<br />
-25:<br />
-26: &nbsp; &nbsp; &lt;schedule interval=&quot;1200&quot;&gt;<br />
-27: &nbsp; &nbsp; &nbsp; &nbsp; &lt;ant
-antscript=&quot;${dir.ant}/bin/ant.bat&quot;<br />
-28: &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp;antworkingdir=&quot;projects/${project.name}&quot;<br />
-29: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;buildfile=&quot;build.xml&quot;
-target=&quot;build&quot;/&gt;<br />
-30: &nbsp; &nbsp; &lt;/schedule&gt;<br />
-31: <br />
-32:&nbsp; &nbsp;&nbsp; &lt;log&gt; <br />
-33:&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;merge
-file=&quot;M:\example_int\Example\build\TESTS-*.xml&quot;/&gt; <br />
-34:&nbsp; &nbsp;&nbsp; &lt;/log&gt; <br />
-35: <br />
-36: &nbsp; &nbsp; &lt;publishers&gt;<br />
-37: &nbsp; &nbsp; &nbsp; &nbsp; &lt;onsuccess&gt;<br />
-38: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactspublisher
-dest=&quot;artifacts/${project.name}&quot;<br />
-39: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp;file=&quot;projects/${project.name}/dist/HotelDJEAR.ear&quot;/&gt;<br />
-40: &nbsp; &nbsp; &nbsp; &nbsp; &lt;/onsuccess&gt;<br />
-41: &nbsp; &nbsp; &nbsp; &nbsp; &lt;htmlemail <br />
-42: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-buildresultsurl=&quot;http://localhost:8080/dashboard/build/detail/${project.name}&quot;&gt;<br />
-43: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;always
-address=&quot;integrators@mailhost.com&quot;/&gt;<br />
-43: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;failure
-address=&quot;developers@mailhost.com&quot;/&gt;<br />
-44: &nbsp; &nbsp; &nbsp; &nbsp; &lt;/htmlemail&gt;<br />
-45: &nbsp; &nbsp; &lt;/publishers&gt;<br />
-46:<br />
-47: &lt;/project&gt; <br />
-48:<br />
-49: &lt;/cruisecontrol&gt;</div>
+<pre name="code" class="xml">
+&lt;cruisecontrol&gt;
+
+&lt;property name=&quot;dir.javatools&quot; value=&quot;C:\JavaTools&quot;/&gt;
+&lt;property name=&quot;dir.ant&quot; value=&quot;${dir.javatools}\apacheant-1.7.0&quot;/&gt;
+&lt;plugin name=&quot;htmlemail&quot; mailhost=&quot;smtp.mailhost.com&quot;
+    returnaddress=&quot;bldadmin&quot;
+    xsldir=&quot;${dir.javatools}/cruisecontrol-bin-2.7/xsl&quot;  
+    css=&quot;${dir.javatools}/cruisecontrol-bin-2.7/css/cruisecontrol.css&quot;
+    subjectprefix=&quot;[CruiseControl]: &quot;/&gt;
+
+&lt;project name=&quot;HotelDeJava&quot;&gt;
+    &lt;labelincrementer defaultLabel=&quot;HDJ.1&quot; separator=&quot;-&quot;/&gt;
+    
+    &lt;listeners&gt;
+        &lt;currentbuildstatuslistener file=&quot;logs\${project.name}\buildstatus.txt&quot;/&gt;
+    &lt;/listeners&gt;
+    
+    &lt;bootstrappers&gt;
+        &lt;svnbootstrapper file=&quot;projects/${project.name}/build.xml&quot;/&gt;
+        &lt;svnbootstrapper file=&quot;projects/${project.name}/default.properties&quot;/&gt;
+    &lt;/bootstrappers&gt;
+    
+    &lt;modificationset quietperiod=&quot;30&quot;&gt;
+        &lt;svn localWorkingCopy=&quot;projects/${project.name}&quot;/&gt;
+    &lt;/modificationset&gt;
+
+    &lt;schedule interval=&quot;1200&quot;&gt;
+        &lt;ant antscript=&quot;${dir.ant}/bin/ant.bat&quot;
+            antworkingdir=&quot;projects/${project.name}&quot;
+            buildfile=&quot;build.xml&quot; target=&quot;build&quot;/&gt;
+    &lt;/schedule&gt;
+
+    &lt;log&gt;
+        &lt;merge file=&quot;M:\example_int\Example\build\TESTS-*.xml&quot;/&gt;
+    &lt;/log&gt;
+
+    &lt;publishers&gt;
+        &lt;onsuccess&gt;
+            &lt;artifactspublisher dest=&quot;artifacts/${project.name}&quot;
+                file=&quot;projects/${project.name}/dist/HotelDJEAR.ear&quot;/&gt;
+        &lt;/onsuccess&gt;
+        &lt;htmlemail buildresultsurl=&quot;http://localhost:8080/dashboard/build/detail/${project.name}&quot;&gt;
+            &lt;always address=&quot;integrators@mailhost.com&quot;/&gt;
+            &lt;failure address=&quot;developers@mailhost.com&quot;/&gt;
+        &lt;/htmlemail&gt;
+    &lt;/publishers&gt;
+
+&lt;/project&gt;
+
+&lt;/cruisecontrol&gt;
+</pre>
 <p>There are a number of entries worthy of explanation in this
 example:</p>
 <ul>
@@ -254,7 +233,7 @@ example:</p>
 	on lines 17-20 make sure that the build scripts are up to date out of
 	Subversion before the build starts</li>
 	<li>The <span style="font-family: monospace;">&lt;modificationset&gt;</span>
-	on lines 22-24 monitors the&nbsp;the Subversion repository for changes
+	on lines 22-24 monitors the the Subversion repository for changes
 	(based on the contents of the local working copy)</li>
 	<li>The <span style="font-family: monospace;">&lt;schedule&gt;</span>
 	on lines 26-30 is defined to potentially execute every 20 minutes (1200
@@ -263,9 +242,9 @@ example:</p>
 	target <span style="font-family: monospace;">build</span>.</li>
 	<li>The <span style="font-family: monospace;">&lt;log&gt;</span>
 	definition on lines 32-34 merges the JUnit tests results file into
-	CruiseControls own log.&nbsp;</li>
+	CruiseControls own log. </li>
 	<li>The <span style="font-family: monospace;">&lt;publishers&gt;</span>
-	on lines&nbsp;36-45 controls how CruiseControl reports on the results
+	on lines 36-45 controls how CruiseControl reports on the results
 	of the build. In this case a HTML formatted email will be sent when the
 	build fails, to the email group <span style="font-family: monospace;">developers</span>,
 	whilst an email on success or failure will be sent to the email group <span
@@ -274,7 +253,7 @@ example:</p>
 	using the <span style="font-family: monospace;">&lt;artifactpublisher&gt;</span>
 	plugin.</li>
 </ul>
-<h3>The CruiseControl Dashboard</h3>
+<h2>The CruiseControl Dashboard</h2>
 <p>As well as sending email notifications on build success or
 failure CruiseControl also has a web based dashboard where you can
 monitor the success or failure of all of the projects that are being
@@ -282,20 +261,20 @@ built using<br />
 CruiseControl. The default URL for the dashboard application is <span
 	style="font-family: monospace;">http://localhost:8080/dashboard</span>.
 An example of the dashboard is illustrated below:</p>
-<p align="center"><img border="0"
-	src="/images/CruiseControl-Dashboard-small.gif"
-	alt="CruiseControl Dashboard" /></p>
-<p align="center"><a target="_blank"
-	href="/images/CruiseControl-Dashboard.gif">larger image</a></p>
+<div align="center"><img border="0"
+	src="%image_dir%/CruiseControl-Dashboard-small.gif"
+	alt="CruiseControl Dashboard" />
+<br/><a target="_blank"
+	href="%image_dir%/CruiseControl-Dashboard.gif">larger image</a></div>
 <p>From the dashboard you can get a quick indication of the status
 of all of your projects, drill down for further information and also
 &ldquo;force&rdquo; builds to happen. You can also edit the
 configuration file from the interface to make minor changes.</p>
-<h3>References</h3>
+<h2>References</h2>
 <ul type="square">
-	<li>[Book] <a href="http://www.lulu.com/content/1022721">Apache
+	<li><a href="http://www.lulu.com/content/1022721">Apache
 	Ant - The Buildmeister's Guide, Second Edition</a></li>
-	<li>[Book] <a
+	<li><a
 		href="http://www.amazon.com/gp/product/0321356993?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0321356993">IBM
 	Rational(R) ClearCase(R), Ant, and CruiseControl: The Java(TM)
 	Developer's Guide to Accelerating and Automating the Build Process</a><img
