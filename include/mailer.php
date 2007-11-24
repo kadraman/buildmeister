@@ -32,6 +32,22 @@ class Mailer {
    }
    
    /**
+    * Send a notification message to all interested users
+    *
+    * @param string $message
+    * @return unknown
+    */
+   function sendNotification($message) {
+      $from = "From: ". EMAIL_FROM_NAME . " <" . EMAIL_FROM_ADDR . ">";
+      $subject = "\"" . SITE_NAME . "\" New Submission";
+      $body = "A new submissions has been made to The Buildmeister:\n\n" . $message
+             . "\n\nThe Buildmeister\n";
+
+      // just me for now             
+      return mail("kevin.lee@buildmeister.com",$subject,$body,$from);
+   } // sendNotification
+   
+   /**
     * sendNewPass - Sends the newly generated password
     * to the user's email address that was specified at
     * sign-up.

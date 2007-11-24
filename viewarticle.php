@@ -31,6 +31,9 @@ if (isset($_SESSION['artcomsuccess'])) {
     } else {
         // retrieve the id of the article to display
 	    $currentid = $_GET['id'];
+	    
+	    // update view count
+	    $database->updateArticleViews($currentid);
     
         # fetch article content
         $placeholder = "%image_dir%";

@@ -51,8 +51,10 @@ on it then please use the form at the end of this page.</p>
 <h3>Definition</h3>
 
 <?php
+// replace underlines for href navigation 
+$term = str_replace('_', ' ', $gitem);
 # fetch glossary item
-$sql = "SELECT * from " . TBL_GLOSSARY . " where title = '". $gitem . "';";
+$sql = "SELECT * from " . TBL_GLOSSARY . " where title = '". $term . "';";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
@@ -62,9 +64,11 @@ if ($numrows != 0) {
     echo "<div align='center'>\n";
     echo "<table width='95%'><tr>";    
     while ($row = mysql_fetch_assoc($result)) {
+        // replace href to point to glossary page
+        $summary = str_replace("href=\"#", "href=\"glossary.php#", $row['summary']);
         echo "<td align='left'><strong><a id='#" . $row['title'] . "'>" 
             . $row['title'] . "</a></strong><br/>"
-		    . $row['summary'] . "</td>\n";
+		    . stripslashes($summary) . "</td>\n";
 		$glossid = $row['id'];
     }
     echo "</tr></table>\n";

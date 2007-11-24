@@ -316,6 +316,7 @@ class Session
          $verifystring = urlencode($randomstring);
          if ($database->addNewUser($subuser, md5($subpass), $subfirst, $sublast, $subemail, $verifystring, $mailok)) {
              $mailer->sendVerification($subuser, $subemail, $subpass, $verifystring);
+             $mailer->sendNotification("New user registerd: " . $this->username);
              return 0;  // new inactive user added succesfully
          } else {
             return 2;   // registration attempt failed
@@ -351,12 +352,14 @@ class Session
       if (!$articlecontent || strlen($articlecontent = trim($articlecontent)) == 0) {
          $form->setError($field, "Article content is required.");
       }
+      $articlecontent = addslashes($articlecontent);
       
       // errors exist, have user correct them
       if ($form->num_errors > 0) {
          return 1;  
       } else {       
          if ($database->addNewArticle($this->username, $articletitle, $articlesummary, $articlecontent)) {
+             $mailer->sendNotification("New article added by " . $this->username . ": " . $articletitle);
              return 0;      // new inactive article added succesfully
          } else {
              return 2;      // submission attempt failed
@@ -396,12 +399,14 @@ class Session
       if (!$booksummary || strlen($booksummary = trim($booksummary)) == 0) {
          $form->setError($field, "A book summary is required.");
       }
+      $booksummary = addslashes($booksummary);
       
       // errors exist, have user correct them
       if ($form->num_errors > 0) {
          return 1;  
       } else {       
          if ($database->addNewBook($this->username, $booktitle, $bookauthor, $bookurl, $booksummary)) {
+             $mailer->sendNotification("New book added by " . $this->username . ": " . $booktitle);
              return 0;      // new inactive book added succesfully
          } else {
              return 2;      // submission attempt failed
@@ -430,6 +435,7 @@ class Session
       if (!$glosssummary || strlen($glosssummary = trim($glosssummary)) == 0) {
          $form->setError($field, "A glossary definition is required.");
       }
+      $glosssummary = addslashes($glosssummary);
       
       // errors exist, have user correct them
       if ($form->num_errors > 0) {
@@ -473,12 +479,14 @@ class Session
       if (!$linksummary || strlen($linksummary = trim($linksummary)) == 0) {
          $form->setError($field, "A link summary is required.");
       }
+      $linksummary = addslashes($linksummary);
       
       // errors exist, have user correct them
       if ($form->num_errors > 0) {
          return 1;  
       } else {       
          if ($database->addNewLinkItem($this->username, $linktitle, $linkurl, $linksummary)) {
+             $mailer->sendNotification("New link added by " . $this->username . ": " . $linktitle);
              return 0;      // new inactive link added succesfully
          } else {
              return 2;      // submission attempt failed
@@ -507,6 +515,7 @@ class Session
          return 1;  
       } else {       
          if ($database->addNewGlossaryComment($this->username, $glossid, $comment)) {
+             $mailer->sendNotification("New glossary comment added by " . $this->username . ": " . $comment);
              return 0;      // new inactive comment added succesfully
          } else {
              return 2;      // submission attempt failed
@@ -535,7 +544,44 @@ class Session
          return 1;  
       } else {       
          if ($database->addNewArticleComment($this->username, $artid, $comment)) {
+             $mailer->sendNotification("New article comment added by " . $this->username . ": " . $comment);
              return 0;      // new inactive comment added succesfully
+         } else {
+             return 2;      // submission attempt failed
+         }
+      }
+   } // submitArticleComment
+   
+   function contactUs($firstname, $lastname, $subemail, $submessage) {
+      global $database, $form, $mailer;  // the database, form and mailer object
+      
+      // email error checking
+      $field = "email";  // use field name for email
+      if (!$subemail || strlen($subemail = trim($subemail)) == 0){
+         $form->setError($field, "An email is required.");
+      } else {
+         // check validity
+         $regex = "^[_+a-z0-9-]+(\.[_+a-z0-9-]+)*"
+                 ."@[a-z0-9-]+(\.[a-z0-9-]{1,})*"
+                 ."\.([a-z]{2,}){1}$";
+         if (!eregi($regex,$subemail)) {
+            $form->setError($field, "The Email address is invalid.");
+         }
+         $subemail = stripslashes($subemail);
+      }
+      
+      // comment error checking
+      $field = "message"; 
+      if (!$submessage || strlen($submessage = trim($submessage)) == 0) {
+         $form->setError($field, "A message is required.");
+      }     
+      
+      // errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;  
+      } else {       
+         if ($mailer->sendNotification("New message from: " . $subemail . ":\n\n" . $submessage)) {
+             return 0;      // new message sent succesfully
          } else {
              return 2;      // submission attempt failed
          }

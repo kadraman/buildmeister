@@ -56,6 +56,10 @@ class Process
       else if (isset($_POST['subgcom'])) {
           $this->procSubmitGlossaryComment();
       }
+      // user sent us a message
+      else if (isset($_POST['subcontact'])) {
+          $this->procContactUs();
+      }
       /**
        * The only other reason user should be directed here
        * is if he wants to logout, which means user is
@@ -210,7 +214,7 @@ class Process
       // successful
       if ($retval == 0){
          $_SESSION['linksuccess'] = true;
-         header("Location: ".$session->referrer);
+         header("Location: " . SITE_BASEDIR . "/links.php");
       }
       // error found with form
       else if ($retval == 1){
@@ -305,6 +309,33 @@ class Process
          header("Location: ".$session->referrer);
       }
    } // procSubmitGlossaryComment
+   
+   /**
+    * Send a contact email
+    */
+   function procContactUs() {
+      global $session, $form;
+      
+      // mail attempt
+      $retval = $session->contactUs($_POST['curfirst'], $_POST['curlast'], $_POST['email'], $_POST['message']);
+      
+      // successful
+      if ($retval == 0) {
+         $_SESSION['contacted'] = true;
+         header("Location: ".$session->referrer);
+      }
+      // error found with form
+      else if ($retval == 1){
+         $_SESSION['value_array'] = $_POST;
+         $_SESSION['error_array'] = $form->getErrorArray();
+         header("Location: ".$session->referrer);
+      }
+      // failed
+      else if($retval == 2){
+         $_SESSION['contacted'] = false;
+         header("Location: ".$session->referrer);
+      }
+   } // procContactUs
    
    /**
     * procForgotPass - Validates the given username then if

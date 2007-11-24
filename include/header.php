@@ -21,7 +21,8 @@ function clearField(obj) {
 </head>
 
 <body id="buildmeister">
-<div id="container"><!-- header begin -->
+<div id="container">
+<!-- header begin -->
 <div id="header">
 <div id="logo"><a href="http://www.buildmeister.com"> <img
 	src="images/logo.gif" alt="The Buildmeister" /> </a></div>
@@ -46,8 +47,10 @@ function clearField(obj) {
 	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
         </script></div>
 <!-- advert end --></div>
-<!-- header end --> <!-- sidebar begin -->
-<div id="sidebar"><!-- navigation menu begin -->
+<!-- header end --> 
+<!-- sidebar begin -->
+<div id="sidebar">
+<!-- navigation menu begin -->
 <div id="navigation">
 <ul id="links">
 <?php
@@ -129,10 +132,9 @@ if ($session->logged_in) {
 <div id="reading">
 <p>Related Reading</p>
 <form id="reading-form">
-<div align="center"><iframe
-	src="http://rcm.amazon.com/e/cm?t=thebuildmeist-20&o=1&p=8&l=st1&mode=books&search=build%20software%20Java%20Microsoft%20Ant&fc1=000000&lt1=_blank&lc1=3366FF&bg1=FFFFFF&f=ifr"
-	marginwidth="0" marginheight="0" width="120" height="240" border="0"
-	frameborder="0" style="border:none;" scrolling="no"></iframe></div>
+<div align="center">
+<iframe src="http://rcm.amazon.com/e/cm?t=thebuildmeist-20&o=1&p=6&l=st1&mode=books&search=software%20build%20java%20.NET%20agile&nou=1&fc1=000000&lt1=_blank&lc1=3366FF&bg1=FFFFFF&f=ifr" marginwidth="0" marginheight="0" width="120" height="150" border="0" frameborder="0" style="border:none;" scrolling="no"></iframe>
+</div>
 </form>
 </div>
 <!-- related reading end -->
@@ -142,4 +144,5 @@ if ($session->logged_in) {
 </div>
 <!-- sidebar end -->
 
+<div id="sideseparator"></div>
 <div id="content">

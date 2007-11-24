@@ -43,8 +43,12 @@ include("include/header.php");
 </table>
 </div>
 
-<div id="boxedtitle">Buildmeister Books</div>
-<p>The home of Buildmeister Books</p>
+<table width="100%">
+<td width="50%">The Buildmeister's Guide</td>
+<td>active tag cloud</td>
+</table>
+
+<div id="dashed-spacer"></div>
 
 <div id="boxedtitle">Selected Articles</div>
 <?php

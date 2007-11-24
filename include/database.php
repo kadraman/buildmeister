@@ -440,6 +440,23 @@ class MySQLDB {
    } // addActiveGuest
    
    /**
+    * Updates the views field for an article
+    *
+    * @param string $artid
+    * @return unknown
+    */
+   function updateArticleViews($artid) {
+       $q = "SELECT views FROM " . TBL_ARTICLES . " where id = " . $artid;
+       $result = mysql_query($q, $this->connection);
+       $row = mysql_fetch_row($result);       
+       $num_views = $row[0];
+       $num_views++;
+       $q = "UPDATE " . TBL_ARTICLES . " SET views =  " . $num_views
+           . " where id = " . $artid;
+       return mysql_query($q, $this->connection);
+   } // updateArticleViews
+   
+   /**
     * Removes an active user.
     *
     * @param string $username

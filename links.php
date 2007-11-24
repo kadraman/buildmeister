@@ -48,8 +48,14 @@ $numrows = mysql_num_rows($result);
 
 if ($numrows != 0) {
     while ($row = mysql_fetch_assoc($result)) {
-        echo "<div id='splitsection'><strong><a href='" . $row['url'] . "'>" . $row['title'] . "</a></strong><br/>"
-		. $row['summary'] . "</div>";
+        echo "<div id='splitsection'>\n";
+        echo "<table width='100%' border=0'><tr>\n";
+        echo "<td align='center' width='300px'><img src='"
+        . $row['preview_url'] . "' alt='[link preview]'></td>\n";
+        echo "<td valign='top'><strong><a href='" . $row['url'] . "'>" . $row['title'] . "</a></strong><br/>"
+		. $row['summary'] . "</td>\n";
+		echo "</tr></table>"; 
+		echo "</div>";
     }
 }   
 ?>

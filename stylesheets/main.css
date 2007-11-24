@@ -8,16 +8,12 @@ body {
 	color:#000;
 	margin:0px;
 	padding:0px;
-    	font-family: arial, "lucida console", sans-serif;
-    	list-style-type: disc;
-    	font-size: 8pt;
+    font-family: arial, "lucida console", sans-serif;
+    list-style-type: disc;
+    font-size: 8pt;
 }
-form {
-	margin:0px;
-}
-img {
-	border:0px;
-}
+form { margin:0px; }
+img { border:0px; }
 
 /*
  * document structure:
@@ -65,14 +61,19 @@ img {
 	margin: 10px 20px 5px 0px;
 }	
 /* sidebar - for menus etc */
-#sidebar {
-	border-right:1px solid #E6EDF2;
+#sidebar {	
 	position:relative;
 	float:left;
-	width:199px;
+	width:198px;
 }
+#sideseparator{
+/*	border-left:1px solid #E6EDF2;*/
+	width:1px;
+	float:left;
+}	
 /* content - for main structured content */
 #content {
+	border-left:1px solid #E6EDF2;
 	float:left;
 	position:relative;
 	width:710px;
@@ -389,6 +390,10 @@ input.formInputText:focus {
 #dashed-spacer { margin-top: 1em; border-bottom: 1px dashed #B2B2B2;}
 
 td.glossitem { width:50%; padding: 1.0em; text-align:justify }
+#alphabet { font-size:2em; padding: 0.5em; text-align:center; }
+#alphabet a { color:#228; text-decoration:underline; }
+#alphabet a.visited { color:#228; text-decoration:underline; }
+}
 
 /* blank line spacer */
 #spacer {

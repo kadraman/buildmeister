@@ -37,55 +37,68 @@ missing and should be included then please <a href="#submit">submit</a>
 it for inclusion using the form at the end of this page.</p>
 </div>
 
-<div align="center">
-
-<p style="font-size:14pt">
+<div id="alphabet">
 <?php
 for ($i = 65; $i <= 90; $i++) {
     echo "<a href='#" . chr($i) . "'>"
         . chr($i) . "</a>&nbsp;";
 }        
 ?>
-</p>
+</div>
         
 <?php
+// iterate over all the letters of the alphabet, fetching glossary terms
 for ($i = 65; $i <= 90; $i++) {
     echo "<h2><a id='" . chr($i) . "'></a>"
         . chr($i) . "</h2>";
  
-# fetch glossary
-$sql = "SELECT * from " . TBL_GLOSSARY 
-    . " where active = 1 AND title REGEXP '^"
-    . chr($i) . "' ORDER BY title;";
-$result = mysql_query($sql);
-$numrows = mysql_num_rows($result);
+    # fetch glossary for letter
+    $sql = "SELECT * from " . TBL_GLOSSARY 
+        . " where active = 1 AND title REGEXP '^"
+        . chr($i) . "' ORDER BY title;";
+    $result = mysql_query($sql);
+    $numrows = mysql_num_rows($result);
 
-$count = 0;
-if ($numrows != 0) {
-    echo "<table width='95%'>";    
-    while ($row = mysql_fetch_assoc($result)) {
-        if (($count % 2) == 0) {
-            echo "<tr>\n";
-        } 
-        echo "<td class='glossitem' valign='top'><strong><a id='#" . $row['title'] . "'></a>"
-        	. "<a href='viewterm.php?term=" . $row['title'] . "'>" 
-            . $row['title'] . "</a></strong><br/>"
-		    . $row['summary'] . "</td>\n";
-		if (($count++ % 2) == 1) {
-            echo "</tr>\n";
-        } 
-		
-    }
-    echo "</table>\n";
-   
-}   
-
+    // used to work out when to start/end table row
+    $count = 1;
+    if ($numrows != 0) {
+    
+        echo "<table width='95%'>";    
+        while ($row = mysql_fetch_assoc($result)) {
+            // if first/odd item start new row
+            if (($count % 2) == 1) {
+                echo "<tr>\n";
+            }
+            // replace spaces for href navigation 
+            $title = $row['title'];
+            $href = str_replace(' ', '_', $title);
+            echo "<td class='glossitem' valign='top'><strong><a id='#" . $href . "'></a>"
+        	    . "<a href='viewterm.php?term=" . $href . "'>" 
+                . $row['title'] . "</a></strong><br/>"
+		        . stripslashes($row['summary']) . "</td>\n";
+            // do we have just a single row?
+            if ($numrows ==1) {
+                # yes add another column
+                echo "<td></td>\n";
+            }
+            // if last/even item end row		    
+		    if (($count++ % 2) == 0) {
+                echo "</tr>\n";
+            } 	
+        }
+        // do we have an odd number of entries?
+        if (($numrows % 2) == 1) {
+            // yes close down row
+            echo "</tr>";
+        }            
+        echo "</table>\n";
+          
+    }   
 }
 ?>
 
 </div>
 
-</div>
 <a id="submit"></a>
 
 <div id="dashed-spacer">&nbsp;</div>
