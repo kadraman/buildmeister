@@ -1,155 +1,132 @@
-<table align="center"
-	style="border-top-width: 0px; border-left-width: 0px; width: 95%;">
-	<tbody>
-		<tr>
-			<td>
-			<h2 align="left">The Perl Command line to the Rescue</h2>
-			<p align="justify"><i>There are a few essential capabilities
-			of the Perl command line that could potentially save your hours of
-			work; this article explains how.</i></p>
-			<h3>Introduction</h3>
-			<p align="justify">Perl is currently one of the most widely used
-			scripting languages. It is relatively straightforward to learn and
-			great for creating basic but functional scripts. However, when
-			needed, Perl also has the power and capabilities of a full blown
-			procedural or object oriented language. As a tool, Perl can be of
-			great use to build or release engineers. For example, you could write
-			Perl scripts to extract software deliveries into specific directory
-			structures, scripts to wrap processes around version control tools or
-			scripts to extract text patterns for the automatic creation of
-			release notes. Perl is particularly adept at just-in-time scripting,
-			that is, one-shot scripts (usually initiated via the command line) to
-			execute what might normally be considerable, time-consuming tasks. In
-			the remainder of this article we will look at how we can invoke Perl
-			from the command line and some examples of how to leverage its
-			capabilities to achieve just that.</p>
-			<h3>Standard Command Execution</h3>
-			<p align="justify">To execute standard Perl commands from the
-			command line, you can use the <b>-e</b> option followed by the line
-			or lines of script that you wish to execute. For example, a rather
-			straightforward command to print out some text would be:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;"><b>&gt;</b>perl -e &quot;print 'command line test';&quot;<br />
-            <b>command line test</b></pre>
-			<p align="justify">Since the <b>-e</b> option is treated as if it
-			ends with a newline, multiple <b>-e</b> options may be used. A more
-			useful example to illustrate this, that displays the last accessed
-			time of the file <i>log.txt</i> would be as follows:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;">&gt;perl -e &quot;print \&quot;Last accessed time of log.txt:\n\&quot;;&quot; \<br />
-            -e &quot;print scalar localtime((stat(\&quot;log.txt\&quot;))[9]);&quot;<br />
-            <b>Last accessed time of log.txt:<br />
-            Sun Sep 12 18:40:20 2004</b></pre>
-			<p align="justify">Note here, the use of escaped quotes (<b>\&quot;</b>),
-			which you can use when you want to use the string quote character
-			within an existing string.</p>
-			<h3>implicit Loops</h3>
-			<p align="justify">Executing lines of Perl from the command line
-			is one thing, probably of more use however, is Perl's ability to
-			generate implicit loops. This feature is invoked by specifying either
-			the <b>-n </b>or <b>-p</b> option, upon which Perl will automatically
-			add loops around the code that you specify via the <b>-e</b>
-			parameter discussed above. This feature can be extremely useful for
-			parsing and processing files one line at a time - a common activity
-			for build or release engineers. In practice, what this means is that
-			when you specify the following code:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;">&gt;perl -n -e &quot;<i>your code</i>&quot; file1</pre>
-			<p>Perl will expand it to:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;">LINE:<br />
-            while (&lt;&gt;) {<br />
-            <i>your code</i>             }</pre>
-			<p align="justify">which will basically cause Perl to iterate
-			over every line of <i>file1</i> executing &quot;<i>your code</i>&quot;.
-			As an example, let us suppose that we had the following source code
-			file <font face="Courier New">HelloWorld.java</font>:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;">class HelloWorld {<br />
-            public static void main (String args[]) {<br />
-            System.out.print(&quot;Hello World &quot;);<br />
-            }<br />
-            }</pre>
-			<p align="justify">and that we wanted to extract all the class
-			names for a summary report. We could use the following command:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;">&gt;perl -n -e &quot;if (/class/) { print $_ }&quot; HelloWorld.java<br />
-            <b>class HelloWorld {</b></pre>
-			<p align="justify">Here we are using <b>$_</b> string, which in
-			Perl refers to the current line. In this example, you might also want
-			to do a bit of formatting at the same time, for example removing the
-			trailing curly bracket (<b>{</b>) with the following code:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;">&gt;perl -n -e &quot;if (/class/) { <b>s/{//</b>; print $_ }&quot; HelloWorld.java<br />
-            <b>class HelloWorld</b></pre>
-			<p align="justify">The <b>-p</b> option is similar to the <b>-n</b>
-			option, except that it always prints the contents of <b><code>$_</code></b>
-			each time around the loop. Here is an example to display our source
-			code but automatically line numbered:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;">&gt;perl -p -e &quot;print \&quot;$.:\t\&quot;&quot; HelloWorld.java<br />
-            <b>1:    class HelloWorld {<br />
-            2:    public static void main (String args[]) {<br />
-            3:          System.out.print(&quot;Hello World &quot;);<br />
-            4:            }<br />
-            5:    }</b></pre>
-			<p align="justify">If you need to have processing carried out
-			either before or after the main code loop, you can also use a <b><code>BEGIN</code></b>
-			or <b><code>END</code></b> block. Using this, we could improve our
-			class listing example above to print out the total number of classes
-			at the end as follows:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;">&gt;perl -n -e &quot;END { print \&quot;Total classes: $i\&quot; } \<br />
-            if (/Data/) { $i++; s/{//; print $_ }&quot; HelloWorld.java<br />
-            <b>class HelloWorld<br />
-            Total classes: 1</b></pre>
-			<h3>In place Editing</h3>
-			<p align="justify">One further ability worth mentioning is
-			in-place editing, this allows you to make text translations
-			(in-place) on a file. For example, referring to our <font
-				face="Courier New">HelloWorld.java</font> code example above, if we
-			wanted to replace all occurrences of <font face="Courier New">Hello</font>
-			with <font face="Courier New">Goodbye</font> then we could use the <b>-i</b>
-			option as follows:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;">&gt;perl -i -pe &quot;s/Hello/Goodbye/g;&quot; HelloWorld.java</pre>
-			<p align="justify">Essentially what Perl is doing here is
-			renaming the input file, then reading from this renamed version
-			(whilst doing the translation) and writing to a new file with the
-			original name. If <b><code>-i</code></b> is given a string argument,
-			then that string is appended to the name of the original version of
-			the file. If instead we specified the following:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;">&gt;perl -i<i>.bak</i> -pe &quot;s/Hello/Goodbye/g;&quot; HelloWorld.java</pre>
-			<p align="justify">then we would end up with the file <font
-				face="Courier New">HelloWorld.java.bak</font> (with the contents of
-			our original file) in the current directory. This feature is probably
-			suitable for those with a nervous disposition or just beginning with
-			their Perl skills.</p>
-			<h3>Summary</h3>
-			<p align="justify">This article was intended as an introduction
-			to using the Perl command line and how it can help you simplify and
-			automate your build and release engineering tasks. We concentrated
-			here on the most widely used command line options, however there are
-			a few more, so I encourage you to check out the references below.</p>
-			<h3>References</h3>
-			<ul>
-				<li><a
-					href="http://www.amazon.com/gp/product/0596000278/sr=1-2/qid=1155572969/ref=pd_bbs_2/002-5409104-2371230?ie=UTF8&amp;s=books">Programming
-				Perl</a> [Wall/Orwant/Chrstiansen]</li>
-				<li><a
-					href="http://www.amazon.com/gp/product/0596101058/sr=1-2/qid=1155573001/ref=pd_bbs_2/002-5409104-2371230?ie=UTF8&amp;s=books">Learning
-				Perl</a> [Scwartz/Phoenix]</li>
-				<li><a href="http://www.perl.com/">O'Reilly <i>Perl.com</i></a><i>
-				</i></li>
-				<li><a href="http://www.perl.org/">The Perl directory</a></li>
-				<li><a
-					href="http://www.perl.com/pub/a/2004/08/09/commandline.html">Perl
-				command line options</a></li>
-			</ul>
-			<!--p require("../theme/comment.htm")--></td>
-		</tr>
-	</tbody>
-</table>
-<center></center>
-<!--p require("../theme/footer.htm")-->
+<div id="article">
+<h1>The Perl Command line to the Rescue</h1>
+<p id="articlehead">There are a few essential capabilities of the
+Perl command line that could potentially save your hours of work; this
+article explains how.</p>
+<h2>Introduction</h2>
+<p>Perl is currently one of the most widely used
+scripting languages. It is relatively straightforward to learn and great
+for creating basic but functional scripts. However, when needed, Perl
+also has the power and capabilities of a full blown procedural or object
+oriented language. As a tool, Perl can be of great use to build or
+release engineers. For example, you could write Perl scripts to extract
+software deliveries into specific directory structures, scripts to wrap
+processes around version control tools or scripts to extract text
+patterns for the automatic creation of release notes. Perl is
+particularly adept at just-in-time scripting, that is, one-shot scripts
+(usually initiated via the command line) to execute what might normally
+be considerable, time-consuming tasks. In the remainder of this article
+we will look at how we can invoke Perl from the command line and some
+examples of how to leverage its capabilities to achieve just that.</p>
+<h2>Standard Command Execution</h2>
+<p>To execute standard Perl commands from the
+command line, you can use the <b>-e</b> option followed by the line or
+lines of script that you wish to execute. For example, a rather
+straightforward command to print out some text would be:</p>
+<div id="codeoutput">&gt;perl -e &quot;print 'command line test';&quot;<br/>
+<b>command line test</b></div>
+<p>Since the <b>-e</b> option is treated as if it
+ends with a newline, multiple <b>-e</b> options may be used. A more
+useful example to illustrate this, that displays the last accessed time
+of the file <i>log.txt</i> would be as follows:</p>
+<div id="codeoutput">&gt;perl -e &quot;print \&quot;Last accessed time of log.txt:\n\&quot;;&quot; \<br />
+-e &quot;print scalar localtime((stat(\&quot;log.txt\&quot;))[9]);&quot;<br />
+<b>Last accessed time of log.txt:<br />
+Sun Sep 12 18:40:20 2004</b></div>
+<p>Note here, the use of escaped quotes (<b>\&quot;</b>),
+which you can use when you want to use the string quote character within
+an existing string.</p>
+<h2>implicit Loops</h2>
+<p>Executing lines of Perl from the command line is
+one thing, probably of more use however, is Perl's ability to generate
+implicit loops. This feature is invoked by specifying either the <b>-n
+</b>or <b>-p</b> option, upon which Perl will automatically add loops around
+the code that you specify via the <b>-e</b> parameter discussed above.
+This feature can be extremely useful for parsing and processing files
+one line at a time - a common activity for build or release engineers.
+In practice, what this means is that when you specify the following
+code:</p>
+<div id="codeoutput">&gt;perl -n -e &quot;<i>your code</i>&quot; file1</div>
+<p>Perl will expand it to:</p>
+<div id="codeoutput">LINE:<br />
+while (&lt;&gt;) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<i>your code</i><br/>}</div>
+<p>which will basically cause Perl to iterate over
+every line of <i>file1</i> executing &quot;<i>your code</i>&quot;. As an
+example, let us suppose that we had the following source code file <font
+	face="Courier New">HelloWorld.java</font>:</p>
+<div id="codeoutput">class HelloWorld {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;public static void main (String args[]) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.print(&quot;Hello World &quot;);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+}</div>
+<p>and that we wanted to extract all the class names
+for a summary report. We could use the following command:</p>
+<div id="codeoutput">&gt;perl -n -e &quot;if (/class/) { print $_ }&quot; HelloWorld.java<br />
+<b>class HelloWorld {</b></div>
+<p>Here we are using <b>$_</b> string, which in Perl
+refers to the current line. In this example, you might also want to do a
+bit of formatting at the same time, for example removing the trailing
+curly bracket (<b>{</b>) with the following code:</p>
+<div id="codeoutput">&gt;perl -n -e &quot;if (/class/) { <b>s/{//</b>; print $_ }&quot; HelloWorld.java<br />
+<b>class HelloWorld</b></div>
+<p>The <b>-p</b> option is similar to the <b>-n</b>
+option, except that it always prints the contents of <b><code>$_</code></b>
+each time around the loop. Here is an example to display our source code
+but automatically line numbered:</p>
+<div id="codeoutput">&gt;perl -p -e &quot;print \&quot;$.:\t\&quot;&quot; HelloWorld.java<br />
+<b>1:&nbsp;&nbsp;&nbsp;&nbsp;class HelloWorld {<br />
+2:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public static void main (String args[]) {<br />
+3:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.print(&quot;Hello World &quot;);<br />
+4:&nbsp;&nbsp;&nbsp;&nbsp;}</b></div>
+<p>If you need to have processing carried out either
+before or after the main code loop, you can also use a <b><code>BEGIN</code></b>
+or <b><code>END</code></b> block. Using this, we could improve our class
+listing example above to print out the total number of classes at the
+end as follows:</p>
+<div id="codeoutput">&gt;perl -n -e &quot;END { print \&quot;Total classes: $i\&quot; } \<br />
+if (/class/) { $i++; s/{//; print $_ }&quot; HelloWorld.java<br />
+<b>class HelloWorld<br />
+Total classes: 1</b></div>
+<h2>In place Editing</h2>
+<p>One further ability worth mentioning is in-place
+editing, this allows you to make text translations (in-place) on a file.
+For example, referring to our <font face="Courier New">HelloWorld.java</font>
+code example above, if we wanted to replace all occurrences of <font
+	face="Courier New">Hello</font> with <font face="Courier New">Goodbye</font>
+then we could use the <b>-i</b> option as follows:</p>
+<div id="codeoutput">&gt;perl -i -pe &quot;s/Hello/Goodbye/g;&quot; HelloWorld.java</div>
+<p>Essentially what Perl is doing here is renaming
+the input file, then reading from this renamed version (whilst doing the
+translation) and writing to a new file with the original name. If <b><code>-i</code></b>
+is given a string argument, then that string is appended to the name of
+the original version of the file. If instead we specified the following:</p>
+<div id="codeoutput">&gt;perl -i<i>.bak</i> -pe &quot;s/Hello/Goodbye/g;&quot; HelloWorld.java</div>
+<p>then we would end up with the file <font
+	face="Courier New">HelloWorld.java.bak</font> (with the contents of our
+original file) in the current directory. This feature is probably
+suitable for those with a nervous disposition or just beginning with
+their Perl skills.</p>
+<h2>Summary</h2>
+<p>This article was intended as an introduction to
+using the Perl command line and how it can help you simplify and
+automate your build and release engineering tasks. We concentrated here
+on the most widely used command line options, however there are a few
+more, so I encourage you to check out the references below.</p>
+<h2>References</h2>
+<ul>
+	<li><a
+		href="http://www.amazon.com/gp/product/0596000278/sr=1-2/qid=1155572969/ref=pd_bbs_2/002-5409104-2371230?ie=UTF8&amp;s=books">Programming
+	Perl</a></li>
+	<li><a
+		href="http://www.amazon.com/gp/product/0596101058/sr=1-2/qid=1155573001/ref=pd_bbs_2/002-5409104-2371230?ie=UTF8&amp;s=books">Learning
+	Perl</a></li>
+	<li><a href="http://www.perl.com/">O'Reilly <i>Perl.com</i></a><i>
+	</i></li>
+	<li><a href="http://www.perl.org/">The Perl directory</a></li>
+	<li><a
+		href="http://www.perl.com/pub/a/2004/08/09/commandline.html">Perl
+	command line options</a></li>
+</ul>
+
+</div>

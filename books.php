@@ -51,7 +51,7 @@ read and enjoyed, together with some personal comments about them. </p>
 
 <?php
 # fetch build process books
-$sql = "SELECT * from " . TBL_BOOKS . " where active = 1 ORDER BY date_posted DESC;";
+$sql = "SELECT * from " . TBL_BOOKS . " where active = 1 ORDER BY date_published DESC;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
@@ -59,8 +59,8 @@ if ($numrows != 0) {
     while ($row = mysql_fetch_assoc($result)) {
         echo "<div id='splitsection'>\n";
         echo "<table width='100%' border=0'><tr>\n";
-        echo "<td align='center' width='150px'><img width='125px' src=" 
-        . $row['imageurl'] . " alt='[book image]'></td>\n";
+        echo "<td align='center' width='150px'><img src='"
+        . $row['image_url'] . "' alt='[book image]'></td>\n";
         echo "<td><strong><a href='" . $row['url'] . "'>" . $row['title'] . "</a></strong><br/>by <i>"
         . $row['author'] . "</i><br/><br/>"
 		. $row['summary'] . "</td>\n";

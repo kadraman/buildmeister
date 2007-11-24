@@ -1,125 +1,125 @@
-<div class="article">
-<h2>The 5 minute low-down on: <i>GNU Make</i></h2>
+<div id="article">
+<h1>introduction to GNU Make</h1>
 <p id="articlehead">A brief introduction to the features and
 capabilities of GNU Make - the C/C++ build tool.</p>
-<h3>Introduction</h3>
+<h2>Introduction</h2>
 <p><b>Make</b> is <i>the</i> original build scripting tool. Created
 by <a href="http://en.wikipedia.org/wiki/Stuart_Feldman">Stuart
-Feldman</a>&nbsp;at Bell Labs as long ago as 1977, make was&nbsp;developed
+Feldman</a> at Bell Labs as long ago as 1977, make was developed
 to support dependency tracking and archiving for applications with large
 numbers of source files. It became popular very quickly and over time
 has been delivered with practically every BSD/UNIX operating system
-variant. Unfortunately,&nbsp;most vendors have also taken&nbsp;the
+variant. Unfortunately, most vendors have also taken the
 opportunity to &quot;enhance&quot; make for their own bespoke
 environments; consequently there is really no single, industry
-recognised implementation.&nbsp;Probably the most common however is <span
-	style="font-weight: bold;">GNU make -&nbsp;</span>&nbsp;an open source
+recognised implementation. Probably the most common however is <span
+	style="font-weight: bold;">GNU make - </span> an open source
 variant maintained by the <a href="http://www.gnu.org/">GNU Project</a>.
 It is therefore this variant of make which we
-will&nbsp;be&nbsp;discussing in this article.</p>
-<p>In its simplest form, make&nbsp;can be&nbsp;used to create and
-coordinate a&nbsp;sequence of operating system scripts or commands.
-However,&nbsp;it is more typically used to help developers keep track of
+will be discussing in this article.</p>
+<p>In its simplest form, make can be used to create and
+coordinate a sequence of operating system scripts or commands.
+However, it is more typically used to help developers keep track of
 which files are needed to build a particular program or application and
 to sort out the dependency relationships between files; for example
-which soure code files,&nbsp;header files and libraries make up a
-specific executable.&nbsp;Make helps implement a simple form of <strong>build
+which soure code files, header files and libraries make up a
+specific executable. Make helps implement a simple form of <strong>build
 avoidance</strong>, in that it looks at the date/time stamps of individual files,
 and the dependency relationships that you have defined, to work out what
 (if any) of the files from your complete application it needs to
 re-build.</p>
-<div class="keyconcepts">
+<div id="keyconcepts">
 <p align="center"><b><u>Key Concepts</u></b></p>
 <p><b>target </b>- the name of the object you are trying to create.</p>
 <p><b>dependency</b> - the relationship between a target and the
 other objects that are needed to construct it.</p>
 <p><b>commands</b> - the operating system commands, utilities
-or&nbsp;scripts that need to be&nbsp;executed to bring a target up to
+or scripts that need to be executed to bring a target up to
 date.</p>
 </div>
-<p>The input to make is a textual file,&nbsp;by default called <span
+<p>The input to make is a textual file, by default called <span
 	style="font-weight: bold;">makefile</span> or <span
 	style="font-weight: bold;">Makefile</span> (although any filename can
-be used). A complete&nbsp;application can be built using one or many
+be used). A complete application can be built using one or many
 makefiles (which are commonly located at different component/directory
 levels). Each makefile describes a set of <span
 	style="font-weight: bold;">targets</span>, which are the
-objects&nbsp;that can be made. Targets are usually the&nbsp;name of an
+objects that can be made. Targets are usually the name of an
 executable or library but can also be the name of a specific
 &quot;activity&quot;, for example &quot;clean&quot; or
 &quot;release&quot; - such targets are often called <strong>phony</strong>
 targets since they do not map to a physical file. By default, a target
 &ldquo;exists&rdquo; if it is present on disk (i.e., there is a file
 with that name).</p>
-<p>Each target is&nbsp;constructed using a set of <span
-	style="font-weight: bold;">commands</span>&nbsp;- which are usually
+<p>Each target is constructed using a set of <span
+	style="font-weight: bold;">commands</span> - which are usually
 calls to compilers, linkers, pre-processors and so on, but can actually
 be any operating system script or utility. A command or set of commands
 is executed by make to bring a target up to date.</p>
 <p>Each target can also have <span style="font-weight: bold;">dependencies</span>.
-A dependency is a relationship between a target and the&nbsp;other
-objects&nbsp;that are needed to construct it. For example, an executable
+A dependency is a relationship between a target and the other
+objects that are needed to construct it. For example, an executable
 depends on object files and libraries, while an object file depends on
 source code and headers. Another name for a dependency is
-a&nbsp;&ldquo;prerequisite&rdquo;.</p>
+a &ldquo;prerequisite&rdquo;.</p>
 <p>An example of calling make from the command line to execute a
 &quot;release&quot; target would be as follows:</p>
-<div class="codeoutput">&gt;make -f atm.mak release<br />
+<div id="codeoutput">&gt;make -f atm.mak release<br />
 </div>
 <p>Here the &quot;-f&quot; option is used to specify the name of the
 makefile that we wish to use (<strong>atm.mak</strong>) and the target
-which we will be executing is the &quot;release&quot; target.&nbsp;</p>
+which we will be executing is the &quot;release&quot; target. </p>
 <p>One of the most important things to note is that make in
-itself&nbsp;is not a compiler, rather it invokes your compiler either
+itself is not a compiler, rather it invokes your compiler either
 using the rules that you specify or using its own built-in rules.</p>
-<h3>An Example</h3>
+<h2>An Example</h2>
 <p>An example of a GNU makefile to compile a set of C++ classes (for
-an ATM application)&nbsp;and produce a releasable &quot;<span
+an ATM application) and produce a releasable &quot;<span
 	style="font-weight: bold;">.tar</span>&quot; file is given below:</p>
-<div class="codelisting">01:&nbsp; CXX := g++ -c<br />
-02:&nbsp; CXXFLAGS := -O2<br />
-03:&nbsp; LD := g++ -o<br />
-04:&nbsp; LIBS := -lstdc++<br />
-05:&nbsp; RM := rm -r<br />
-06:&nbsp; ARCHIVE := tar -cf<br />
-07:&nbsp; COMPRESS := gzip<br />
-08:&nbsp; PROGRAM := atm<br />
-09:&nbsp; SOURCES := account.cc customer.cc transaction.cc atm.cc<br />
-10:&nbsp; HEADERS := account.h customer.h transaction.h<br />
-11:&nbsp; OBJECTS := $(SOURCES:%.cc=%.o)<br />
-12:<br />
-13:&nbsp; .PHONY: all<br />
-14:&nbsp; all: $(PROGRAM)<br />
-15:&nbsp; <br />
-16:&nbsp; <b># redefine compilation procedure for .cc files</b><br />
-17:&nbsp; .SUFFIXES:<br />
-18:&nbsp; .SUFFIXES: .cc .o<br />
-19:&nbsp; .cc.o:<br />
-20:&nbsp; &nbsp;&nbsp; &nbsp;$(CXX) $(CXXFLAGS) $&lt;<br />
-21:<br />
-22:&nbsp; <b># create the executable</b><br />
-23:&nbsp; $(PROGRAM): $(OBJECTS)<br />
-24:&nbsp; &nbsp;&nbsp; &nbsp;$(LD) $@ $(OBJECTS) $(LIBS)<br />
-25:<br />
-26:&nbsp; <b># dependencies (without makedepend)</b><br />
-27:&nbsp; $(OBJECTS): $(HEADERS)<br />
-28:<br />
-29:&nbsp; <b># create a release</b><br />
-30:&nbsp; .PHONY: release<br />
-31:&nbsp; release:<br />
-32:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $(RM) $(PROGRAM).tar.gz<br />
-33:&nbsp; &nbsp;&nbsp; &nbsp;$(ARCHIVE) $(PROGRAM).tar $(PROGRAM) $(SRC)
-$(HEADERS) Makefile<br />
-34:&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;$(COMPRESS) $(PROGRAM).tar<br />
-35: <br />
-36:&nbsp; <b># create a clean environment</b><br />
-37:&nbsp; .PHONY: clean<br />
-38:&nbsp; clean:<br />
-39:&nbsp; &nbsp;&nbsp; &nbsp;$(RM) $(PROGRAM) $(OBJECTS)<br />
-</div>
+<pre name="code" class="python">
+CXX := g++ -c
+CXXFLAGS := -O2
+LD := g++ -o
+LIBS := -lstdc++
+RM := rm -r
+ARCHIVE := tar -cf
+COMPRESS := gzip
+PROGRAM := atm
+SOURCES := account.cc customer.cc transaction.cc atm.cc
+HEADERS := account.h customer.h transaction.h
+OBJECTS := $(SOURCES:%.cc=%.o)
+
+.PHONY: all
+all: $(PROGRAM)
+
+# redefine compilation procedure for .cc files
+.SUFFIXES:
+.SUFFIXES: .cc .o
+.cc.o:
+	$(CXX) $(CXXFLAGS) $&lt;
+
+# create the executable
+$(PROGRAM): $(OBJECTS)
+	$(LD) $@ $(OBJECTS) $(LIBS)
+
+# dependencies (without makedepend)
+$(OBJECTS): $(HEADERS)
+
+# create a release
+.PHONY: release
+release:
+	$(RM) $(PROGRAM).tar.gz
+	$(ARCHIVE) $(PROGRAM).tar $(PROGRAM) $(SRC) $(HEADERS) Makefile
+	$(COMPRESS) $(PROGRAM).tar
+
+# create a clean environment
+.PHONY: clean
+clean:
+	$(RM) $(PROGRAM) $(OBJECTS)
+</pre>
 <p>If this makefile was used to build the ATM application then the
 output result would look similar to the following:</p>
-<div class="codeoutput">
+<div id="codeoutput">
 <p><b>&gt;make -f atm.mak</b><br />
 g++ -O2 -c -o account.o account.cc<br />
 g++ -O2 -c -o customer.o customer.cc<br />
@@ -133,22 +133,22 @@ gzip atm.tar</p>
 </div>
 <p>In this makefile an executable called <b>atm</b> is being built,
 it consists of four C++ source files (as listed on line 9) and
-three&nbsp;headers file (as listed on line 10). Lines 1-11 define some
+three headers file (as listed on line 10). Lines 1-11 define some
 make <span style="font-weight: bold;">macros</span> to be used
-throughout the makefile.&nbsp;A macro in make is&nbsp;a variable, it can
+throughout the makefile. A macro in make is a variable, it can
 either be user defined (as for example <span style="font-weight: bold;">PROGRAM</span>
 in our example) or internally pre-defined (such as <span
 	style="font-weight: bold;">$@</span>). There are a large number of
 pre-defined macros (which can be listed by running &quot;<strong>make
 -p</strong>&quot;). Of particular note is line 11 which uses a macro string
-substitution&nbsp;to create&nbsp;the macro <span
+substitution to create the macro <span
 	style="font-weight: bold;">OBJECTS</span> which is similar to <span
 	style="font-weight: bold;">SOURCES</span> but with the &quot;<span
 	style="font-weight: bold;">.cc</span>&quot; extension replaced with
 &quot;<span style="font-weight: bold;">.o</span>&quot;. Line 14 defines
 the default &quot;all&quot; target of the makefile - which will build
-the application and then create a release from it.&nbsp;The
-&quot;all&quot; target is marked as a&nbsp;<strong>.PHONY</strong>
+the application and then create a release from it. The
+&quot;all&quot; target is marked as a <strong>.PHONY</strong>
 target (on line 13) to indicate that it is a special internal only
 target - otherwise make would try to check for the existence of
 thistarget on the file system.</p>
@@ -161,32 +161,32 @@ files are constructed (and to help you with your understanding). The
 &quot;<span style="font-weight: bold;">$&lt;</span>&quot; string is one
 of make's special dynamic macros that can be used to refer to the name
 of the dependency file (i.e. the C++ source file being
-compiled).&nbsp;Note that one of the most annoying issues with make is
+compiled). Note that one of the most annoying issues with make is
 that it insists all indentation is carried out using tabs not spaces -
 this is true for the command script of every target.</p>
 <p>In lines 23-24 a target is defined to link the application and
 lists the object files that it is dependent upon. The command on line 24
 defines how to link the object files together to produce the resultant
 application executable. As well as listing the dependencies for object
-files, on line 27&nbsp;we also list the dependencies of the object files
+files, on line 27 we also list the dependencies of the object files
 on the header files which are used in their compilation. The reason for
 this is that if a header file is updated we want make to see that the
 date/time-stamp of the header file has changed and therefore
-automatically work out which object files it needs to rebuild.&nbsp;</p>
+automatically work out which object files it needs to rebuild. </p>
 <p>Lines 31-34 defines a target to create a releasable &quot;<span
 	style="font-weight: bold;">.tar</span>&quot; file (including our
-sources and compiled application). Finally lines&nbsp;37-39 define a
+sources and compiled application). Finally lines 37-39 define a
 target that can be called to &quot;clean up&quot; (i.e. remove) any
 pre-built objects and application files in order to be able to return to
 a known state.</p>
-<h3>Managing Dependencies</h3>
-<p>Manually managing the header file dependencies&nbsp;for an
+<h2>Managing Dependencies</h2>
+<p>Manually managing the header file dependencies for an
 application such as this is relatively straightforward, however in large
 applications (potentially consisting of thousands of files) this is not
 practical. Instead it is better to let make and your compiler manage
-these dependencies for you. Most modern compilers&nbsp;take a command
+these dependencies for you. Most modern compilers take a command
 line argument to indicate it that source files should be parsed for
-dependency information and the results&nbsp;output. For the GNU C/C++
+dependency information and the results output. For the GNU C/C++
 compilers this is the &quot;<strong>-M</strong>&quot; for full or &quot;<strong>-MM</strong>&quot;
 for project specific dependencies (i.e. only the header files that you
 have developed - not operating system header files). A simple method of
@@ -194,52 +194,52 @@ managing dependencies is to add a target to create a specific dependency
 file and then include the ouput of this file directly within your
 makefile. An example of achieving this is illustrated in the following
 makefile:</p>
-<div class="codelisting">01:&nbsp; CXX := g++<br />
-02:&nbsp; CXXFLAGS := -O2<br />
-03:&nbsp; LD := g++ -o<br />
-04:&nbsp; LIBS := -lstdc++<br />
-05:&nbsp; RM := rm -f<br />
-06:&nbsp; ARCHIVE := tar -cf<br />
-07:&nbsp; COMPRESS := gzip<br />
-08:&nbsp; PROGRAM := atm.exe<br />
-09:&nbsp; SOURCES := ${wildcard *.cc}<br />
-10:&nbsp; OBJECTS := $(SOURCES:%.cc=%.o)<br />
-11:&nbsp; <br />
-12:&nbsp; .PHONY: all<br />
-13:&nbsp; all: $(PROGRAM)<br />
-14:<br />
-15:&nbsp; -include depend<br />
-16:<br />
-17:&nbsp; <b># create the executable</b><br />
-18:&nbsp; $(PROGRAM): depend $(OBJECTS)<br />
-19:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $(LD) $@ $(OBJECTS) $(LIBS)<br />
-20:<br />
-21:&nbsp; <strong># create the dependency file</strong><br />
-22:&nbsp; depend: $(SOURCES)<br />
-23:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $(CXX) -MM $(CXXFLAGS) $^ &gt; $@<br />
-24:<br />
-25:&nbsp; <b># create the release</b><br />
-26:&nbsp; .PHONY: release<br />
-27:&nbsp; release: $(PROGRAM)<br />
-28:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $(RM) $(PROGRAM).tar.gz<br />
-29:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $(ARCHIVE) $(PROGRAM).tar $(PROGRAM)
-$(SRC) $(SOURCES) ${wildcard *.h} Makefile<br />
-30:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $(COMPRESS) $(PROGRAM).tar<br />
-31:<br />
-32:&nbsp; <b># create a clean environment</b><br />
-33:&nbsp; .PHONY: clean<br />
-34:&nbsp; clean: <br />
-35:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $(RM) $(PROGRAM).tar.gz $(PROGRAM)
-$(OBJECTS)<br />
-36:<br />
-37:&nbsp; <b># clean up dependency file</b><br />
-38:&nbsp; .PHONY: clean-depend <br />
-39:&nbsp; clean-depend: clean<br />
-40:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $(RM) depend</div>
+<pre name="code" class="python">
+CXX := g++
+CXXFLAGS := -O2
+LD := g++ -o
+LIBS := -lstdc++
+RM := rm -f
+ARCHIVE := tar -cf
+COMPRESS := gzip
+PROGRAM := atm.exe
+SOURCES := ${wildcard *.cc}
+OBJECTS := $(SOURCES:%.cc=%.o)
+
+.PHONY: all
+all: $(PROGRAM)
+
+-include depend
+
+# create the executable
+$(PROGRAM): depend $(OBJECTS)
+	$(LD) $@ $(OBJECTS) $(LIBS)
+
+# create the dependency file
+depend: $(SOURCES)
+	$(CXX) -MM $(CXXFLAGS) $^ &gt; $@
+
+# create the release
+.PHONY: release
+release: $(PROGRAM)
+	$(RM) $(PROGRAM).tar.gz
+	$(ARCHIVE) $(PROGRAM).tar $(PROGRAM) $(SRC) $(SOURCES) ${wildcard *.h} Makefile
+	$(COMPRESS) $(PROGRAM).tar
+
+# create a clean environment
+.PHONY: clean
+clean:
+	$(RM) $(PROGRAM).tar.gz $(PROGRAM) $(OBJECTS)
+
+# clean up dependency file
+.PHONY: clean-depend
+clean-depend: clean
+	$(RM) depend
+</pre>	
 <p>In this example a new target called &quot;depend&quot; is added
 on lines 21-23 which takes the name of each source file (via the <strong>$^</strong>
 dynamic macro and creates a file called <strong>depend</strong>. Notice
-that on line 15&nbsp; an &quot;<strong>-include</strong>&quot; command
+that on line 15  an &quot;<strong>-include</strong>&quot; command
 is used to include this file into the makefile (the minus means ignore
 errors - in case the file does not exist yet). There is also an
 additional cleanup target called &quot;clean-depend&quot; on lines
@@ -249,7 +249,7 @@ not for it to be deleted as part of a build specific &quot;clean&quot;
 process</p>
 <p>If we now used this makefile was to build the ATM application
 then the output result would look similar to the following:</p>
-<div class="codeoutput">
+<div id="codeoutput">
 <p><b>&gt;make -f atm.mak depend</b><br />
 g++ -MM -O2 account.cc atm.cc customer.cc transaction.cc &gt; depend<br />
 <b>&gt;make -f atm.mak</b><br />
@@ -268,12 +268,12 @@ transaction.o: transaction.cc transaction.h</p>
 the dependency file.</p>
 <p>Note, that in a large code base we might also use one of GNU
 makes functions to work out the list of source files to build for us by
-looking in a specific directory (a typical&nbsp;example is shown on
-line&nbsp;9 where the GNU make&nbsp;&quot;<span
+looking in a specific directory (a typical example is shown on
+line 9 where the GNU make &quot;<span
 	style="font-weight: bold;">${wildcard *.cc}&quot;</span> function is
 being used - see the GNU make reference manual for more detail).</p>
-<h3>Summary</h3>
-<p>There is significantly&nbsp;more to GNU make than is described in
+<h2>Summary</h2>
+<p>There is significantly more to GNU make than is described in
 this article, but hopefully it has given you an introduction to how the
 tool can be used and its capabilities. Make is a powerful tool but can
 be somewhat cryptic, especially when used in large projects. Command
@@ -285,7 +285,7 @@ which can hopefully be used to implement the same functionality. It is
 therefore worth understanding these functions in more detail.</p>
 <p>For more information on GNU make see the references listed below
 or other articles on this site.</p>
-<h3>References</h3>
+<h2>References</h2>
 <ul>
 	<li><a
 		href="http://www.amazon.com/gp/product/0596006101?ie=UTF8&amp;tag=thebuildmeist-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0596006101">Managing
@@ -301,6 +301,4 @@ or other articles on this site.</p>
 	<li><a href="http://www.jgc.org/">John Graham-Cumming's
 	website</a> (with plenty of tips on GNU make)</li>
 </ul>
-<div>&nbsp;</div>
 </div>
-<div>&nbsp;</div>

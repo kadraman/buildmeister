@@ -1,241 +1,215 @@
-<table align="center"
-	style="border-top-width: 0px; border-left-width: 0px; width: 95%;">
+<div id="article">
+<h1>An Introduction to Regular Expressions</h1>
+<p id="articlehead">An introduction to the fundamentals of regular
+expressions and how to use them in a number of languages and
+environments.</p>
+<h2>Introduction</h2>
+<p>A decent knowledge of regular expressions
+(sometimes known as regexps or REs) is a fundamental skill that any
+buildmeister should acquire. Regular expressions are a language subset
+(they are common to many different programming and scripting languages)
+that allow you to specify a set of rules for a particular text pattern
+that you want to match. For example, searching through a source code
+file to find all the classes that being with the string
+&quot;admin&quot;. In this article we will introduce the different
+aspects of the regular expression language, how you can make use of it,
+and how different languages support it.</p>
+<h2>The basics</h2>
+<p>The simplest form of a regular expression is one
+that searches for a particular text string without any special
+characters, thus:</p>
+<div id="codeoutput">xxx</div>
+<p>will find all lines of a file or part of a string
+that contain three letters <b>x</b> in succession at any point. Now
+obviously, this is a great start but is probably rare that we know the
+exact sequence of characters that we wish to match or more likely we
+want to only match a sequence of characters at specific points in a
+file. For example, if we wanted to match the above string but only if it
+was at the beginning of a line we&nbsp; could use the special character
+<b>^ </b>as follows:</p>
+<div id="codeoutput">^xxx</div>
+<p>Likewise you can use the<b> $ </b>character to only match the
+string if it appears only at the end of a line.</p>
+<h2>Wild Cards</h2>
+<p>Regular expressions can include a number of wild
+card symbols. A period can be used to specify exactly one arbitrary
+character, for example:</p>
+<div id="codeoutput">x.</div>
+<p>will find all strings containing the letter <b>x</b>
+followed by any character, i.e. <b>xa</b>, <b>xb</b>, <b>xc</b> and so
+on. Asterisks can be used to specify the repetition of an expression
+zero or more times, for example:</p>
+<div id="codeoutput">abx*</div>
+<p>will find all strings containing the letters <b>ab</b>
+followed by zero or more <b>x</b>'s, i.e. <b>ab</b>, <b>abx</b>, <b>abxxxx</b>
+and so on. Similarly the <b>+ </b>sign can be used to specify the
+repetition of a string but at least one time, for example:</p>
+<div id="codeoutput">abx+</div>
+<p>will find all strings containing the letters <b>ab</b>
+followed by one or more <b>x</b>'s, i.e. <b>abx</b>, <b>abxx</b> and so
+on.</p>
+<p>Sets of characters can be specified by enclosing the characters
+in square brackets, for example:</p>
+<div id="codeoutput">x[ab]</div>
+<p>will find the strings <b>xa</b> or <b>xb</b>. Ranges of
+characters can be specified using the - character, for example:</p>
+<div id="codeoutput">x[a-c]</div>
+<p>will find the strings <b>xa,</b> <b>xb</b> or <b>xc</b>.
+You can also use the <b>^</b> character to specify the characters that
+do not belong to the set, for example:</p>
+<div id="codeoutput">x[^a-b]</div>
+<p>will not match either <b>xa</b> or <b>xb</b> but
+<b>xc</b>, <b>xd</b> and so on. Finally, you can use the <b>|</b>
+character to specify an OR relationship for regular expressions, for
+example:</p>
+<div id="codeoutput">xa|xb</div>
+<p>will find the strings <b>xa</b> or <b>xb</b>. If
+you want to match any of these characters without using it's special
+meaning then you can escape it using the <b>\ </b>character.</p>
+<h2>Pattern Symbols</h2>
+<p>The regular expression language has a number of
+pre-defined symbols that match sets or groupings of characters, for
+example the <b>\d</b> symbol will match any (number) digit, conversely
+the <b>\D</b> symbol will match any non (number) digit. The <b>\w</b>
+symbol will match any word character consisting of letters, numbers or
+the underscore character (which is equivalent to the set [a-zA-z_0-9])
+and <b>\W </b>will match any non word character. Finally, the <b>\s</b>
+symbol will match any whitespace character (tabs, spaces, new-lines and
+so on] whilst<b> \S</b> will match any non whitespace character. A
+number of whitespace characters can also be matched explictly, for
+example to match a tab, you can use <b>\t</b>, a newline <b>\n</b> and a
+carriage return <b>\r</b>.</p>
+<div align="center">
+<table id="nicewidth">
 	<tbody>
 		<tr>
-			<td>
-			<h2 align="left">An introduction to Regular Expressions</h2>
-			<p align="justify"><i>An introduction to the fundamentals of
-			regular expressions and how to use them in a number of languages and
-			environments.</i></p>
-			<h3>Introduction</h3>
-			<p align="justify">A decent knowledge of regular expressions
-			(sometimes known as regexps or REs) is a fundamental skill that any
-			buildmeister should acquire. Regular expressions are a language
-			subset (they are common to many different programming and scripting
-			languages) that allow you to specify a set of rules for a particular
-			text pattern that you want to match. For example, searching through a
-			source code file to find all the classes that being with the string
-			&quot;admin&quot;. In this article we will introduce the different
-			aspects of the regular expression language, how you can make use of
-			it, and how different languages support it.</p>
-			<h3>The basics</h3>
-			<p align="justify">The simplest form of a regular expression is
-			one that searches for a particular text string without any special
-			characters, thus:</p>
-			<p style="margin-left: 18pt; color: gray; font-family: Courier New;">xxx
-			</p>
-			<p align="justify">will find all lines of a file or part of a
-			string that contain three letters <b>x</b> in succession at any
-			point. Now obviously, this is a great start but is probably rare that
-			we know the exact sequence of characters that we wish to match or
-			more likely we want to only match a sequence of characters at
-			specific points in a file. For example, if we wanted to match the
-			above string but only if it was at the beginning of a line we&nbsp;
-			could use the special character <b>^ </b>as follows:</p>
-			<p style="margin-left: 18pt; color: gray; font-family: Courier New;">^xxx
-			</p>
-			<p>Likewise you can use the<b> $ </b>character to only match the
-			string if it appears only at the end of a line.</p>
-			<h3>Wild Cards</h3>
-			<p align="justify">Regular expressions can include a number of
-			wild card symbols. A period can be used to specify exactly one
-			arbitrary character, for example:</p>
-			<p style="margin-left: 18pt; color: gray; font-family: Courier New;">x.
-			</p>
-			<p align="justify">will find all strings containing the letter <b>x</b>
-			followed by any character, i.e. <b>xa</b>, <b>xb</b>, <b>xc</b> and
-			so on. Asterisks can be used to specify the repetition of an
-			expression zero or more times, for example:</p>
-			<p style="margin-left: 18pt; color: gray; font-family: Courier New;">abx*
-			</p>
-			<p align="justify">will find all strings containing the letters <b>ab</b>
-			followed by zero or more <b>x</b>'s, i.e. <b>ab</b>, <b>abx</b>, <b>abxxxx</b>
-			and so on. Similarly the <b>+ </b>sign can be used to specify the
-			repetition of a string but at least one time, for example:</p>
-			<p style="margin-left: 18pt; color: gray; font-family: Courier New;">abx+</p>
-			<p align="justify">will find all strings containing the letters <b>ab</b>
-			followed by one or more <b>x</b>'s, i.e. <b>abx</b>, <b>abxx</b> and
-			so on.</p>
-			<p>Sets of characters can be specified by enclosing the
-			characters in square brackets, for example:</p>
-			<p style="margin-left: 18pt; color: gray; font-family: Courier New;">x[ab]</p>
-			<p>will find the strings <b>xa</b> or <b>xb</b>. Ranges of
-			characters can be specified using the - character, for example:</p>
-			<pre
-				style="margin-left: 18pt; color: gray; font-family: Courier New;">x[a-c]</pre>
-			<p align="justify">will find the strings <b>xa,</b> <b>xb</b> or
-			<b>xc</b>. You can also use the <b>^</b> character to specify the
-			characters that do not belong to the set, for example:</p>
-			<p style="margin-left: 18pt; color: gray; font-family: Courier New;">x[^a-b]
-			</p>
-			<p align="justify">will not match either <b>xa</b> or <b>xb</b>
-			but <b>xc</b>, <b>xd</b> and so on. Finally, you can use the <b>|</b>
-			character to specify an OR relationship for regular expressions, for
-			example:</p>
-			<p style="margin-left: 18pt; color: gray; font-family: Courier New;">xa|xb</p>
-			<p align="justify">will find the strings <b>xa</b> or <b>xb</b>.
-			If you want to match any of these characters without using it's
-			special meaning then you can escape it using the <b>\ </b>character.</p>
-			<h3>Pattern Symbols</h3>
-			<p align="justify">The regular expression language has a number
-			of pre-defined symbols that match sets or groupings of characters,
-			for example the <b>\d</b> symbol will match any (number) digit,
-			conversely the <b>\D</b> symbol will match any non (number) digit.
-			The <b>\w</b> symbol will match any word character consisting of
-			letters, numbers or the underscore character (which is equivalent to
-			the set [a-zA-z_0-9]) and <b>\W </b>will match any non word
-			character. Finally, the <b>\s</b> symbol will match any whitespace
-			character (tabs, spaces, new-lines and so on] whilst<b> \S</b> will
-			match any non whitespace character. A number of whitespace characters
-			can also be matched explictly, for example to match a tab, you can
-			use <b>\t</b>, a newline <b>\n</b> and a carriage return <b>\r</b>.</p>
-			<h3>Some Examples</h3>
-			<p align="justify">In <span class="body">Perl you can
-			specify regular expressions between<b> / </b>delimiters (you can
-			change the delimiter if you wish), and you add modifiers after the
-			closing <b>/</b>. For example, to carry out a global search and
-			replace of the pattern <b>xxx</b> with <b>yyy </b>you could use the
-			expression:</span></p>
-			<p style="margin-left: 18pt; color: gray; font-family: Courier New;">s/xxx/yyy/g
-			</p>
-			<p align="justify"><span class="body">To match the
-			contents of a variable to a regular expression, you can use the <b>=~</b>
-			operator as in the following code:</span></p>
-			<p style="margin-left: 18pt; color: gray; font-family: Courier New;">$str
-			= &quot;Hello World&quot;;<br />
-			$str =~ s/Hello/Goodbye/;<br />
-			print $str;<br />
-			<b>Goodbye World</b></p>
-			<p align="justify"><span class="body">Java2 version 1.4
-			and onwards includes the regular expression class java.util.regex. In
-			Java you specify a regular expression as a String, which must first
-			be compiled into an instance of the class Pattern. The resulting
-			pattern can then be used to create a Matcher object that can match
-			arbitrary character sequences against the regular expression. For
-			example:</span></p>
-			<p><br />
-			<span class="body">&nbsp;&nbsp;&nbsp;<font color="#808080">Pattern
-			p = Pattern.compile(&quot;Hello&quot;);<br />
-			&nbsp;&nbsp;&nbsp;Matcher m = p.matcher(&quot;Hello World&quot;);<br />
-			&nbsp;&nbsp;&nbsp;myMatcher.replaceAll(&quot;subject&quot;,
-			&quot;replacement&quot;)<br />
-			&nbsp;&nbsp;&nbsp;boolean b = m.matches();</font><br />
-			<p align="justify"><span class="body">Visual Basic, C++
-			and C# amongst other languages can make use of the shared regular
-			expression library provided under Microsoft's .NET framework. </span></p>
-			<h3>Summary</h3>
-			<p align="justify">This article was intended as an introduction
-			to using regular expressions. The table below summarises the
-			language. There is more to the regular expression language and in
-			fact complete books have been written on the subject, and I therefore
-			encourage you to view the references listed below in more detail.</p>
-			<div align="center">
-			<center><br />
-			<table width="60%" cellspacing="0" cellpadding="0"
-				bordercolor="#111111" border="0" style="border-collapse: collapse;"
-				id="AutoNumber3">
-				<tbody>
-					<tr>
-						<td width="29%" bgcolor="#6666cc"><b>Expression</b></td>
-						<td width="71%" bgcolor="#6666cc"><b>Meaning</b></td>
-					</tr>
-					<tr>
-						<td width="29%">x</td>
-						<td width="71%">Match one letter <i>x</i></td>
-					</tr>
-					<tr>
-						<td width="29%">^</td>
-						<td width="71%">Match at beginning of line</td>
-					</tr>
-					<tr>
-						<td width="29%">$</td>
-						<td width="71%">Match at end of line</td>
-					</tr>
-					<tr>
-						<td width="29%">.</td>
-						<td width="71%">Match any character (except newline)</td>
-					</tr>
-					<tr>
-						<td width="29%">*</td>
-						<td width="71%">Match zero or more times</td>
-					</tr>
-					<tr>
-						<td width="29%">+</td>
-						<td width="71%">Match one or more times</td>
-					</tr>
-					<tr>
-						<td width="29%">?</td>
-						<td width="71%">Match zero or one time</td>
-					</tr>
-					<tr>
-						<td width="29%">[xxx]</td>
-						<td width="71%">Match a set of characters</td>
-					</tr>
-					<tr>
-						<td width="29%">[a-z]</td>
-						<td width="71%">Match a range of characters</td>
-					</tr>
-					<tr>
-						<td width="29%">[^xxx]</td>
-						<td width="71%">Match characters that do not belong to the
-						set</td>
-					</tr>
-					<tr>
-						<td width="29%">a|b</td>
-						<td width="71%">Match one or other character</td>
-					</tr>
-					<tr>
-						<td width="29%">\d</td>
-						<td width="71%">Match any digit [0-9]</td>
-					</tr>
-					<tr>
-						<td width="29%">\D</td>
-						<td width="71%">Match any non-digit [^0-9]</td>
-					</tr>
-					<tr>
-						<td width="29%">\w</td>
-						<td width="71%">Match any word [a-zA-Z_0-9] character</td>
-					</tr>
-					<tr>
-						<td width="29%">\W</td>
-						<td width="71%">Match any non word character</td>
-					</tr>
-					<tr>
-						<td width="29%">\s</td>
-						<td width="71%">Match any whitespace character</td>
-					</tr>
-					<tr>
-						<td width="29%">\S</td>
-						<td width="71%">Match any non whitespace character</td>
-					</tr>
-					<tr>
-						<td width="29%">\x</td>
-						<td width="71%">Cancel character special meaning and match
-						exactly</td>
-					</tr>
-				</tbody>
-			</table>
-			<br />
-			</center>
-			</div>
-			<h3>References<br />
-			</h3>
-			<ul type="square">
-				<li><a
-					href="http://www.amazon.com/gp/product/0596002890/sr=1-2/qid=1155573098/ref=pd_bbs_2/002-5409104-2371230?ie=UTF8&amp;s=books">Mastering
-				Regular Expressions</a> [Friedl]</li>
-				<li><a href="http://www.regular-expressions.info/">Regular-Expressions.info</a></li>
-				<li><a href="http://www.regexbuddy.com/">RegexBuddy</a><i>
-				</i></li>
-				<li><a href="http://www.regexlib.com/">The Regular
-				Expression library</a></li>
-				<li><a
-					href="http://gnosis.cx/publish/programming/regular_expressions.html">Learning
-				to use regular expressions</a><br />
-				</li>
-			</ul>
-			</span></p>
-			</td>
+			<th>Expression</td>
+			<th>Meaning</td>
+		</tr>
+		<tr>
+			<td>x</td>
+			<td>Match one letter <i>x</i></td>
+		</tr>
+		<tr>
+			<td>^</td>
+			<td>Match at beginning of line</td>
+		</tr>
+		<tr>
+			<td>$</td>
+			<td>Match at end of line</td>
+		</tr>
+		<tr>
+			<td>.</td>
+			<td>Match any character (except newline)</td>
+		</tr>
+		<tr>
+			<td>*</td>
+			<td>Match zero or more times</td>
+		</tr>
+		<tr>
+			<td>+</td>
+			<td>Match one or more times</td>
+		</tr>
+		<tr>
+			<td>?</td>
+			<td>Match zero or one time</td>
+		</tr>
+		<tr>
+			<td>[xxx]</td>
+			<td>Match a set of characters</td>
+		</tr>
+		<tr>
+			<td>[a-z]</td>
+			<td>Match a range of characters</td>
+		</tr>
+		<tr>
+			<td>[^xxx]</td>
+			<td>Match characters that do not belong to the set</td>
+		</tr>
+		<tr>
+			<td>a|b</td>
+			<td>Match one or other character</td>
+		</tr>
+		<tr>
+			<td>\d</td>
+			<td>Match any digit [0-9]</td>
+		</tr>
+		<tr>
+			<td>\D</td>
+			<td>Match any non-digit [^0-9]</td>
+		</tr>
+		<tr>
+			<td>\w</td>
+			<td>Match any word [a-zA-Z_0-9] character</td>
+		</tr>
+		<tr>
+			<td>\W</td>
+			<td>Match any non word character</td>
+		</tr>
+		<tr>
+			<td>\s</td>
+			<td>Match any whitespace character</td>
+		</tr>
+		<tr>
+			<td>\S</td>
+			<td>Match any non whitespace character</td>
+		</tr>
+		<tr>
+			<td>\x</td>
+			<td>Cancel character special meaning and match
+			exactly</td>
 		</tr>
 	</tbody>
 </table>
+</div>
+<h2>Some Examples</h2>
+<p>In Perl you can specify
+regular expressions between<b> / </b>delimiters (you can change the
+delimiter if you wish), and you add modifiers after the closing <b>/</b>.
+For example, to carry out a global search and replace of the pattern <b>xxx</b>
+with <b>yyy </b>you could use the expression:</p>
+<div id="codeoutput">s/xxx/yyy/g</div>
+<p>to match the contents
+of a variable to a regular expression, you can use the <b>=~</b>
+operator as in the following code:</span></p>
+<div id="codeoutput">$str
+= &quot;Hello World&quot;;<br />
+$str =~ s/Hello/Goodbye/;<br />
+print $str;<br />
+<b>Goodbye World</b></div>
+<p>Java2 version 1.4 and
+onwards includes the regular expression class java.util.regex. In Java
+you specify a regular expression as a String, which must first be
+compiled into an instance of the class Pattern. The resulting pattern
+can then be used to create a Matcher object that can match arbitrary
+character sequences against the regular expression. For example:</p>
+<pre name="code" class="java">
+Pattern p = Pattern.compile(&quot;Hello&quot;);
+Matcher m = p.matcher(&quot;Hello World&quot;);
+myMatcher.replaceAll(&quot;subject&quot;,&quot;replacement&quot;)
+boolean b = m.matches();
+</pre>
+<p>Visual Basic, C++ and
+C# amongst other languages can make use of the shared regular expression
+library provided under Microsoft's .NET framework.</p>
+<h2>Summary</h2>
+<p>This article was intended as an introduction to
+using regular expressions. The table below summarises the language.
+There is more to the regular expression language and in fact complete
+books have been written on the subject, and I therefore encourage you to
+view the references listed below in more detail.</p>
+<h2>References</h2>
+<ul>
+	<li><a
+		href="http://www.amazon.com/gp/product/0596002890/sr=1-2/qid=1155573098/ref=pd_bbs_2/002-5409104-2371230?ie=UTF8&amp;s=books">Mastering
+	Regular Expressions</a></li>
+	<li><a href="http://www.regular-expressions.info/">Regular-Expressions.info</a></li>
+	<li><a href="http://www.regexbuddy.com/">RegexBuddy</a><i> </i></li>
+	<li><a href="http://www.regexlib.com/">The Regular Expression
+	library</a></li>
+	<li><a
+		href="http://gnosis.cx/publish/programming/regular_expressions.html">Learning
+	to use regular expressions</a><br />
+	</li>
+</ul>
+</div>
