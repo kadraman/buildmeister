@@ -38,62 +38,32 @@ If you have an idea for an article or have written some content yourself, then p
 your content using the form at the bottom of this page.</p>
 </div>
 
-<div id="boxedtitle">Build Process</div>
-
 <?php
-// fetch build process articles
-$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 1 AND active = 1 ORDER BY date_posted DESC;";
-$result = mysql_query($sql);
-$numrows = mysql_num_rows($result);
+// fetch category and display it
+function displayCategory($title, $cat_id) {
+    
+    echo "<div id='boxedtitle'>$title</div>\n";
+    $sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = "
+        . $cat_id . " AND active = 1 ORDER BY date_posted DESC;";
+    $result = mysql_query($sql);
+    $numrows = mysql_num_rows($result);
 
-if ($numrows != 0) {
-    while ($row = mysql_fetch_assoc($result)) {
-        echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
-    		. $row['title'] . "</a></strong><br/>"
-		. $row['summary'] . "</div>";
+    if ($numrows != 0) {
+        while ($row = mysql_fetch_assoc($result)) {
+            echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
+    		    . $row['title'] . "</a></strong><br/>"
+		    . $row['summary'] . "</div>";
+        }
     }
-}    
-?>
+    echo "<div id='spacer'>&nbsp;</div>\n";
+} // displayCategory
 
-<div id="spacer">&nbsp;</div>
-<div id="boxedtitle">Build Tools</div>
-
-<?php
-// fetch build tools articles
-$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 2 AND active = 1 ORDER BY date_posted DESC;";
-$result = mysql_query($sql);
-$numrows = mysql_num_rows($result);
-
-if ($numrows != 0) {
-    while ($row = mysql_fetch_assoc($result)) {
-        echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
-    		. $row['title'] . "</a></strong><br/>"
-		. $row['summary'] . "</div>";
-    }
-}
-
-?>
-
-<div id="spacer">&nbsp;</div>
-<div id="boxedtitle">Supporting Core Skills</div>
-
-<?php
-// fetch miscellaneous articles
-$sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = 3 AND active = 1 ORDER BY date_posted DESC;";
-$result = mysql_query($sql);
-$numrows = mysql_num_rows($result);
-
-if ($numrows != 0) {
-    while ($row = mysql_fetch_assoc($result)) {
-        echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
-    		. $row['title'] . "</a></strong><br/>"
-		. $row['summary'] . "</div>";
-    }
-}
+displayCategory("Process", 1);
+displayCategory("Tools", 2);
+displayCategory("Miscellaneous", 3)
 ?>
 
 <a id="submit"></a>	    
-
 <div id="dashed-spacer">&nbsp;</div>
 
 <h3>Submit a new article</h3>

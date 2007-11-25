@@ -73,7 +73,7 @@ class Process
        * by mistake and therefore is redirected.
        */
        else{
-          header("Location: index.php");
+          header("Location: " . SITE_BASEDIR . "/index.php");
        }
    }
 
@@ -106,7 +106,7 @@ class Process
    function procLogout(){
       global $session;
       $retval = $session->logout();
-      header("Location: index.php");
+      header("Location: " . SITE_BASEDIR . "/index.php");
    }
    
    /**

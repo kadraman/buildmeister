@@ -41,26 +41,51 @@ recommended, together with some personal comments about them. </p>
 </div>
 
 <?php
-# fetch build process books
-$sql = "SELECT * from " . TBL_LINKS . " where active = 1 ORDER BY date_posted DESC;";
-$result = mysql_query($sql);
-$numrows = mysql_num_rows($result);
+# fetch category and display it
+function displayCategory($title, $cat_id) {
+    
+    echo "<div id='boxedtitle'>$title</div>\n";
+    $sql = "SELECT * from " . TBL_LINKS . " where cat_id = "
+    	. $cat_id . " AND active = 1 ORDER BY date_posted DESC;";
+    $result = mysql_query($sql);
+    $numrows = mysql_num_rows($result);
 
-if ($numrows != 0) {
-    while ($row = mysql_fetch_assoc($result)) {
-        echo "<div id='splitsection'>\n";
-        echo "<table width='100%' border=0'><tr>\n";
-        echo "<td align='center' width='300px'><img src='"
-        . $row['preview_url'] . "' alt='[link preview]'></td>\n";
-        echo "<td valign='top'><strong><a href='" . $row['url'] . "'>" . $row['title'] . "</a></strong><br/>"
-		. $row['summary'] . "</td>\n";
-		echo "</tr></table>"; 
-		echo "</div>";
+    if ($numrows != 0) {
+        while ($row = mysql_fetch_assoc($result)) {
+            echo "<div id='splitsection'>\n";
+            echo "<table width='100%' border=0'><tr>\n";        
+            // do we have a preview image
+            if ($row['preview_url'] == "") {
+                // no single column link
+                echo "<td width='100%' align='left' valign='top'>\n";
+                echo "<strong><a href='" . $row['url'] . "'>" . $row['title'] 
+                    . "</a></strong><br/>" . $row['summary'] . "</td>\n";
+            } else {
+                // two column link
+                echo "<td align='center' width='300px'>\n";
+                echo "<a href='" . $row['url'] . "'>"; 
+                echo "<img src='" . $row['preview_url'] . "' alt='[link preview]'>";
+                echo "</a></td>\n";
+                echo "<td valign='top'><strong><a href='" . $row['url'] . "'>" 
+                    . $row['title'] . "</a></strong><br/>" . $row['summary'] . "</td>\n";
+            }
+		    echo "</tr></table>"; 
+		    echo "</div>";
+        }
     }
-}   
+    
+    echo "<div id='spacer'>&nbsp;</div>\n";
+} // displayCategory
+
+displayCategory("Portals", 0);
+displayCategory("Process", 1);
+displayCategory("Tools", 2);
+displayCategory("Miscellaneous", 3);
+
 ?>
 
 <a id="submit"></a>
+<div id="dashed-spacer">&nbsp;</div>
 
 <h3>Submit a new link</h3>
 <?php
@@ -87,7 +112,7 @@ if ($numrows != 0) {
 	<tr>
 		<td>*<label class="formLabelText" for="linkurl">URL:</label></td>
 		<td><input class="formInputText" type='text' name='linkurl' <?php echo $disable_field; ?>
-			maxlength="80" value="<?php echo $form->value("linkurl"); ?>"></td>
+			maxlength="120" value="<?php echo $form->value("linkurl"); ?>"></td>
 	</tr>
 	<tr>
 		<td>*<label class="formLabelText" for="linksummary">Summary of link:</label></td>

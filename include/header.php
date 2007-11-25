@@ -75,7 +75,7 @@ if ($session->logged_in) {
 	    echo "<li><a href=\"admin\admin.php\">Admin Center</a></li>";
 	}
 	?>
-	<li><a href="process.php">Logout</a></li>
+	<li><a href="include/process.php">Logout</a></li>
 </ul>
 	<?php
 } else {

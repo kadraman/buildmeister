@@ -7,7 +7,9 @@ $_SESSION['SESS_NAVITEM'] = 0;
 include("include/header.php");
 ?>
 
-<div id="toptitle"><h2>Welcome to <i>The Buildmeister</i></h2></div>
+<div id="toptitle">
+<h2>Welcome to <i>The Buildmeister</i></h2>
+</div>
 
 <div id="introductory">
 <table width="100%">
@@ -43,12 +45,45 @@ include("include/header.php");
 </table>
 </div>
 
-<table width="100%">
-<td width="50%">The Buildmeister's Guide</td>
-<td>active tag cloud</td>
-</table>
+<div id="boxedtitle">The Buildmeister's Guide</div>
+<table style="width: 100%;">
+	<tbody>
+		<tr>
+			<td style="vertical-align: top;">
+			<p align="justify"><img alt="[Buildmeister Books]"
+				src="images/buildmeisterbookslogo.gif" align="top" hspace="2"
+				vspace="2"></p>
+			<p>If you enjoy this site then you can help to keep it going by
+			purchasing a copy of <a
+				href="http://www.lulu.com/browse/book_view.php?fCID=409652">The
+			Buildmeister's Guide</a> - the book of this website, which contains a
+			collection of the best articles and information from this site
+			together with some significant and new unpublished content. Printed
+			and electronic copies of these books are available to purchase
+			from&nbsp;<a href="http://stores.lulu.com/buildmeisterbooks">stores.lulu.com/buildmeisterbooks</a>.&nbsp;</p>
 
-<div id="dashed-spacer"></div>
+			</td>
+			<td><img style="border: 1px solid; width: 93px; height: 140px;"
+				alt="[The Buildmeister's Guide]"
+				src="images/The_Buildmeisters_Guide_cover_small.jpg" hspace="5"
+				vspace="5"><br>
+			<div style="text-align: center;"><a
+				href="http://www.lulu.com/commerce/index.php?fBuyContent=409652"> <img
+				src="http://www.lulu.com/services/buy_now_buttons/images/book_blue2.gif"
+				alt="Buy now" border="0"></a></div>
+			</td>
+			<td><img style="border: 1px solid; width: 93px; height: 140px;"
+				alt="[Apache Ant - The Buildmeister's Guide]"
+				src="images/Apache_Ant_TBG_cover_small.jpg" hspace="5" vspace="5"><br>
+
+			<div style="text-align: center;"><a
+				href="http://www.lulu.com/commerce/index.php?fBuyContent=1022721"><img
+				src="http://www.lulu.com/services/buy_now_buttons/images/book_blue2.gif"
+				alt="Buy now" border="0"></a></div>
+			</td>
+		</tr>
+	</tbody>
+</table>
 
 <div id="boxedtitle">Selected Articles</div>
 <?php
@@ -60,9 +95,9 @@ $numrows = mysql_num_rows($result);
 if ($numrows != 0) {
     while ($row = mysql_fetch_assoc($result)) {
         echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>" . $row['title'] . "</a></strong><br/>"
-		. $row['summary'] . "</div>";
+        . $row['summary'] . "</div>";
     }
-}   
+}
 
 ?>
 
