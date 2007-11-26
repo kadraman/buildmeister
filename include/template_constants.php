@@ -10,10 +10,10 @@
  */
  
 // database constants for MySQL
-define("DB_SERVER", "localhost");
-define("DB_USER", "webmaster@buildmeister.com");
-define("DB_PASS", "redrock71");
-define("DB_NAME", "buildmeister_com_1");
+define("DB_SERVER", "@db_server@");
+define("DB_USER", "@db_user@");
+define("DB_PASS", "@db_pass@");
+define("DB_NAME", "@db_name@");
 
 // database tables
 define("TBL_USERS", "users");
@@ -24,9 +24,13 @@ define("TBL_ARTICLES", "articles");
 define("TBL_BOOKS", "books");
 define("TBL_GLOSSARY", "glossary");
 define("TBL_LINKS", "links");
+define("TBL_ARTRATE", "articles_ratings");
+define("TBL_LINKRATE", "links_ratings");
+define("TBL_ARTCOM", "article_comm");
+define("TBL_GLOSSCOM", "glossary_comm");
 
 // special names and level constants
-define("SITE_BASEDIR", "http://www.buildmeister.com/new");
+define("SITE_BASEDIR", "@site_basedir@");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");

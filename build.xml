@@ -10,6 +10,17 @@
 	<property file="build.properties"/>
 	<property file="default.properties"/>
 
+	<!-- define a patternset for PHP Web sources -->
+	<patternset id="php.sources">
+	    <include name="**/*.htm*"/>		
+		<include name="**/*.php"/>
+	    <include name="**/*.swf"/>
+	    <include name="**/*.js"/>
+	    <include name="**/*.css"/>
+	    <include name="**/*.gif"/>
+		<include name="**/*.jpg"/>
+	</patternset>
+	
 	<!-- define an internal classpath for -->
 	<path id="internal.classpath">
     	<!-- include local libraries -->
@@ -45,52 +56,6 @@
         		<entry key="rel.num" value="${rel.num}"/>
 		</propertyfile>
 	</target>
-	
-	<!-- get a formatted Subversion commit message -->
-	<target name="get-relmess">
-		<loadproperties srcfile="release.properties"/>
-		<input message="Enter commit message:" addproperty="svn.message"
-	       defaultvalue="Delivering release ${rel.num}"/>
-	</target>
-
-	<!-- taskdef for SVNAnt -->
-	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"
-		classpathref="internal.classpath"/>
-
-	<!-- checkout a project from Subversion -->
-	<target name="svn-checkout" description="checkout a project from Subversion">
-		<svn username="${svn.username}" password="${svn.password}">
-			<checkout url="${svn.url}" destPath="${svn.dir}"/>
-		</svn>
-	</target>
-
-	<!-- update a project from Subversion -->
-	<target name="svn-update" description="update a project from Subversion">
-		<svn username="${svn.username}" password="${svn.password}">
-			<update dir="${svn.dir}"/>
-		</svn>
-	</target>
-
-	<!-- commit a project back into Subversion -->
-	<target name="svn-commit">
-		<svn username="${svn.username}" password="${svn.password}">
-			<commit dir="${svn.dir}" message="${svn.message}"/>
-			<info target="${svn.dir}"/>
-		</svn>
-		<echo>Last Revision = ${svn.info.lastRev} by ${svn.info.author} on ${svn.info.lastDate}</echo>
-	</target>
-
-	<!-- create a Subversion release tag/directory  -->
-	<target name="svn-copy">
-		<loadproperties srcfile="release.properties"/>
-		<fail message="Error: property rel.num has not been set"
-			unless="rel.num"/>
-		<property name="svn.url-rel" value="${svn.url-base}/tags/${rel.num}/"/>
-		<svn username="${svn.username}" password="${svn.password}">
-			<copy srcurl="${svn.url}" desturl="${svn.url-rel}"
-				message="${svn.message}"/>
-			</svn>
-	</target>	
 			
 	<!-- prepare a release -->
 	<target name="release-package" depends="get-relnum">
@@ -103,9 +68,57 @@
 		</zip>
 		<checksum file="${ant.project.name}-src-${rel.num}.zip"/>
 	</target>
-
-	<!-- commit release into Subversion -->
-	<target name="release-commit" depends="get-relmess, svn-commit, svn-copy"/>
+	
+	<!-- deploy to development environment it env.dev property is set -->
+	<target name="deploy2dev" if="env.dev">
+		<property file="dev.properties"/>
+		<copy overwrite="true" 
+			file="include/template_constants.php" 
+			tofile="include/constants.php"/>
+		<echo>Replacing constants in include/constants.php</echo>
+		<replace file="include/constants.php" propertyfile="dev.properties">
+		  <replacefilter token="@db_server@" property="db.server"/>
+		  <replacefilter token="@db_user@" property="db.user"/>
+		  <replacefilter token="@db_pass@" property="db.pass"/>			
+	      <replacefilter token="@db_name@" property="db.name"/>
+		  <replacefilter token="@site_basedir@" property="site.basedir"/>
+		</replace>
+	</target>
+	
+	<!-- deploy to test environment if env.test property is set -->
+	<target name="deploy2test" if="env.test">
+		<property file="test.properties"/>
+		<!-- not used -->
+	</target>
+	
+	<!-- deploy to production environment if env.prod property is set -->
+	<target name="deploy2prod" if="env.prod">
+		<property file="prod.properties"/>
+		<copy overwrite="true" 
+			file="include/template_constants.php" 
+			tofile="include/constants.php"/>
+		<echo>Replacing constants in include/constants.php</echo>
+		<replace file="include/constants.php" propertyfile="prod.properties">
+		  <replacefilter token="@db_server@" property="db.server"/>
+		  <replacefilter token="@db_user@" property="db.user"/>
+		  <replacefilter token="@db_pass@" property="db.pass"/>			
+	      <replacefilter token="@db_name@" property="db.name"/>
+		  <replacefilter token="@site_basedir@" property="site.basedir"/>
+		</replace>
+		<!-- ftp files to server - requires apache commons.net -->
+		<echo>FTP'ing files to ${ftp.server}</echo>
+		<ftp server="${ftp.server}" userid="${ftp.user}"
+			remotedir="${ftp.remotedir}" password="${ftp.pass}"
+			passive="true" depends="true" verbose="true"
+			skipfailedtransfers="true" retriesallowed="5">
+ 			<fileset dir="${basedir}">
+ 				<patternset refid="php.sources"/>
+ 			</fileset>
+		</ftp>			
+	</target>
+	
+	<!-- deploy to a specific environment -->
+	<target name="deploy" depends="deploy2dev, deploy2test, deploy2prod"/>
 	
 	<!-- help -->
 	<target name="help" description="display help">

@@ -1,11 +1,11 @@
 <?php
 require("include/header.php");
 
-// account has been updated succesfully
+// account has been updated successfully
 if (isset($_SESSION['contacted'])) {
     unset($_SESSION['contacted']);
     $session->displayDialog("Message Sent",
-       "Thank you for your message, we have succesfully recieved it and will respond shortly.",
+       "Thank you for your message, we have successfully recieved it and will respond shortly.",
     SITE_BASEDIR . "/contact.php");
 } else {
     // if user is logged in

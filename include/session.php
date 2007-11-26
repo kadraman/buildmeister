@@ -185,6 +185,9 @@ class Session
       $database->updateUserField($this->username, "userid", $this->userid);
       $database->addActiveUser($this->username, $this->time);
       $database->removeActiveGuest($_SERVER['REMOTE_ADDR']);
+      
+      /* Reflect fact that user has logged in */
+      $this->logged_in = true;
 
       /**
        * This is the cool part: the user has requested that we remember that
@@ -198,6 +201,8 @@ class Session
          setcookie("cookid",   $this->userid,   time()+COOKIE_EXPIRE, COOKIE_PATH);
       }
 
+      //echo "session: $this->userinfo $this->username $this->userid $this->userlevel\n";
+      //echo "session: $this->logged_in\n";
       /* Login completed sucessfuly */
       return true;
    }
@@ -316,7 +321,7 @@ class Session
          $verifystring = urlencode($randomstring);
          if ($database->addNewUser($subuser, md5($subpass), $subfirst, $sublast, $subemail, $verifystring, $mailok)) {
              $mailer->sendVerification($subuser, $subemail, $subpass, $verifystring);
-             $mailer->sendNotification("New user registerd: " . $this->username);
+             $mailer->sendNotification("A new user has registered: " . $subuser);
              return 0;  // new inactive user added succesfully
          } else {
             return 2;   // registration attempt failed
@@ -723,12 +728,19 @@ class Session
       return $randstr;
    }
    
+   /**
+    * Display a dialog box for results
+    *
+    * @param string $title
+    * @param string $text
+    * @param string $referrer
+    */
    function displayDialog($title, $text, $referrer) {
        echo "<div align=\"center\">";
        echo "<form action=\"$referrer\">\n";
        echo "<fieldset style=\"width:400px\">\n";
        echo "<legend>$title</legend>";
-       echo "<p>$text</p>";
+       echo "<p style='text-align:center'>$text</p>";
        echo "<input type=\"submit\" value=\"OK\">\n";
        echo "</fieldset>\n";
        echo "</form></div>\n";

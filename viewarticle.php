@@ -10,7 +10,7 @@ include("include/header.php");
 if (isset($_SESSION['artcomsuccess'])) {
     if ($_SESSION['artcomsuccess']) {
         // comment was successful
-        $session->displayDialog("Submission Succesfull",
+        $session->displayDialog("Submission Successful",
     		"Thank you for your comments, they will be reviewed before being added to the site.",
             SITE_BASEDIR . "/articles.php");
     } else {

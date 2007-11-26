@@ -89,7 +89,7 @@ class Process
                 
       /* Login successful */
       if($retval){
-         header("Location: ". SITE_BASEDIR . "/index.php");
+         header("Location: ". $session->referrer);
       }
       /* Login failed */
       else{

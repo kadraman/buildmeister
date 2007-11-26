@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="svn-tasks" basedir=".">
+	
+	<property name="dir.svnlib"	value="lib"/>
+
+	<!-- define an internal classpath for -->
+	<path id="svn.classpath">
+    	<!-- include local libraries -->
+    	<fileset dir="${dir.svnlib}"/>
+	</path>
+	
+	<!-- get a formatted Subversion commit message -->
+	<target name="get-relmess">
+		<loadproperties srcfile="release.properties"/>
+		<input message="Enter commit message:" addproperty="svn.message"
+	       defaultvalue="Delivering release ${rel.num}"/>
+	</target>
+
+	<!-- taskdef for SVNAnt -->
+	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"
+		classpathref="svn.classpath"/>
+
+	<!-- checkout a project from Subversion -->
+	<target name="svn-checkout" description="checkout a project from Subversion">
+		<svn username="${svn.username}" password="${svn.password}">
+			<checkout url="${svn.url}" destPath="${svn.dir}"/>
+		</svn>
+	</target>
+
+	<!-- update a project from Subversion -->
+	<target name="svn-update" description="update a project from Subversion">
+		<svn username="${svn.username}" password="${svn.password}">
+			<update dir="${svn.dir}"/>
+		</svn>
+	</target>
+
+	<!-- commit a project back into Subversion -->
+	<target name="svn-commit">
+		<svn username="${svn.username}" password="${svn.password}">
+			<commit dir="${svn.dir}" message="${svn.message}"/>
+			<info target="${svn.dir}"/>
+		</svn>
+		<echo>Last Revision = ${svn.info.lastRev} by ${svn.info.author} on ${svn.info.lastDate}</echo>
+	</target>
+
+	<!-- create a Subversion release tag/directory  -->
+	<target name="svn-copy">
+		<loadproperties srcfile="release.properties"/>
+		<fail message="Error: property rel.num has not been set"
+			unless="rel.num"/>
+		<property name="svn.url-rel" value="${svn.url-base}/tags/${rel.num}/"/>
+		<svn username="${svn.username}" password="${svn.password}">
+			<copy srcurl="${svn.url}" desturl="${svn.url-rel}"
+				message="${svn.message}"/>
+			</svn>
+	</target>	
+
+	<!-- commit release into Subversion -->
+	<target name="release-commit" depends="get-relmess, svn-commit, svn-copy"/>
+	
+</project>

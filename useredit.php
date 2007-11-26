@@ -1,7 +1,7 @@
 <?php
 require("include/header.php");
 
-// account has been updated succesfully
+// account has been updated successfully
 if (isset($_SESSION['useredit'])) {
    unset($_SESSION['useredit']);
    $session->displayDialog("Account Updated", 

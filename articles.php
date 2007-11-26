@@ -13,7 +13,7 @@ include("include/header.php");
 if (isset($_SESSION['articlesuccess'])) {
     if ($_SESSION['articlesuccess']) {
         // submission was sucessful
-        $session->displayDialog("Submission Succesfull",
+        $session->displayDialog("Submission Successful",
         	"Thank you for your submission, it will be reviewed before being added to the site.",
             SITE_BASEDIR . "/articles.php");
     } else {

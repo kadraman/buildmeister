@@ -2,9 +2,11 @@
 include("include/header.php");
 
 // are you already logged in
-if ($session->logged_in) {
-	echo "<p><b>$session->username</b> is succesfully logged in.</p>"; 
-}
+if ($session->logged_in) { 
+	$session->displayDialog("Login Successful",
+        "The user <b>$session->username</b> is now successfully logged in.",
+        SITE_BASEDIR . "/index.php");
+} else {
 ?>
 <form method="post" action="include/process.php">
     <fieldset style="width: 250px">
@@ -43,6 +45,8 @@ if ($session->logged_in) {
 		</table>
 	</fieldset>
 </form>
+
 <?php
+}
 include("include/footer.php");
 ?>

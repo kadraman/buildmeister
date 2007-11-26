@@ -9,7 +9,7 @@ if ($session->logged_in) {
 } else if (isset($_SESSION['regsuccess'])) {
     if ($_SESSION['regsuccess']) {
         // registration was successful
-        $session->displayDialog("Registration Succesfull",
+        $session->displayDialog("Registration Successful",
             "Thank you <b>" . $_SESSION['reguname'] . "</b>, an email has been sent to your " .
 		    "inbox, please click on the link it contains to enable your account.",
             SITE_BASEDIR . "/index.php");

@@ -14,7 +14,7 @@ include("include/header.php");
 if (isset($_SESSION['glosssuccess'])) {
     if ($_SESSION['glosssuccess']) {
         // submissions was successful
-        $session->displayDialog("Submission Succesfull",
+        $session->displayDialog("Submission Successful",
         	"Thank you for your submission, it will be reviewed before being added to the site.",
             SITE_BASEDIR . "/glossary.php");
     } else {
@@ -97,8 +97,6 @@ for ($i = 65; $i <= 90; $i++) {
 }
 ?>
 
-</div>
-
 <a id="submit"></a>
 
 <div id="dashed-spacer">&nbsp;</div>
@@ -152,9 +150,8 @@ for ($i = 65; $i <= 90; $i++) {
     }
 ?>
 
-
+</div>
 
 <?php
 include("include/footer.php");
-
 ?>
