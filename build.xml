@@ -42,6 +42,11 @@
 	<!-- static analysis -->
 	
 	<!-- phpdoc -->
+	<target name="phpdoc" description="execute phpDocumentor">
+		<exec executable="${phpexe}" dir="${phpdoc.dir}">
+			<arg line="phpdoc -o HTML:frames:earthli -d ${ant.file}\.. -t ${ant.file}\..\doc"/>
+		</exec>
+	</target>
 	
 	<!-- get a formatted release number -->
 	<target name="get-relnum">
@@ -72,16 +77,22 @@
 	<!-- deploy to development environment it env.dev property is set -->
 	<target name="deploy2dev" if="env.dev">
 		<property file="dev.properties"/>
-		<copy overwrite="true" 
-			file="include/template_constants.php" 
+		<copy overwrite="true" file="stylesheets/template_main.css" 
+			tofile="stylesheets/main.css"/>
+		<copy overwrite="true" file="include/template_constants.php" 
 			tofile="include/constants.php"/>
+		<input addproperty="db.pass">Enter database password:</input>
+		<echo>Replacing constants in stylesheets/main.css</echo>
+		<replace file="stylesheets/main.css" propertyfile="dev.properties">
+			<replacefilter token="@image_dir@" property="image.dir"/>
+		</replace>
 		<echo>Replacing constants in include/constants.php</echo>
 		<replace file="include/constants.php" propertyfile="dev.properties">
-		  <replacefilter token="@db_server@" property="db.server"/>
-		  <replacefilter token="@db_user@" property="db.user"/>
-		  <replacefilter token="@db_pass@" property="db.pass"/>			
-	      <replacefilter token="@db_name@" property="db.name"/>
-		  <replacefilter token="@site_basedir@" property="site.basedir"/>
+			<replacefilter token="@db_server@" property="db.server"/>
+		  	<replacefilter token="@db_user@" property="db.user"/>
+		  	<replacefilter token="@db_pass@" value="${db.pass}"/>			
+	      	<replacefilter token="@db_name@" property="db.name"/>
+		  	<replacefilter token="@site_basedir@" property="site.basedir"/>
 		</replace>
 	</target>
 	
@@ -94,18 +105,24 @@
 	<!-- deploy to production environment if env.prod property is set -->
 	<target name="deploy2prod" if="env.prod">
 		<property file="prod.properties"/>
-		<copy overwrite="true" 
-			file="include/template_constants.php" 
+		<copy overwrite="true" file="stylesheets/template_main.css" 
+			tofile="stylesheets/main.css"/>
+		<copy overwrite="true" file="include/template_constants.php" 
 			tofile="include/constants.php"/>
+		<input addproperty="db.pass">Enter database password:</input>
+		<echo>Replacing constants in stylesheets/main.css</echo>
+		<replace file="stylesheets/main.css" propertyfile="prod.properties">
+			<replacefilter token="@image_dir@" property="image.dir"/>
+		</replace>
 		<echo>Replacing constants in include/constants.php</echo>
 		<replace file="include/constants.php" propertyfile="prod.properties">
-		  <replacefilter token="@db_server@" property="db.server"/>
-		  <replacefilter token="@db_user@" property="db.user"/>
-		  <replacefilter token="@db_pass@" property="db.pass"/>			
-	      <replacefilter token="@db_name@" property="db.name"/>
-		  <replacefilter token="@site_basedir@" property="site.basedir"/>
+			<replacefilter token="@db_server@" property="db.server"/>
+		  	<replacefilter token="@db_user@" property="db.user"/>
+		  	<replacefilter token="@db_pass@" value="${db.pass}"/>			
+	      	<replacefilter token="@db_name@" property="db.name"/>
+		  	<replacefilter token="@site_basedir@" property="site.basedir"/>
 		</replace>
-		<!-- ftp files to server - requires apache commons.net -->
+		<input addproperty="ftp.pass">Enter FTP password:</input>
 		<echo>FTP'ing files to ${ftp.server}</echo>
 		<ftp server="${ftp.server}" userid="${ftp.user}"
 			remotedir="${ftp.remotedir}" password="${ftp.pass}"
