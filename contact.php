@@ -8,9 +8,7 @@ if (isset($_SESSION['contacted'])) {
        "Thank you for your message, we have successfully recieved it and will respond shortly.",
     SITE_BASEDIR . "/contact.php");
 } else {
-    // if user is logged in
-    if($session->logged_in) {
-        ?>
+?>
 
 <form action="include/process.php" method="post">
 <fieldset style="width:600px"><legend>Contact Us</legend>
@@ -71,7 +69,6 @@ if($form->value("email") == ""){
 </form>
 
 <?php
-}
 }
 require("include/footer.php");
 ?>
