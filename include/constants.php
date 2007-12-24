@@ -14,10 +14,6 @@ define("DB_SERVER", "localhost");
 define("DB_USER", "root");
 define("DB_PASS", "");
 define("DB_NAME", "buildmeister");
-//define("DB_SERVER", "localhost");
-//define("DB_USER", "webmaster@buildmeister.com");
-//define("DB_PASS", "redrock71");
-//define("DB_NAME", "buildmeister_com_1");
 
 // database tables
 define("TBL_USERS", "users");
@@ -35,7 +31,6 @@ define("TBL_GLOSSCOM", "glossary_comm");
 
 // special names and level constants
 define("SITE_BASEDIR", "http://localhost/buildmeister.com");
-//define("SITE_BASEDIR", "http://www.buildmeister.com/new");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");

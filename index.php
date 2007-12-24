@@ -50,36 +50,33 @@ include("include/header.php");
 	<tbody>
 		<tr>
 			<td style="vertical-align: top;">
-			<p align="justify"><img alt="[Buildmeister Books]"
-				src="images/buildmeisterbookslogo.gif" align="top" hspace="2"
-				vspace="2"></p>
+			<div align="center">
+			<p style="align: center"><img alt="[Buildmeister Books]"
+                             src="images/buildmeisterbookslogo_small.gif"
+                             vspace="5">
+			</p>
+			</div>
 			<p>If you enjoy this site then you can help to keep it going by
 			purchasing a copy of <a
-				href="http://www.lulu.com/browse/book_view.php?fCID=409652">The
-			Buildmeister's Guide</a> - the book of this website, which contains a
+				href="http://www.lulu.com/content/661485">The
+			Buildmeister's Guide - Achieving Agile Software Delivery</a> - the book of this website, which contains a
 			collection of the best articles and information from this site
 			together with some significant and new unpublished content. Printed
-			and electronic copies of these books are available to purchase
+			and electronic copies are available to purchase
 			from&nbsp;<a href="http://stores.lulu.com/buildmeisterbooks">stores.lulu.com/buildmeisterbooks</a>.&nbsp;</p>
-
+			<br/>
 			</td>
-			<td><img style="border: 1px solid; width: 93px; height: 140px;"
+			<td width="30%">
+			<div align="center">
+			<img style="border: 0px;"
 				alt="[The Buildmeister's Guide]"
 				src="images/The_Buildmeisters_Guide_cover_small.jpg" hspace="5"
 				vspace="5"><br>
 			<div style="text-align: center;"><a
-				href="http://www.lulu.com/commerce/index.php?fBuyContent=409652"> <img
+				href="http://www.lulu.com/commerce/index.php?fBuyContent=661485"> <img
 				src="http://www.lulu.com/services/buy_now_buttons/images/book_blue2.gif"
 				alt="Buy now" border="0"></a></div>
-			</td>
-			<td><img style="border: 1px solid; width: 93px; height: 140px;"
-				alt="[Apache Ant - The Buildmeister's Guide]"
-				src="images/Apache_Ant_TBG_cover_small.jpg" hspace="5" vspace="5"><br>
-
-			<div style="text-align: center;"><a
-				href="http://www.lulu.com/commerce/index.php?fBuyContent=1022721"><img
-				src="http://www.lulu.com/services/buy_now_buttons/images/book_blue2.gif"
-				alt="Buy now" border="0"></a></div>
+			</div>
 			</td>
 		</tr>
 	</tbody>
