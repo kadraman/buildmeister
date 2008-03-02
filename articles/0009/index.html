@@ -1,71 +1,76 @@
 <div id="article">
-<h1>Build Management Plan: <span style="font-style: italic;">H&ocirc;tel
-de Java</span></h1>
+<h1>Build Management Plan: <span style="font-style: italic;">myReserve</span></h1>
 <h2>1. Introduction</h2>
 <h3>1.1 Scope</h3>
-<p>The purpose of this document is to define the Build Management
-procedures to be followed by the <a
-	href="http://hoteldejava.sourceforge.net"><i>H&ocirc;tel de
-Java</i></a> project. It is intended as an &quot;example&quot; of such a
-document rather than a real world working example. To simplify the
-document open-source rather than commercial tools are described. With
-use of commercial (particularly Enterprise) tools more detail should be
-included on integration, automation and security.</p>
+<p>The purpose of this article is to define the Build Management
+procedures to be followed by the <i>myReserve</i> project &ndash; an
+open source hotel reservation system (<a
+	href="http://myreserve.sourceforge.net">http://myreserve.sourceforge.net</a>).</p>
+<p><i>Note, this article is intended as a working &quot;example&quot;
+of a Build Management Plan. Although the project it is defined for uses
+open source rather than commercial build and deployment tools, the
+template itself can be tailored and applied to any development project.
+For example, if commercial build and deployment tools were being using
+in a complex business environment, then there should be more detail
+included on the integration of build and deployment into the corporate
+environment and the implementation of build and deployment security.</i></p>
 <h3>1.2 Definitions</h3>
+<p>All definitions are taken from <a href="#BMG">The Buildmeister&lsquo;s Guide</a>
+ glossary.</p>
 <h3>1.3 References</h3>
 <ul>
-	<li><a id="SCM">[SCM]</a> <span style="font-style: italic;">H&ocirc;tel
-	de Java</span> Software Configuration Management Plan.</li>
+	<li><a id="SCM">[SCM]</a> <span style="font-style: italic;">myReserve</span>
+	Software Configuration Management Plan.</li>
 	<li><a id="BMG">[BMG]</a> <a
-		href="http://www.buildmeister.com/modules/content/index.php?id=41">The
-	Buildmeister's Guide</a>, <a
-		href="http://stores.lulu.com/buildmeisterbooks">Buildmeister Books</a>.</li>
+		href="http://www.lulu.com/content/409652">The Buildmeister's Guide</a>,
+	<a href="http://stores.lulu.com/buildmeisterbooks">Buildmeister
+	Books</a>.</li>
 </ul>
 <h2>2. Build Management</h2>
 <h3>2.1 Organization, Responsibilities, and Interfaces</h3>
 <p>The organizational structure of relevant roles to Build
 Management are illustrated in the diagram below:</p>
-<br />
 <p style="text-align: center;"><img
 	style="width: 399px; height: 183px;" alt="[Organization Chart]"
 	src="%image_dir%/BMPlan_Organization.gif" /></p>
-<p>The <span style="font-weight: bold;">Build Engineer </span>will
-be responsible for:</p>
+<p>The <span style="font-weight: bold;">Build Engineer
+(Buildmeister) </span>will be responsible for:</p>
 <ul>
-	<li>defining theproject's build process based on the input
-	of the <span style="font-weight: bold;">Developers</span></li>
-	<li>implementing, automating and securing the build process</li>
-	<li>liaise with the <span style="font-weight: bold;">Configuration
+	<li>defining the project's build process based on the input of the
+	<span style="font-weight: bold;">Developers,</span></li>
+	<li>implementing, automating and securing the build process,</li>
+	<li>liaising with the <span style="font-weight: bold;">Configuration
 	Manager</span> to ensure that the build process correctly interfaces to the <a
-		href="#SCM">SCM</a> environment.</li>
+		href="#SCM">SCM</a> environment,</li>
 	<li>automating or initiating the deployment of the application to
-	development and test environments.</li>
+	Development and Acceptance Test environments.</li>
 </ul>
 The <span style="font-weight: bold;">Deployment Engineer</span> will be
 responsible for automating or initiating the deployment of the
-application to production environments.
+application to Production Environments.
 <h3>2.2 Tools, Environment, and Infrastructure</h3>
 <p>The infrastructure that is to be used for supporting the build
 and deployment process is illustrated below:</p>
 <p style="text-align: center;"><img
 	style="width: 376px; height: 278px;" alt="[Build Infrastructure]"
 	src="%image_dir%/BMPlan_Infrastructure.gif" /></p>
-<p>The H&ocirc;tel de Java build scripts will be version controlled
-alongside the project source code on the <span
-	style="font-weight: bold;">Version Control Server</span> (see the <a
-	href="#SCM">SCM</a> plan for more details).Development
-Integration builds will be automatically executed on the <span
-	style="font-weight: bold;">Build Server</span>and deployed to a
-local instance of WebSphere for Link Testing. The outputs of each
-succesful build will be stored on the <span style="font-weight: bold;">Staging
-Server</span> (in this case a file system share on the Build Server).</p>
-<p>At pre-defined milestones, specific build outputs will be
-deployed by the Build Engineer into the <span style="font-weight: bold;">Test
-Environment</span> for System Acceptance Testing. Validated milestone build
-outputs will then be securely stored on the Version Control Server. The
-Deployment Engineer will deploy releaseble builds from the Version
-Control Server into the secure <span style="font-weight: bold;">Production
-Environment</span> as and when required.</p>
+<p>The <i>myReserve</i> build scripts will be version controlled
+alongside the project source code on the <b>Version Control Server</b>
+(see the <a href="#SCM">SCM</a> plan for more details). Development
+Integration builds will be automatically executed on the <b>Build Server</b>
+and deployed to a local instance of Apache Geronimo for Functional
+Integration Testing.</p>
+<p>The outputs of each successful Integration build will be stored
+on the <b>Staging Server</b> (in this case a file system share on the <b>Build
+Server</b>).</p>
+<p>Approximately once a week, Feature Drops (Integration builds with
+specific, testable content) will be deployed by the Build Engineer into
+the <b>Test Environment</b> for validation by the Acceptance Testing
+team. Validated builds will then be securely stored back on the <b>Version
+Control Server</b> as candidate release builds.</p>
+<p>The Deployment Engineer will deploy these builds from the <b>Version
+Control Server</b> into the secure <b>Production Environment</b> as and when
+required.</p>
 <p>The following tools will be used to implement the build and
 deployment process:</p>
 <ul>
@@ -74,134 +79,136 @@ deployment process:</p>
 	<li><a href="http://cruisecontrol.sourceforge.net">CruiseControl</a>
 	- to automate the execution of the Ant build scripts when developer
 	changes are committed to the <span style="font-weight: bold;">Version
-	Control Server</span> as well as to initiate deployment of milestone builds to
-	the test environment</li>
-	<li><a href="http://www.ibm.com/websphere">WebSphere</a> Jython
-	scripting - for automating the provisioning, installation and
-	validation of build outputs into the WebSphere Application Server <span
-		style="font-weight: bold;">Production Environment</span>.</li>
+	Control Server</span> as well as to initiate deployment of Feature Drops to
+	the <b>Test Environment</b>.</li>
+	<li><a href="http://www.ibm.com/websphere">Apache Geronimo</a>
+	scripting - for automating the provisioning of servers, deployment of
+	release builds and validation of their success on to the <b>Production
+	Environment</b>.</li>
 </ul>
 A number of additional, related tools will be used to enforce and assess
-the quality of the input and output of the build process,
-including <a href="http://www.junit.org">JUnit</a>, <a
+the quality of the input and output of the build process, including <a
+	href="http://www.junit.org">JUnit</a>, <a
 	href="http://pmd.sourceforge.net">PMD</a> and <a
 	href="http://fitnesse.org">Fitnesse</a>.<br />
 <h2>3. Build Management Activities</h2>
 <h3>3.1 Build Identification</h3>
-<h4><span style="font-weight: bold;">3.1.1 Build</span>Frequency</h4>
-Two levels of Integration Build will be carried out as follows:<br />
+<h4>3.1.1 Build Frequency</h4>
+<p>Two levels of Integration Build will be carried out as follows:</p>
 <ul>
 	<li><span style="font-weight: bold;">Partial Integration
 	Build</span> - conforming to the <a href="#BMG">Continuous Integration</a>
 	pattern and that is carried out automatically on each developer commit.
-	This will perform full static analysis of theapplication code
+	This build will perform full static analysis of the application code
 	base, compile the application and run through a defined subset of
 	critical unit-tests.</li>
 	<li><span style="font-weight: bold;">Full Integration Build</span>
 	- conforming to the <a href="#BMG">Daily Build and Smoke Test</a>
-	pattern and that is carried out automatically over night. This will
-	perform full static analysis, compilation, full unit testing and
+	pattern and that is carried out automatically over night. This build
+	will perform full static analysis, compilation, full unit testing and
 	deployment of the application to the development test instance. A small
 	subset of automated functional tests will be executed on the deployed
-	application for Link Testing.</li>
+	application for Functional Integration Testing.</li>
 </ul>
 <h4>3.1.2 Build Identification</h4>
-The outputs of each build will be labeled with the release number and a
-unique build number in the form <span style="font-weight: bold;"><span
+<p>The outputs of each build will be labeled with the release number
+and a unique build number in the form:</p>
+<p><span style="font-weight: bold;"><span
 	style="font-style: italic;">filename</span>_REL-<span
 	style="font-style: italic;">BLD</span>.<span
 	style="font-style: italic;">extension</span></span><span
-	style="font-style: italic;">.</span> For example if the release number
-is 1.1 and the build number is 005, for a Web Application Archive
-this would result in a file named <span style="font-weight: bold;">HotelDeJava_1.1-005.war</span>.
-The Subversion global revision number will be recorded against the build
-in CruiseControl so that the build can be reconstructed at a later date.<br />
-<br />
-Any milestone builds which have been deployed and successfully validated
-in the Test Environment will be treated as release builds and the
-outputs stored in a specific Subversion &quot;release&quot; repository.
-This repository will also be populated with release specific
-documentation (see 3.1.3 below).<br />
-<span style="font-weight: bold;"><br />
-</span>Build automation projects defined in CruiseControl will conform to the
-following convention:
+	style="font-style: italic;">.</span></p>
+<p>For example if the release number is 1.1 and the build number is
+005, for a Web Application Archive this would result in a file named <span
+	style="font-weight: bold;">myReserveWeb_1.1-005.war</span>. Note, that
+the Subversion global revision number will be recorded against the build
+in CruiseControl so that the build can be reconstructed at a later date.</p>
+<p>Any Feature Drop builds which have been deployed and successfully
+validated in the Test Environment will be treated as release builds and
+the outputs stored in a specific Subversion &quot;release&quot;
+repository. This repository will also be populated with release specific
+documentation (see 3.1.3 below).</p>
+<p>Build automation projects defined in CruiseControl will conform
+to the following convention:
 <ul>
 	<li>Partial Integration Build projects will be named <span
-		style="font-weight: bold;">HDJ_<span
-		style="font-style: italic;">REL</span>_dev </span>where REL is the targeted
-	release number, e.g. 1.1.</li>
+		style="font-weight: bold;">myReserve_<span
+		style="font-style: italic;">REL</span>_dev </span></li>
 	<li>Full Integration Build projects will be named <span
-		style="font-weight: bold;">HDJ_<span
-		style="font-style: italic;">REL</span>_int </span>where REL is the targeted
-	release number, e.g. 1.1.</li>
+		style="font-weight: bold;">myReserve_<span
+		style="font-style: italic;">REL</span>_int </span></li>
 	<li>Deployment (to Test) projects will be named <span
-		style="font-weight: bold;">HDL_<span
-		style="font-style: italic;">REL</span>_deploy</span> where REL is the
-	targeted release number, e.g. 1.1</li>
+		style="font-weight: bold;">myReserve_<span
+		style="font-style: italic;">REL</span>_deploy</span></li>
 </ul>
+<p>where REL is the targeted release number, e.g. 1.1.</p>
 <h4><b>3.1.3 Build Directory Structure</b></h4>
-<div class="Section2">The build and deployment directory structure
-for H&ocirc;tel de Java is illustrated below:<br />
-<br />
-<div style="text-align: center;"><img
-	style="width: 569px; height: 474px;" alt="[Directory Structure"
-	src="%image_dir%/BMPlan_DirectoryStructure.gif" /><br />
-<div style="text-align: left;">
+<p>The build and deployment directory structure for <i>myReserve</i>
+is illustrated below:</p>
+<p>
+<p style="text-align: center;"><img
+	s alt="[Directory Structure"
+	src="%image_dir%/BMPlan_DirectoryStructure.gif" /></p>
 <p>Where the contents of this diagram are as follows:</p>
 <ul>
-	<li><span style="font-weight: bold;">build.xml</span> - Ant build
-	script(s) for building the application</li>
-	<li><span style="font-weight: bold;">default.properties</span> -
-	Ant build properties</li>
-	<li><span style="font-weight: bold;">src</span> - Java and HTML
-	source code for the application</li>
-	<li><span style="font-weight: bold;">bin</span> - WebSphere
-	deployment scripts for the application</li>
-	<li><span style="font-weight: bold;">release_notes.html </span>-
+	<li><span style="font-weight: bold;">build.xml</span> &ndash; Ant
+	build script(s) for building the application</li>
+	<li><span style="font-weight: bold;">default.properties</span>
+	&ndash; Ant build properties</li>
+	<li><span style="font-weight: bold;">src</span> &ndash; Java and
+	HTML source code for the application</li>
+	<li><span style="font-weight: bold;">bin</span> &ndash; Apache
+	Geronimo deployment scripts for the application</li>
+	<li><span style="font-weight: bold;">release_notes.html </span>&ndash;
 	description of the changes (new features, defects addressed) in the
 	release of the application</li>
-	<li><span style="font-weight: bold;">install.html</span> -
+	<li><span style="font-weight: bold;">install.html</span> &ndash;-
 	instructions on how to install the application</li>
 </ul>
-Note that as the application contains multiple components there will be
-multiple directories in the <span style="font-weight: bold;">HotelDeJava_SRC</span>
-repository with similar structures.</div>
-</div>
-<p><b>3.1.5 Build Workspaces</b></p>
+<p>Note that as the application contains multiple components there
+will be multiple directories in the <span style="font-weight: bold;">src</span>
+repository with similar structures.</p>
+<h4>3.1.5 Build Workspaces</h4>
 <p>The Partial Integration Build will use and update a single
 Subversion workspace (working directory).</p>
 <p>To ensure a clean and repeatable build process, the Full
 Integration Build will create and populate a new Subversion workspace.</p>
-A file system directory will be created on the Build Server to hold
-CruiseControl build results and build outputs.<br />
+<p>A file system directory will be created on the Build Server to
+hold CruiseControl build results and build outputs.</p>
 <h3>3.2 Build Control</h3>
 <h4>3.2.1 Security and Authorization</h4>
-The following security restrictions will be implemented on the project:<br />
+<p>The following security restrictions will be implemented on the project:</p>
 <ul>
-	<li>Any user will have permission to update the Apache Ant build
-	scripts and CruiseControl projects, however because of availability and
-	experience it is expected that the Build Engineer will carry out these
-	changes.</li>
-	<li>The Build Engineer role will be the only role authorized to
-	deploy to the Test Environment.</li>
-	<li>The Build Engineer role be the only role authorized to stage a
-	validated build to the Version Control Server.</li>
-	<li>The Build Engineer role be the only individual authorized to
+	<li><b>Any user</b> will have permission to update the Apache Ant
+	build scripts and CruiseControl projects, however because of
+	availability and experience it is expected that the Build Engineer will
+	carry out these changes.</li>
+	<li>The <b>Build Engineer</b> role will be the only role
+	authorized to deploy to the <b>Test Environment</b>.</li>
+	<li>The <b>Build Engineer</b> role is the only role authorized to
+	commit a validated release candidate build to the <b>Version
+	Control Server</b>.</li>
+	<li>The <b>Build Engineer</b> role is the only role authorized to
 	update and version the release documentation.</li>
-	<li>The Deployment Engineer role will be the only role authorized
-	to provision and deploy to the Production Environment.</li>
+	<li>The <b>Deployment Engineer</b> role will be the only role
+	authorized to provision and deploy to the <b>Production Environment</b>.</li>
 </ul>
-Where authorization is required this will be enabled by user login and
-password mechanisms.
+<p>Where authorization is required this will be enabled by standard user
+login and password mechanisms. Usernames and passwords will be permitted 
+to be cached for deployment to the Test Environment but not for deployment
+to the Production Environment.</p>
 <h4>3.2.2 Integration to Configuration and Change Control</h4>
-TBD<br />
-</div>
-<h2>4Build Status Accounting</h2>
+<p>See the <a href="#SCM">SCM</a> plan for more details on how
+the build and deployment process is integrated to Change Control.</p>
+<h2>4 Build Status Accounting</h2>
 <h3>4.1 Project Media Storage</h3>
-<p>TBD</p>
+<p>All Integrations builds are transient are not expected to be
+backed up. All candidate release builds will be backed up with the
+Subversion repository - see the <a href="href="#SCM">SCM</a> plan for
+more details.</p>
 <h3>4.2 Release Process</h3>
-<p>The release process for <i>H&ocirc;tel de Java is</i> illustrated
-in the diagram below:</p>
+<p>The release process for <i>myReserve</i> is illustrated in the
+diagram below:</p>
 <p style="text-align: center;"><img
 	style="width: 531px; height: 276px;" alt="[Release Process]"
 	src="%image_dir%/BMPlan_Release.gif" /></p>
@@ -224,15 +231,15 @@ in the diagram below:</p>
 		<tr>
 			<td><a>Test Engineer</a></td>
 			<td>Validate Build</td>
-			<td>The Test Engineer validates whether the build passes
-			System Acceptance Tests.</td>
+			<td>The Test Engineer validates whether the build passes the
+			Acceptance Tests.</td>
 		</tr>
 		<tr>
 			<td>Build Engineer</td>
 			<td><a>Stage Validated Build</a></td>
-			<td>If the Build passes all System Acceptance Tests and is
+			<td>If the Feature Drio passes all Acceptance Tests and is
 			deemed &quot;ready to release&quot; then the Build Engineer stages
-			the buildin the Subversion release repository.</td>
+			the build in the Subversion release repository.</td>
 		</tr>
 		<tr>
 			<td>Build Engineer</td>
@@ -282,15 +289,23 @@ the build process are provided below</a>:</p>
 			recorded in CruiseControl.</td>
 		</tr>
 		<tr>
+			<td>Build Engineer</td>
+			<td><a>Report on Feature Drop content</a></td>
+			<td>The incremental features that have been developed and are
+			available for Acceptance testing will be retrieved and documented.</td>
+		</tr>
+		<tr>
 			<td>Test Engineer</td>
 			<td>Report on Build Validation</td>
-			<td>The Test Engineer will document the results of the System
+			<td>The Test Engineer will document the results of the
 			Acceptance Testing for the build.</td>
 		</tr>
 		<tr>
 			<td>Build Engineer</td>
-			<td>Create Release Documentation</td>
-			<td>As defined in 3.3.1 above</td>
+			<td>Report on release content (Bill of Materials)</td>
+			<td>The Build Engineer will create a Bill of Materials,
+			detailing the content of the release, including features, bug-fixes
+			and installation steps. As defined in 4.2 above.</td>
 		</tr>
 		<tr>
 			<td>Deployment Engineer</td>
@@ -319,7 +334,7 @@ the build process are provided below</a>:</p>
 			Deployment Engineer</td>
 		</tr>
 		<tr>
-			<td>WebSphere Application Server Administration</td>
+			<td>Apache Geronimo Application Server Administration</td>
 			<td><a>Build Engineer<br />
 			Deployment Engineer</a></td>
 		</tr>
@@ -327,13 +342,22 @@ the build process are provided below</a>:</p>
 </table>
 </center>
 <h2>6. Subcontractor and Vendor Software Control</h2>
-<p><i>H&ocirc;tel de Java</i>does not currently subcontract
-software development. However, they do incorporate open-source
-products into their systems which must be carefully controlled.
-The versions of all of these products and tools used in the development
-environment (including Apache Ant, CruiseControl and so on on) are
-recorded in the <a href="#SCM">SCM Plan</a>.</p>
+<p><i>myReserve</i>does not currently subcontract software
+development. However, they do incorporate open-source products into
+their systems which must be carefully controlled. The versions of all of
+these products and tools used in the Development, Acceptance Test and
+Production Environment&lsquo;s (including Apache Ant, CruiseControl and so on)
+are recorded in the <a href="#SCM">SCM</a> plan.</p>
 <h2>Appendix A - Administration Procedures</h2>
-<p>TBD. Issues to be covered include:</p>
-<p>&lt;Archiving and maintenance produced for CruiseControl&gt;</p>
+<p>Issues to be covered include:</p>
+<ul>
+	<li>How to reuse Ant common targets when a new project component
+	is developed.</li>
+	<li>Support and maintenance of Apache Geronimo application server
+	environments.</li>
+	<li>Archiving and maintenance of CruiseControl projects and build
+	results.</li>
+</ul>
+<p>The backup and recovery of Subversion repositories is detailed in
+the <a href="#SCM">SCM</a> plan.</p>
 </div>
