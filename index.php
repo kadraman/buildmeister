@@ -96,6 +96,20 @@ include("include/header.php");
 	</tbody>
 </table>
 
+<div id="boxedtitle">Whitepapers</div>
+<table style="width: 100%;">
+	<tbody>
+		<tr>
+			<td width="100%">
+			<p><a href="whitepapers/AgileSCMInTheEnterprise.pdf">Implementing Agile SCM in the Enterprise</a> &ndash;
+			this whitepaper introduces the concept of Agile SCM (a lightweight and well designed form of SCM) and
+			discusses how it can be implemented across a large enterprise organization.</p>
+			<br/>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 <div id="boxedtitle">Selected Articles</div>
 <?php
 # fetch latest articles
