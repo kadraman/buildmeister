@@ -81,13 +81,13 @@ include("include/header.php");
 			</td>
 			<td>
 			<div align="center">
-            <a href="http://www.lulu.com/commerce/index.php?fBuyContent=436259">
+            <a href="http://www.lulu.com/content/1022721">
 			<img style="border: 0px;"
 				alt="[Apache Ant - The Buildmeister's Guide]"
 				src="images/Apache_Ant_TBG_cover_small.jpg" hspace="5"
 				vspace="5"></a><br>
 			<div style="text-align: center;"><a
-				href="http://www.lulu.com/commerce/index.php?fBuyContent=436259"> <img
+				href="http://www.lulu.com/content/1022721"> <img
 				src="http://www.lulu.com/services/buy_now_buttons/images/book_blue2.gif"
 				alt="Buy now" border="0"></a></div>
 			</div>
