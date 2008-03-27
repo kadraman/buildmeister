@@ -1,45 +1,62 @@
 <div id="article">
 <h1>Defining Agile Software Delivery</h1>
 <p id="articlehead">This article describes the concept of Agile
-Software Delivery and how it can be applied.</p>
-<h2>Software Delivery and ALM</h2>
+Software Delivery, how it relates to the build process and how it can be 
+implemented.</p>
+<h2>Software Delivery</h2>
 <p>When most people talk about the build process, they typically
-focus on a very narrow definition – usually thinking in terms of code,
+focus on a very narrow definition - usually thinking in terms of code,
 of compilation, and of the technical implementation of build tools.
-These are some of the aspects of a build process but certainly they are
-not the only ones. Build processes are also not defined in isolation,
-they are typically part of complete Application Lifecycle Management
-(ALM) solution - one that is hopefully implemented to ensure the
-successful delivery of software applications. Given this it is entirely
-possible and reasonable to therefore talk about the build process as
-enabling <b>software delivery</b> - ensuring that software is delivered
-to its end users, in as timely and efficient way as possible.</p>
-<p>By definition, software delivery is a mechanistic foundation. It
+Although these are certainly some aspects of an overall build process they are
+not the only ones. Build processes are not defined in isolation,
+they are  part of an overall development lifecycle (or production line). One
+that helps turns developed code into quality deliverables that are ultimately
+handed over to an end user.</p>
+<p>In such a context, it is therefore plausible to talk about the build process as
+enabling <b>software delivery</b> - the process of ensuring that 
+quality software is delivered to its end users, in as timely and efficient way as possible.
+By definition, software delivery is a mechanistic foundation. It
 is not a process or method in its own right, rather it is a collection
-of automated functions to underpin ALM and help bridge the delivery gap
-that exists between development teams, operations and the applications
-ultimate end users. By using this definition, it is hopefully clearer
-that the build process is not about building for building’s sake – a
-build has no value in isolation – rather it is about helping to add
-value to a project – incrementally, over time, and throughout its entire
+of automated functions to underpin the software development lifecycle 
+and help bridge the delivery gap that exists between development teams, operations 
+and the applications ultimate end users. By using such a definition, it is hopefully clearer
+that the build process is not about building for building’s sake - a
+build has no value in isolation - rather it is about helping to add
+value to an application - incrementally, over time, and throughout its entire
 lifecycle.</p>
-<h2>The Build Process and Agility</h2>
-<p>Following this definition, it should be no surprise that the
-overall process of software delivery should be as agile as possible.
-This is not agile as in the sense of Agile Development practices; rather
-it is the need for agility in processes that can potentially be executed
-many times over and that need to share and publish relevant information
-as a continuous pipeline. The diagram below illustrates the pipeline
-concept of <b>Agile Software Delivery</b> - with frequent and repeatable builds
-and deployments.</p>
+<h2>Agility in delivery</h2>
+<p>Following on from this definition, it should be no surprise that the
+overall process of software delivery should be as "agile" as possible.
+This is not necessarily agile as in the sense of Agile Development practices
+- although as we will discuss certain Agile practices are often essential to help
+implementation. Rather it is the need for agility in processes that can potentially 
+be executed many times over. Processes that need to be:</p>
+<ul>
+    <li>automated not manual</li>
+    <li>executed in as short a time as possible</li>
+    <li>reuseable so that other processes (builds) can use them </li>
+    <li>simply defined and understandable, yet complete</li>
+</ul>
+<p>Perhaps one of the most important aspects to understand here is that as more
+and more builds are carried out, the opportunity to build everything, everytime
+decreases. Therefore this is often a risk analysis that needs to be carried out
+to establish what needs to be built and when. For example, private developer builds can
+typically reuse previously-built component libraries. Similarly integration builds 
+do not necessarily have (the time) to execute a complete and intensive regression suite
+everytime, but should do at least before the build is handed over to testing.</p>
+<p>Deployment is often a neglected and poorly defined part of the overall build 
+process. Although it is great to be able to build an application continually, unless
+you can then deploy it succesfully to different environments then your build's are 
+ultimately useless. Since deployment can often be a complex exercise in its own right
+it can be best to think of deployment as separate but related processes. The build
+and deployment processes can then be bought together as a continuous pipeline for
+enabling <b>Agile Software Delivery</b> - which is graphically illustrated in
+the diagram below.</p>
 <p style="text-align: center;"><img alt="[Agile Software Delivery]"
 	src="%image_dir%/AgileSoftwareDelivery.gif" /></p>
-<p>It illustrates that shared infrastructure and the
-outputs of previous (related) builds can be used as inputs to the
-software delivery process. The idea behind this is the more that can be shared the more
-likely it is possible to decrease the total build time and to ensure
-consistency.</p>
-<p>The diagram also illustrates that the outputs of the software
+<p>This diagram illustrates that shared build and deployment infrastructure and the
+outputs of previous (but related) builds can be used as inputs to the overall
+software delivery process. The diagram also illustrates that the outputs of the software
 delivery process are the build outputs and builds reports, which are
 made available so that content can be potentially shared by other
 processes.</p>
