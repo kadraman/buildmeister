@@ -1,25 +1,25 @@
 <div id="article">
-<h1>Defining Agile Software Delivery</h1>
+<h1>Introducing Agile Software Delivery</h1>
 <p id="articlehead">This article describes the concept of Agile
-Software Delivery, how it relates to the build process and how it can be 
+Software Delivery, how it relates to the build process and how it can be
 implemented.</p>
-<h2>Software Delivery</h2>
+<h2>Software delivery</h2>
 <p>When most people talk about the build process, they typically
 focus on a very narrow definition - usually thinking in terms of code,
 of compilation, and of the technical implementation of build tools.
 Although these are certainly some aspects of an overall build process they are
 not the only ones. Build processes are not defined in isolation,
-they are  part of an overall development lifecycle (or production line). One
+they are part of an overall development lifecycle- one
 that helps turns developed code into quality deliverables that are ultimately
 handed over to an end user.</p>
 <p>In such a context, it is therefore plausible to talk about the build process as
-enabling <b>software delivery</b> - the process of ensuring that 
+enabling <b>software delivery</b> - the process of ensuring that
 quality software is delivered to its end users, in as timely and efficient way as possible.
 By definition, software delivery is a mechanistic foundation. It
 is not a process or method in its own right, rather it is a collection
-of automated functions to underpin the software development lifecycle 
-and help bridge the delivery gap that exists between development teams, operations 
-and the applications ultimate end users. By using such a definition, it is hopefully clearer
+of automated functions to underpin the software development lifecycle
+and to help bridge the delivery gap that exists between development teams, operations
+and the applications ultimate end users. By using such a definition, it should then be clearer
 that the build process is not about building for building’s sake - a
 build has no value in isolation - rather it is about helping to add
 value to an application - incrementally, over time, and throughout its entire
@@ -29,7 +29,7 @@ lifecycle.</p>
 overall process of software delivery should be as "agile" as possible.
 This is not necessarily agile as in the sense of Agile Development practices
 - although as we will discuss certain Agile practices are often essential to help
-implementation. Rather it is the need for agility in processes that can potentially 
+implementation. Rather it is the need for agility in processes that can potentially
 be executed many times over. Processes that need to be:</p>
 <ul>
     <li>automated not manual</li>
@@ -38,42 +38,67 @@ be executed many times over. Processes that need to be:</p>
     <li>simply defined and understandable, yet complete</li>
 </ul>
 <p>Perhaps one of the most important aspects to understand here is that as more
-and more builds are carried out, the opportunity to build everything, everytime
-decreases. Therefore this is often a risk analysis that needs to be carried out
-to establish what needs to be built and when. For example, private developer builds can
-typically reuse previously-built component libraries. Similarly integration builds 
-do not necessarily have (the time) to execute a complete and intensive regression suite
-everytime, but should do at least before the build is handed over to testing.</p>
-<p>Deployment is often a neglected and poorly defined part of the overall build 
+and more builds are carried out, the opportunity to build and deploy everything, every time
+decreases. In such circumstances a pragmatic risk analysis needs to be carried out
+to establish exactly what needs to be built and when. For example, do
+integration builds always have (the time) to build everything? Should they execute
+a complete and intensive regression suite each time? Or should they only build changed
+components and run through a subset of unit tests - in such a scenario a complete build
+and test suite might still be executed but less frequently (maybe once a week). The
+exact instantiation is different for each team and is essentially the definition
+of a teams <b>project rhythm</b> - the frequency at which they can develop, integrate
+and deliver.</p>
+<p>Deployment is often a neglected and poorly defined part of the overall build
 process. Although it is great to be able to build an application continually, unless
-you can then deploy it succesfully to different environments then your build's are 
-ultimately useless. Since deployment can often be a complex exercise in its own right
-it can be best to think of deployment as separate but related processes. The build
-and deployment processes can then be bought together as a continuous pipeline for
-enabling <b>Agile Software Delivery</b> - which is graphically illustrated in
+you can then deploy it successfully to different environments then your carefully
+constructed builds are ultimately useless. Since deployment can often be a complex
+exercise in its own right it can be best to think of deployment as separate but related process.
+Build and deployment processes can then be bought together to form a continuous pipeline for
+enabling <b>Agile Software Delivery</b> - an idea which is graphically illustrated in
 the diagram below.</p>
 <p style="text-align: center;"><img alt="[Agile Software Delivery]"
 	src="%image_dir%/AgileSoftwareDelivery.gif" /></p>
-<p>This diagram illustrates that shared build and deployment infrastructure and the
-outputs of previous (but related) builds can be used as inputs to the overall
-software delivery process. The diagram also illustrates that the outputs of the software
-delivery process are the build outputs and builds reports, which are
-made available so that content can be potentially shared by other
-processes.</p>
+<p>This diagram illustrates a software delivery process containing continual builds
+and deployments. It also illustrates that the inputs and outputs of the process are
+reused, for example the build outputs are "staged" so that they can be
+consumed by another related software delivery process. An example here would be the
+build and staging of framework libraries to be consumed by various applications.</p>
 <h2>Enabling Agile Software Delivery</h2>
-<p>In order to implement a build process to enable Agile Software
-Delivery I believe there are three key enablers:</p>
+<p>Agile Software Delivery can be enabled in a variety of ways, but is best achieved through
+the implementation of specific Agile software development practices, in particular the
+following four practices:</p>
 <ul>
-	<li>Automation – of manual and repetitive tasks in as quick and
-	timely a way of possible.</li>
-	<li>Communication – of build success or failure as well as reports
-	and metrics on build content, trends and quality.</li>
-	<li>Re-use – of build tools, technology and infrastructure across
-	project and organizational boundaries.</li>
+    <li><b>incremental development</b> - developing system features in small, frequent iterations
+    and implementing high risk items first.</li>
+    <li><b>refactoring</b> - restructuring a system (including build and deployment processes)
+    without changing its behaviour to remove duplication, simplify or add flexibility.</li>
+    <li><b>continuous testing</b> - driving system development through the creation of unit and
+    customer tests.</li>
+    <li><b>continuous integration and deployment</b> - integrating (building and deploying)
+    the entire system (potentially) many times a day to reduce integration time and errors.</li>
 </ul>
-<p>Enablers such as these are often easy to state but hard to
-implement. In the course of this book I will therefore describe them in
-more detail as well as discuss strategies on how they can be
-successfully implemented. Hopefully by doing so, you will then be able
-to achieve Agile Software Delivery in your own environment.</p>
+<p>The exact details on how to achieve some of these practices, particularly continuous
+integration and testing, will be dependent on the environment in which you are developing.
+Your implementation language for example, will typically constrain the tools that can
+be used for unit testing, static analysis and deployment. To get you started there are
+a large number of articles on this site which describe the technical implementation of
+various tools to achieve Agile Software Delivery and which are listed in the <
+a href="#references">References</a>.</p>
+<h2>Summary</h2>
+<p>This article has been a quick introduction to the concept of Agile Software Delivery.
+It has discussed what software delivery is and why agility in it is important. It has
+also discussed how Agile Software Delivery can be enabled and provided some pointers on
+how to get started. I hope you agree, that by talking about Agile Software Delivery rather
+that the build process it is possible to raise the level and quality of discussions and
+provide a framework for better implementation.</p>
+<a name="references"/>
+<h2>References</h2>
+<ul>
+<li><a href="http://www.lulu.com/content/409652">The Buildmeister's Guide - Achieving Agile Software Delivery</a></li>
+<li><a href="http://www.amazon.com/Continuous-Integration-Improving-Addison-Wesley-Signature/dp/0321336380">
+Continuous Integration: Improving Software Quality and Reducing Risk</a></li>
+<li><a href="http://www.buildmeister.com/viewarticle.php?id=3">Introduction to Test Driven Development and JUnit</a></li>
+<li><a href="http://www.buildmeister.com/viewarticle.php?id=4">Architecting the Build Process</a></li>
+</ul>
+
 </div>
