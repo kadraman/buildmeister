@@ -45,7 +45,22 @@ include("include/header.php");
 </table>
 </div>
 
-<div id="boxedtitle">The Buildmeister's Guide</div>
+<div id="boxedtitle">Build and Release Management Survey</div>
+<table style="width: 100%;">
+	<tbody>
+		<tr>
+			<td width="100%">
+			<p><font size="2">If you are interested in improving the maturity of Build and Release Management,
+			   then please share your knowledge and thoughts by completing
+			   <a target="_blank" href="http://www.surveymonkey.com/s.aspx?sm=mvNuGTwtYj7obhgxFnmeqw_3d_3d">
+			       The Buildmeister - Build and Release Management survey</a>.
+			   The results will be published on this site.</font></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<div id="boxedtitle">Books and Whitepapers</div>
 <table style="width: 100%;">
 	<tbody>
 		<tr>
@@ -63,7 +78,9 @@ include("include/header.php");
 			collection of the best articles and information from this site
 			together with some significant and new unpublished content. A hardcopy version of the book
 			is also available from&nbsp;<a href="http://stores.lulu.com/buildmeisterbooks">stores.lulu.com/buildmeisterbooks</a>.&nbsp;</p>
-			<br/>
+			<p>Download <a href="whitepapers/AgileSCMInTheEnterprise.pdf">Implementing Agile SCM in the Enterprise</a> &ndash;
+			an introduction to the concept of Agile SCM (a lightweight and well designed form of SCM) and
+			how it can be implemented across a large enterprise organization.</p>
 			</td>
 			<td>
 			<div align="center">
@@ -77,20 +94,6 @@ include("include/header.php");
 				src="http://www.lulu.com/services/buy_now_buttons/images/book_blue2.gif"
 				alt="Buy now" border="0"></a></div>
 			</div>
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-<div id="boxedtitle">Whitepapers</div>
-<table style="width: 100%;">
-	<tbody>
-		<tr>
-			<td width="100%">
-			<p><a href="whitepapers/AgileSCMInTheEnterprise.pdf">Implementing Agile SCM in the Enterprise</a> &ndash;
-			this whitepaper introduces the concept of Agile SCM (a lightweight and well designed form of SCM) and
-			discusses how it can be implemented across a large enterprise organization.</p>
-			<br/>
 			</td>
 		</tr>
 	</tbody>
