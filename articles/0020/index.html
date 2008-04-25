@@ -1,10 +1,11 @@
 <div id="article">
-<h1>Implementing library management in with Apache Ant</h1>
+<h1>Managing Java dependencies with Apache Ant and Ivy</h1>
 <p id="articlehead">The world of Java is one of open-source, common
 components and rapid, evolving change. However, one of the caveats of
 such a model is the time spent in managing library dependencies. In this
-article In this section I will describe how the <a href="http://maven.apache.org/ant-tasks.html">
-Ant tasks for Apache Maven </a> can be implemented to help solve this issue.</p>
+article I discuss in more detail the nature of this problem and how a
+specific tool: <a href="http://ant.apache.org/ivy/">Ivy</a> - can be used
+to help you solve this problem.</p>
 <h2>The Java dependency management problem</h2>
 <p>If you took a typical enterprise Java application and decomposed
 it down into the libraries that were developed or reused to implement
@@ -22,7 +23,7 @@ obviously also be creating multiple versions of them and will probably
 need to support different versions for different projects, or for
 projects in different phases. Following on from this, your library
 dependencies might have dependencies on other libraries themselves (so
-called <b>transitive dependencies</b>),
+called <span style="font-weight: bold;">transitive dependencies</span>),
 you will also need to manage and capture this kind of metadata too.</p>
 <p>The typical ways that organizations solve this problem are to
 create a shared repository of libraries - sometimes in version control
@@ -32,539 +33,207 @@ for transitive dependencies where you would need to somehow store their
 associative metadata alongside the components. Alternately you would
 need to create a significant amount of baselines in your version control
 system to refer to a compatible (and collective set) of libraries.</p>
-<p>Fortunately, there are now a number of Java tools that can help you solve
-this problem. These include Apache Maven (in the form of Ant tasks) and
-<a href="http://incubator.apache.org/ivy">Apache Ivy</a>. Both can be made to
-work with Ant, however since Maven could be seen as the next generation of
-Java build tool, I recommend looking at its implementation first - doing so
-will give you a possible future upgrade path. In this article I will
-therefore describe in detail how to implement library management with the
-Ant tasks for Apache Maven.</p>
-
-<h2>Installing the Ant tasks for Apache Maven</h2>
-
-<p>The Ant tasks for Apache Maven are available as a Java library from the
-Apache Maven website. You can download the latest version of the tasks from <a
-href="http://maven.apache.org/download.html">http://maven.apache.org/download.html</a>.
-There should be a single Java library. You can either install this library to
-your Ant <span style='font-size:
-10.0pt;line-height:120%;mso-bidi-font-family:"Times New Roman"'>lib</span>
-directory (for example, <span
-style='font-size:10.0pt;line-height:120%;mso-bidi-font-family:"Times New Roman"'>%ANT_HOME%\lib</span>)
-or to a directory alongside your top-level <span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>build.xml</span> file. I
-prefer to install the Java library into a directory called <span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>lib</span> alongside the <span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>build.xml</span> file, and
-then place it under version control. </p>
-
-<p>Once you have done this you will need to change your <span
-style='font-size:10.0pt;line-height:120%;font-family:"Courier New"'>build.xml</span>
-to reference the tasks "namespace". You can achieve this by adding the
-following to your top-level <span style='font-size:10.0pt;line-height:120%;
-font-family:"Courier New"'>&lt;project&gt;</span> element:</p>
-
-<div id="codeoutput">&lt;project ...
-xmlns:artifact=&quot;urn:maven-artifact-ant&quot;&gt;</div>
-
-<p>Namespaces allow you to reference third party libraries
-and their tasks. In this case the namespace being created is called "<span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>artifact</span>" and refers
-to the Uniform Resource Name(URN) "<span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>maven-artifact-ant</span>".In order for Ant to be able to locate this
-URN, you will also need to define a Classpath where Ant can locate the library
-as follows:</p>
-
-<pre name="code" class="xml">
-&lt;typedef uri=&quot;urn:maven-artifact-ant&quot;
-    resource=&quot;org/apache/maven/artifact/ant/antlib.xml&quot;&gt;
-    &lt;classpath&gt;
-        &lt;pathelement location=&quot;${dir.lib}/
-            maven-artifact-ant-2.x.x-dep.jar&quot;/&gt;
-    &lt;/classpath&gt;
-&lt;/typedef&gt;
-</pre>
-
-<p>This <span
-style='font-size:10.0pt;line-height:120%;mso-bidi-font-family:"Times New Roman"'>&lt;typedef&gt;</span>
-element references the Ant tasks for the Apache Maven Java library that you
-have downloaded and installed &ndash; in this case in the <span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>${dir.lib}</span>
-directory.</p>
-
-<h2>Using Apache Maven repositories</h2>
-
-<p>Apache Maven uses file system repositories to store and
-organize the Java libraries that you will be using as part of your build
-process. Alongside the Java libraries themselves, it also stores metadata
-representing their versions and dependencies. By default this repository is located
-on the Internet at <a href="http://ibiblio.org/maven2">http://ibiblio.org/maven2</a>
-(and is mirrored around the world), however you also can implement internal
-repositories for your own organization. One obvious reason for wanting to do
-this is for security purposes &ndash; you probably would not want to publish your
-companies internally developed libraries on the Internet.</p>
-
-<p>The basic structure of any Maven repository is relatively simple
-and is illustrated in the diagram below:</p>
-
-<img border=0 width=283 height=302
-src="Apache_Ant-The_Buildmeisters_Guide-2nd_ed_files/image002.gif" v:shapes="_x0000_i1025">
-
-<p>In this example I am focusing on a specific directory in
-the Maven <span style='font-size:
-10.0pt;line-height:120%;mso-bidi-font-family:"Times New Roman"'>ibiblio</span>
-repository for the Jakarta
-<span style='font-size:10.0pt;
-line-height:120%;mso-bidi-font-family:"Times New Roman"'>commons-net</span>
-component. This is a popular component which contains a
-collection of network utilities and protocol implementations such as FTP, SMTP and Telnet. Inside the
-<span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>commons-net</span>
-directory of the Maven repository is a sub-directory for every version of <span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>commons-net</span> that has
-been released. Inside these sub-directories are three types of files:</p>
-
+<p>Fortunately, there are now a number of Java tools that can help
+you resolve this problem. These include <a href="viewarticle.php?id=15">Apache
+Maven</a> (which is a complete replacement for <a
+	href="viewarticle.php?id=1">Apache Ant</a>) or the tool that is the
+subject of this article: <a href="http://ant.apache.org/ivy/">Ivy</a> -
+which works with your existing Apache Ant build scripts.</p>
+<h2>Getting started with Ivy</h2>
+<p>Getting Ivy up and running with your existing Apache Ant base
+build process is relatively straightforward, and can be carried out as
+follows:</p>
 <ul>
-<li>The Java libraries which contain the implemented
-functionality. In the diagram above
-there is only a single library called <span style='font-size:10.0pt;font-family:
-"Courier New"'>commons-net-1.40.jar</span> (although the directory could
-contain several libraries).</li>
-<li>The Project Object Model (POM) file for the component, in this
-case <span style='font-size:10.0pt;font-family:"Courier New"'>commons-net-1.4.0.pom</span>.</li>
-<li>The <span style='font-size:10.0pt;font-family:
-"Courier New"'>maven-metadata.xml</span> which is an internally managed file
-used to mark out the fact that this is a Maven repository</li>
+	<li>Download the Ivy binary distribution from <a
+		href="http://ant.apache.org/ivy/download.html">http://ant.apache.org/ivy/download.html</a>
+	</li>
+	<li>Extract the downloaded archive somewhere on your hard disk.</li>
+	<li>Copy the extracted .<span style="font-style: italic;">jar</span>
+	file, i.e. <span style="font-family: monospace;">ivy-1.3-RC3.jar</span><span
+		style="font-weight: bold;"> </span>to your Ant <span
+		style="font-family: monospace;">lib</span><span
+		style="font-weight: bold;"> </span>directory (this ensures that it
+	will be on your <span style="font-style: italic;">classpath</span>).</li>
+	<li>Create an <span style="font-family: monospace;">ivy.xml</span>
+	file (alongside your Ant <span style="font-family: monospace;">build.xml</span>
+	file) to specify your project's library dependencies</li>
+	<li>Configure your Ant <span style="font-family: monospace;">build.xml</span>
+	file to resolve these dependencies and build against them.</li>
 </ul>
-
-<p>There will also be a number of checksum files but these
-are managed by Maven as well.</p>
-
-<p>Maven uniquely identifies each version of a library via its
-filename, for example, <span style='font-size:10.0pt;line-height:120%;
-font-family:"Courier New"'>commons-net-1.4.0.jar</span>. However, it also
-allows you to manage snapshots, which are the latest but unreleased versions of
-libraries. Snapshots are marked via a "<span style='font-size:10.0pt;
-line-height:120%;font-family:"Courier New"'>&ndash;SNAPSHOT</span>" identifier in the
-version name. Although Maven will help you manage these files in its
-repository, creating checksums, directory structures and so on, it does not automatically
-know about dependencies between libraries. This is where the POM file comes in.
-</p>
-
-<p>In the full version of Apache Maven, POM files replace <span
-style='font-size:10.0pt;line-height:120%;font-family:"Courier New"'>build.xml</span>
-files as the build scripts - defining how to build a project or component. Included
-in this file is the list of dependent libraries that are required for the build
-to be successful. For example, if you looked at this file for <span
-style='font-size:10.0pt;line-height:120%;font-family:"Courier New"'>commons-net</span>
-you would see that it contains the following lines:</p>
-
-<div style='mso-element:para-border-div;border:none;border-top:solid windowtext 1.0pt;
-mso-border-top-alt:solid windowtext .75pt;padding:1.0pt 0cm 0cm 0cm'>
-
-&lt;project&gt;</p>
-
-</div>
-
-<span style='mso-spacerun:yes'>
-</span>&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</p>
-
-<span style='mso-spacerun:yes'>
-</span>&lt;groupId&gt;commons-net&lt;/groupId&gt;</p>
-
-<span style='mso-spacerun:yes'>
-</span>&lt;artifactId&gt;commons-net&lt;/artifactId&gt;</p>
-
-<span style='mso-spacerun:yes'>  </span>&lt;name&gt;Jakarta
-Commons Net&lt;/name&gt;</p>
-
-<span style='mso-spacerun:yes'>
-</span>&lt;version&gt;1.4.0&lt;/version&gt;</p>
-
-<span style='mso-spacerun:yes'>  </span>…</p>
-
-<span style='mso-spacerun:yes'>  </span>&lt;dependencies&gt;</p>
-
-    &lt;dependency&gt;</p>
-
-<span style='mso-spacerun:yes'>
-</span>&lt;groupId&gt;oro&lt;/groupId&gt;</p>
-
-<span style='mso-spacerun:yes'>
-</span>&lt;artifactId&gt;oro&lt;/artifactId&gt;</p>
-
-<span style='mso-spacerun:yes'>
-</span>&lt;version&gt;2.0.8&lt;/version&gt;</p>
-
-    &lt;/dependency&gt;</p>
-
-<span style='mso-spacerun:yes'>  </span>&lt;/dependencies&gt;</p>
-
-<span style='mso-spacerun:yes'>  </span>…</p>
-
-<div style='mso-element:para-border-div;border:none;border-bottom:solid windowtext 1.0pt;
-mso-border-bottom-alt:solid windowtext .75pt;padding:0cm 0cm 1.0pt 0cm'>
-
-&lt;/project&gt;</p>
-
-</div>
-
-<p>In this example you can see that the initial elements
-define information about the library and how to access it from within the
-repository - via its "<span
-style='font-size:10.0pt;line-height:120%;mso-bidi-font-family:"Times New Roman"'>groupId</span></span>"
-and "<span style='font-size:10.0pt;
-line-height:120%;mso-bidi-font-family:"Times New Roman"'>artifiactId</span></span>".
-You can also see the set of additional libraries that this library is dependent
-on; in this case it is the Jakarta ORO (regular expression) library version
-2.0.8. You only really need to be concerned with the content of POM files if
-you are going to be creating your own Java libraries and publishing them to the
-Maven repository. If this is the case then you will need to create POM<!--[if supportFields]><span
-style='mso-element:field-begin'></span> XE &quot;Project Object Model:creating&quot;
-<![endif]--><!--[if supportFields]><span style='mso-element:field-end'></span><![endif]--><span
-style='mso-spacerun:yes'> </span>files for each component that you wish to
-publish. I will discuss how to achieve this later.</p>
-
-<p>The way that the Apache Maven<!--[if supportFields]><span
-style='mso-element:field-begin'></span> XE &quot;Apache Maven:dependency
-management&quot; <![endif]--><!--[if supportFields]><span style='mso-element:
-field-end'></span><![endif]--><span style='mso-spacerun:yes'> </span>dependency
-management feature works is that when you carry out a build, it cycles through
-all these dependencies and downloads the appropriate versions from the site
-repository to a user’s local repository (by default this repository is called "<span
-style='font-size:10.0pt;line-height:120%;font-family:"Courier New"'>.m2</span>"
-and is located in your home directory). The local repository is essentially
-your own personal cache &ndash; and is automatically maintained &ndash; you do not need to
-do anything to update or refresh it.</p>
-
-<p class=SectionHead2><a name="_Toc172464122">Implementing your own repository</a></p>
-
-<p>If you want to make use of the Internet repository then
-you need to do nothing to specify the location of the library repository.
-However, if you wish to implement your own site based repository, along side or
-instead of the Internet repository, then you need to specify the location of
-this repository in your <span
-style='font-size:10.0pt;line-height:120%;mso-bidi-font-family:"Times New Roman"'>build.xml</span></span>
-file. You can achieve this by including a line similar to the following:</p>
-
-<div id="codeoutput">&lt;artifact:remoteRepository
-id=&quot;internal.repository&quot; <span style='mso-spacerun:yes'> </span><span
-style='mso-spacerun:yes'> </span><br>
-<span style='mso-spacerun:yes'> </span>url=&quot;http://myhost/maven2&quot;/&gt;</p>
-
-<p>In this example an internal repository is being used
-which is accessible via a Web server on the local Intranet at <span
-class=StyleBodyNoIndentCourierNewChar><span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>http://myhost.maven2</span></span>.
-This repository is going to be referenced using the id "<span
-class=StyleBodyNoIndentCourierNewChar><span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>internal.repository</span></span>".
-If you do not have a Web server you can still specify a URL for a file system
-location, for example, <span
-style='font-size:10.0pt;line-height:120%;mso-bidi-font-family:"Times New Roman"'>file:///shared/maven2</span></span>.</p>
-
-<p>You can initialize your own repository by simply creating an
-empty directory on a file system. If you have an existing set of internally
-developed Java libraries then you can import them into your repository using
-the Apache Maven <span style='font-size:10.0pt;line-height:120%;font-family:
-"Courier New"'>deploy</span> command. For example, to install the Java library <span
-style='font-size:10.0pt;line-height:120%;font-family:"Courier New"'>HotelDJEJBClient.jar</span>
-at version 1.0.1 you would use the following command:</p>
-
-<div id="codeoutput">mvn deploy:deploy-file -DgroupId=hoteldejava <span
-style='font-family:"Wingdings 3";mso-ascii-font-family:"Courier New";
-mso-hansi-font-family:"Courier New";mso-char-type:symbol;mso-symbol-font-family:
-"Wingdings 3"'><span style='mso-char-type:symbol;mso-symbol-font-family:"Wingdings 3"'>É</span></span>
-<br>
--DartifactId=hoteldejavaejbclient -Dversion=1.0.1 <span style='font-family:
-"Wingdings 3";mso-ascii-font-family:"Courier New";mso-hansi-font-family:"Courier New";
-mso-char-type:symbol;mso-symbol-font-family:"Wingdings 3"'><span
-style='mso-char-type:symbol;mso-symbol-font-family:"Wingdings 3"'>É</span></span><br>
--Dpackaging=jar -Dfile=./HotelDJEJBClient.jar <span style='font-family:"Wingdings 3";
-mso-ascii-font-family:"Courier New";mso-hansi-font-family:"Courier New";
-mso-char-type:symbol;mso-symbol-font-family:"Wingdings 3"'><span
-style='mso-char-type:symbol;mso-symbol-font-family:"Wingdings 3"'>É</span></span>
-<br>
--DrepositoryId=repository -Durl=file:///shared/maven2</p>
-
-<p>In order to use this command you will need to download Apache
-Maven<!--[if supportFields]><span style='mso-element:field-begin'></span> XE
-&quot;Apache Maven: <![endif]--><!--[if supportFields]><span style='mso-element:
-field-end'></span><![endif]--><span style='mso-spacerun:yes'> </span>itself
-since it requires the "<span
-style='font-size:10.0pt;line-height:120%;mso-bidi-font-family:"Times New Roman"'>mvn</span></span>"
-binary. One particular point to consider is that only open source libraries are
-contained in the ibiblio repository, not those with click-through licenses like
-Sun’s. Therefore if you are going to build anything which is based on or uses
-Sun’s libraries then you will need to install the relevant Sun Java libraries<a
-style='mso-footnote-id:ftn2' href="#_ftn2" name="_ftnref2" title=""><span
-class=MsoFootnoteReference><span style='mso-special-character:footnote'><![if !supportFootnotes]><span
-class=MsoFootnoteReference><span style='font-size:11.0pt;mso-bidi-font-size:
-12.0pt;font-family:"Times New Roman","serif";mso-fareast-font-family:"Times New Roman";
-color:black;mso-ansi-language:EN-GB;mso-fareast-language:EN-GB;mso-bidi-language:
-AR-SA'>[2]</span></span><![endif]></span></span></a> using this installation process.
-</p>
-
-<p class=SectionHead2><a name="_Toc172464123">Resolving Java libraries</a></p>
-
-<p>Once you have installed the Ant tasks for Apache Maven, in
-order to specify the versions of libraries you wish to build against I
-recommend creating a new properties file called<!--[if supportFields]><span
-style='mso-element:field-begin'></span> XE &quot;library.properties&quot; <![endif]--><!--[if supportFields]><span
-style='mso-element:field-end'></span><![endif]--><span
-style='mso-spacerun:yes'> </span><span
-style='font-size:10.0pt;line-height:120%;mso-bidi-font-family:"Times New Roman"'>library.properties</span></span>.
-You can then populate this file with the versions of libraries that you wish to
-build against, for example:</p>
-
-<div style='mso-element:para-border-div;border:none;border-top:solid windowtext 1.0pt;
-mso-border-top-alt:solid windowtext .75pt;padding:1.0pt 0cm 0cm 0cm'>
-
-<span lang=NL style='mso-ansi-language:NL'>ver.hoteldejava.ejbclient
-= 1.1<o:p></o:p></span></p>
-
-</div>
-
-<div style='mso-element:para-border-div;border:none;border-bottom:solid windowtext 1.0pt;
-mso-border-bottom-alt:solid windowtext .75pt;padding:0cm 0cm 1.0pt 0cm'>
-
-<span lang=NL style='mso-ansi-language:NL'>ver.commons-net = 1.4.0<o:p></o:p></span></p>
-
-</div>
-
-<p>Since you are going to compile against these libraries,
-you will need to setup a Java Classpath to contain them. Fortunately, the Ant
-tasks for Apache Maven<!--[if supportFields]><span style='mso-element:field-begin'></span>
-XE &quot;Apache Maven:defining a Classpath&quot; <![endif]--><!--[if supportFields]><span
-style='mso-element:field-end'></span><![endif]--><span
-style='mso-spacerun:yes'> </span>can do this for you automatically. Therefore,
-to specify and resolve the Java libraries that you need and to automatically
-create a new Classpath you would include the following in your <span
-class=StyleBodyNoIndentCourierNewChar><span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>build.xml</span></span>:</p>
-
-<div style='mso-element:para-border-div;border:none;border-top:solid windowtext 1.0pt;
-mso-border-top-alt:solid windowtext .75pt;padding:1.0pt 0cm 0cm 0cm'>
-
-&lt;property file=&quot;build.properties&quot;/&gt;</p>
-
-</div>
-
-&lt;property file=&quot;library.properties&quot;/&gt;</p>
-
-<o:p>&nbsp;</o:p></p>
-
-&lt;artifact:dependencies pathId=&quot;maven.classpath&quot;&gt;</p>
-
-    &lt;remoteRepository
-refid=&quot;internal.repository&quot;/&gt;</p>
-
-    &lt;dependency
-groupId=&quot;hoteldejava&quot; </p>
-
-<span style='mso-spacerun:yes'>     </span>artifactId=&quot;ejbclient&quot;</p>
-
-<span style='mso-spacerun:yes'>     </span>version=&quot;${ver.hoteldejava.ejbclient}&quot;/&gt;</p>
-
-    &lt;dependency
-groupId=&quot;commons-net&quot; </p>
-
-<span style='mso-spacerun:yes'>     </span>artifactId=&quot;commons-net&quot;<span
-style='mso-spacerun:yes'>  </span></p>
-
-<span style='mso-spacerun:yes'>     </span>version=&quot;${ver.commons-net}&quot;/&gt;</p>
-
-<div style='mso-element:para-border-div;border:none;border-bottom:solid windowtext 1.0pt;
-mso-border-bottom-alt:solid windowtext .75pt;padding:0cm 0cm 1.0pt 0cm'>
-
-&lt;/artifact:dependencies&gt;</p>
-
-</div>
-
-<p>In this case I have specified that the Java libraries are
-to be downloaded from the internal repository. The Ant tasks for Apache Maven
-will therefore download the versions of the libraries from this repository to
-the "<span style='font-size:10.0pt;
-line-height:120%;mso-bidi-font-family:"Times New Roman"'>.m2</span></span>"
-directory in your home directory &ndash; if they do not exist there already. If the
-libraries that you require have dependencies on other libraries, these will be downloaded
-too &ndash; this is the transitive dependencies<!--[if supportFields]><span
-style='mso-element:field-begin'></span> XE &quot;transitive dependencies&quot; <![endif]--><!--[if supportFields]><span
-style='mso-element:field-end'></span><![endif]--><span
-style='mso-spacerun:yes'> </span>feature in action. You can then use the
-generated <span style='font-size:
-10.0pt;line-height:120%;mso-bidi-font-family:"Times New Roman"'>maven.classpath</span></span>
-in your Ant build script, for example to compile your project you could use a
-line similar to the following:</p>
-
-<div id="codeoutput">&lt;javac classpathref=&quot;maven.classpath&quot; …/&gt;</p>
-
-<p><span lang=EN-US style='mso-ansi-language:EN-US'>If at a
-later date you require a different version of a library then you can simply
-override the relevant entry in the </span><span
-class=StyleBodyNoIndentCourierNewChar><span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>library.properties</span></span><span
-lang=EN-US style='mso-ansi-language:EN-US'> file. Additionally, if as a
-developer you were doing some testing and did not want to update this file, you
-could override the version on the command line (for example, using "</span><span
-class=StyleBodyNoIndentCourierNewChar><span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>ant &ndash;Dver.commons.cli=1.4.1</span></span><span
-lang=EN-US style='mso-ansi-language:EN-US'>") or make use of your own </span><span
-class=StyleBodyNoIndentCourierNewChar><span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>build.properties</span></span><span
-lang=EN-US style='mso-ansi-language:EN-US'> file.<o:p></o:p></span></p>
-
-<p class=SectionHead2><a name="_Toc172464124">Publishing Java libraries</a></p>
-
-<p>As well as downloading pre-built libraries to build
-against, you can also publish your own libraries to an Apache Maven<!--[if supportFields]><span
-style='mso-element:field-begin'></span> XE &quot;Apache Maven:publishing
-libraries&quot; <![endif]--><!--[if supportFields]><span style='mso-element:
-field-end'></span><![endif]--><span style='mso-spacerun:yes'> </span>repository.
-This allows you create a single consistent area for re-using libraries, and to take
-advantage of Apache Maven’s dependency management capabilities. In order to
-publish libraries, you will first need to create a <span
-class=StyleBodyNoIndentCourierNewChar><span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>pom.xml</span></span> file. For
-example, for the <i style='mso-bidi-font-style:normal'>Hotel de Java</i> <span
-class=StyleBodyNoIndentCourierNewChar><span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>EJBClient</span></span> project
-this file would contain the following:</p>
-
-<div style='mso-element:para-border-div;border:none;border-top:solid windowtext 1.0pt;
-mso-border-top-alt:solid windowtext .75pt;padding:1.0pt 0cm 0cm 0cm'>
-
-&lt;project&gt;</p>
-
-</div>
-
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</p>
-
-    &lt;groupId&gt;hoteldejava&lt;/groupId&gt;</p>
-
-    &lt;artifactId&gt;ejbclient&lt;/artifactId&gt;</p>
-
-    &lt;version&gt;1.0.1&lt;/version&gt;</p>
-
-<div style='mso-element:para-border-div;border:none;border-bottom:solid windowtext 1.0pt;
-mso-border-bottom-alt:solid windowtext .75pt;padding:0cm 0cm 1.0pt 0cm'>
-
-&lt;/project&gt;</p>
-
-</div>
-
-<p>These are the only lines that you will need to be able to
-publish a new library. However if applicable, you can also add dependencies to
-the POM<!--[if supportFields]><span style='mso-element:field-begin'></span> XE
-&quot;Project Object Model:example&quot; <![endif]--><!--[if supportFields]><span
-style='mso-element:field-end'></span><![endif]--><span
-style='mso-spacerun:yes'> </span>file similar to that for <span
-class=StyleBodyNoIndentCourierNewChar><span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>commons-cli</span></span>
-component described above.</p>
-
-<p>To deploy your built library to the Maven repository, you would then
-include a target in your <span style='font-size:10.0pt;line-height:120%;
-font-family:"Courier New"'>build.xml</span> file similar to the following:</p>
-
-<div style='mso-element:para-border-div;border:none;border-top:solid windowtext 1.0pt;
-mso-border-top-alt:solid windowtext .75pt;padding:1.0pt 0cm 0cm 0cm'>
-
-&lt;target name=&quot;maven-deploy&quot; </p>
-
-</div>
-
-    description=&quot;deploy
-to maven repository&quot;&gt;</p>
-
-    &lt;artifact:pom
-id=&quot;maven.project&quot; file=&quot;pom.xml&quot; /&gt;</p>
-
-    &lt;artifact:deploy file=&quot;dist/HotelDJEJBClient-
-</p>
-
-<span style='mso-spacerun:yes'>     </span>${rel.num}.jar&quot;&gt;</p>
-
-        &lt;remoteRepository
-refid=&quot;internal.repository&quot;/&gt;</p>
-
-        &lt;pom
-refid=&quot;maven.project&quot;/&gt;</p>
-
-    &lt;/artifact:deploy&gt;</p>
-
-<div style='mso-element:para-border-div;border:none;border-bottom:solid windowtext 1.0pt;
-mso-border-bottom-alt:solid windowtext .75pt;padding:0cm 0cm 1.0pt 0cm'>
-
-&lt;/target&gt;</p>
-
-</div>
-
-<p>In this example the library version is referenced by the <span
-class=StyleBodyNoIndentCourierNewChar><span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>${rel.num}</span></span> property
-and it is being published to the repository referenced by "<span
-class=StyleBodyNoIndentCourierNewChar><span style='font-size:10.0pt;line-height:
-120%;mso-bidi-font-family:"Times New Roman"'>internal.repository</span></span>".</p>
-
-<p>In practice, this is all you will need to start using Apache Maven
-repositories to implement Java library re-use and dependency management.
-However there are additional settings and configurations that you can make
-(such as specifying the location of your own local repository). These are
-described in more detail on the Apache Ant tasks for Apache Maven website<a
-style='mso-footnote-id:ftn3' href="#_ftn3" name="_ftnref3" title=""><span
-class=MsoFootnoteReference><span style='mso-special-character:footnote'><![if !supportFootnotes]><span
-class=MsoFootnoteReference><span style='font-size:11.0pt;mso-bidi-font-size:
-12.0pt;font-family:"Times New Roman","serif";mso-fareast-font-family:"Times New Roman";
-color:black;mso-ansi-language:EN-GB;mso-fareast-language:EN-GB;mso-bidi-language:
-AR-SA'>[3]</span></span><![endif]></span></span></a>.</p>
-
-</div>
-
-<div style='mso-element:footnote-list'><![if !supportFootnotes]><br clear=all>
-
-<hr align=left size=1 width="33%">
-
-<![endif]>
-
-<div style='mso-element:footnote' id=ftn1>
-
-<p class=MsoFootnoteText><a style='mso-footnote-id:ftn1' href="#_ftnref1"
-name="_ftn1" title=""><span class=MsoFootnoteReference><span style='mso-special-character:
-footnote'><![if !supportFootnotes]><span class=MsoFootnoteReference><span
-style='font-size:10.0pt;font-family:"Times New Roman","serif";mso-fareast-font-family:
-"Times New Roman";mso-ansi-language:EN-GB;mso-fareast-language:EN-GB;
-mso-bidi-language:AR-SA'>[1]</span></span><![endif]></span></span></a> <a
-href="http://jakarta.apache.org/commons/net"><span style='mso-ansi-font-size:
-10.0pt'>http://jakarta.apache.org/commons/net</span></a></p>
-
-</div>
-
-<div style='mso-element:footnote' id=ftn2>
-
-<p class=MsoFootnoteText><a style='mso-footnote-id:ftn2' href="#_ftnref2"
-name="_ftn2" title=""><span class=MsoFootnoteReference><span style='mso-special-character:
-footnote'><![if !supportFootnotes]><span class=MsoFootnoteReference><span
-style='font-size:10.0pt;font-family:"Times New Roman","serif";mso-fareast-font-family:
-"Times New Roman";mso-ansi-language:EN-GB;mso-fareast-language:EN-GB;
-mso-bidi-language:AR-SA'>[2]</span></span><![endif]></span></span></a> See <a
-href="http://maven.apache.org/guides/mini/guide-coping-with-sun-jars.html"><span
-style='mso-ansi-font-size:10.0pt'>http://maven.apache.org/guides/mini/guide-coping-with-sun-jars.html</span></a></p>
-
-</div>
-
-<div style='mso-element:footnote' id=ftn3>
-
-<p class=MsoFootnoteText><a style='mso-footnote-id:ftn3' href="#_ftnref3"
-name="_ftn3" title=""><span class=MsoFootnoteReference><span style='mso-special-character:
-footnote'><![if !supportFootnotes]><span class=MsoFootnoteReference><span
-style='font-size:10.0pt;font-family:"Times New Roman","serif";mso-fareast-font-family:
-"Times New Roman";mso-ansi-language:EN-GB;mso-fareast-language:EN-GB;
-mso-bidi-language:AR-SA'>[3]</span></span><![endif]></span></span></a> <a
-href="http://maven.apache.org/ant-tasks.html"><span style='mso-ansi-font-size:
-10.0pt'>http://maven.apache.org/ant-tasks.html</span></a></p>
-
-
+<p>Let's walk through the last two steps in a bit more detail. The <span
+	style="font-family: monospace;">ivy.xml</span> file lists the library
+dependencies which the project requires to be accessible so that it can
+build against them, as in the following:</p>
+<pre name="code" class="xml">
+&lt;ivy-module version=&quot;1.0&quot;&gt;
+    &lt;info organisation=&quot;jayasoft&quot; module=&quot;ivytest&quot; /&gt;
+    &lt;dependencies&gt;
+        &lt;dependency org=&quot;apache&quot; name=&quot;commons-lang&quot; rev=&quot;2.1&quot; /&gt;
+        &lt;dependency org=&quot;apache&quot; name=&quot;commons-cli rev=&quot;1.0&quot; /&gt;
+        &lt;dependency org=&quot;buildmeister&quot; name=&quot;RatlBankWeb&quot; rev=&quot;1.001&quot;/&gt;
+    &lt;/dependencies&gt;
+&lt;/ivy-module&gt;
+</pre>
+<p>This particular example lists three dependencies, two of which
+are Apache commons libraries (<span style="font-style: italic;">commons-lan</span>g
+and <span style="font-style: italic;">commons-cli</span>) and one of
+which is an internally produced library (<span
+	style="font-style: italic;">RatlBankWeb</span>). One of the best things
+about Ivy is that it supports transitive dependencies. In this example
+there is some extra metadata that has been placed in the ivy repository
+for the <span style="font-style: italic;">commons-cli</span> library
+that says that it depends on <span style="font-style: italic;">commons-logging</span>
+too, so this library will be additionally downloaded at resolve time.</p>
+<p>To configure your Ant <span style="font-family: monospace;">build.xml</span>
+file to resolve and build against these dependencies you would include
+the following:</p>
+<pre name="code" class="xml">
+&lt;project xmlns:ivy=&quot;antlib:org.apache.ivy.ant&quot; name=&quot;ivytest&quot; default=&quot;compile&quot;&gt;
+    ...
+    &lt;property name=&quot;dir.src&quot; value=&quot;src&quot;/&gt;
+    &lt;property name=&quot;dir.lib&quot; value=&quot;lib&quot;/&gt;
+
+    &lt;!-- define a classpath for use throughout the file --&gt;
+    &lt;path id=&quot;project.classpath&quot;&gt;
+        &lt;!-- include local libraries --&gt;
+        &lt;fileset dir=&quot;${dir.lib}&quot;/&gt;
+    &lt;/path&gt;
+
+    &lt;target name=&quot;resolve&quot; description=&quot;retrieve dependencies with ivy&quot;&gt;      
+        &lt;ivy:retrieve/&gt;
+    &lt;/target&gt;
+    ...
+    &lt;target name=&quot;compile&quot; depends=&quot;resolve&quot;&gt;
+        &lt;javac&gt; 
+            &lt;src path=&quot;${dir.src}&quot;/&gt;
+            &lt;classpath refid=&quot;project.classpath&quot;/&gt;
+        &lt;/javac&gt;
+    &lt;/target&gt;
+    ...
+&lt;/project&gt;
+</pre>
+<p>As you can see the first line of this file declares the namespace
+for the Ivy tasks that the build file will include, one of Ivy tasks is
+the <span style="font-style: italic;">retrieve</span> task which scans
+your Ivy repositories to resolve the dependencies. By default any
+libraries are resolved to a local cache first and then retrieved
+(copied) to the <span style="font-family: monospace;">lib</span>
+directory inside the current working directory. Consequently the
+project's <span style="font-style: italic;">classpath</span> uses this
+fact to define the set of files that this project should build against.
+The actual resolution process is quite seamless with Ivy; it's conflict
+manager will download libraries as you need them, evict those that are
+no longer required and can also be configured to execute operations such
+as download the libraries that are latest in time or latest in revision
+number.</p>
+<h2>Configuring Ivy resolvers</h2>
+<p>Ivy can be configured to look for (and resolve) libraries in a
+number of locations, either on the Internet at the <a
+	href="http://ivyrep.jayasoft.org/">ivyrep</a> site (its default) or the
+Apache Maven <a href="http://www.ibiblio.org/maven/">ibiblio</a> site.
+These sites contain a vast collection of common libraries, the advantage
+of the <span style="font-style: italic;">ivyrep</span> site is that the
+metadata for resolving transitive dependencies is also stored there. If
+you don't have an Internet connection or want to create your own
+repository, Ivy can also be configured to look at a shared or user
+specific repository. To customize this configuration you create an <span
+	style="font-family: monospace;">ivyconf.xml</span> file as in the
+following:</p>
+<pre name="code" class="xml">
+&lt;ivyconf&gt;
+  &lt;conf defaultResolver=&quot;buildmeister&quot;/&gt;
+  &lt;resolvers&gt;
+    &lt;chain name=&quot;buildmeister&quot;&gt;
+      &lt;filesystem name=&quot;local&quot;&gt;
+        &lt;artifact pattern=&quot;${ivy.conf.dir}/artifacts/[artifact]-[revision].[ext]&quot;/&gt;
+        &lt;ivy pattern=&quot;${ivy.conf.dir}/ivy/[module]-[revision].xml&quot;/&gt;
+      &lt;/filesystem&gt;
+      &lt;ivyrep name=&quot;public&quot;/&gt;
+    &lt;/chain&gt;
+  &lt;/resolvers&gt;
+&lt;/ivyconf&gt;
+</pre>
+<p>This example chains together two resolvers, the first resolver
+looks locally for any revisions of libraries in the <span
+	style="font-family: monospace;">artifacts</span> directory in the same
+directory as the <span style="font-family: monospace;">ivyconf.xml</span>
+file. If the library cannot be found then a second resolver is used to
+look on <span style="font-style: italic;">ivyrep.</span> To specify the
+location of this <span style="font-family: monospace;">ivyconf.xml</span>
+file in your build script you would specify the <span
+	style="font-family: monospace;">ivy.conf.dir</span> property as
+follows:</p>
+<pre name="code" class="xml">    
+    &lt;property name=&quot;dir.lib&quot; value=&quot;lib&quot;/&gt;
+    &lt;property name=&quot;ivy.conf.dir&quot; value=&quot;../components/&quot;/&gt;
+   
+    &lt;!-- define a classpath for use throughout the file --&gt;
+    &lt;path id=&quot;project.classpath&quot;&gt;
+        &lt;!-- include local libraries --&gt;
+        &lt;fileset dir=&quot;${dir.lib}&quot;/&gt;
+    &lt;/path&gt;
+</pre>
+<p>In this example the <span style="font-family: monospace;">ivy.conf.dir</span>
+property is specified to look at the <span
+	style="font-family: monospace;">components</span> directory that is at
+the same level in the directory hierarchy as the project's working
+directory. Inside this <span style="font-family: monospace;">component</span>
+directory is where the <span style="font-family: monospace;">ivyconf.xml</span>
+file resides and the <span style="font-family: monospace;">artifacts</span>
+and <span style="font-family: monospace;">ivy</span> directory.</p>
+<h2>Publishing libraries using Ivy</h2>
+<p>To make use of Ivy for your own internally developed libraries,
+you can use Ivy's <span style="font-style: italic;">publish</span> task
+in your <span style="font-family: monospace;">build.xml</span> file as
+follows:</p>
+<pre name="code" class="xml">
+&lt;target name=&quot;publish&quot; depends=&quot;jar&quot;&gt;
+    &lt;property name=&quot;revision&quot; value=&quot;${build.number}&quot;/&gt;
+    &lt;ivy:publish artifactspattern=&quot;${dir.build}/[artifact].[ext]&quot; 
+        resolver=&quot;buildmeister&quot; pubrevision=&quot;${revision}&quot;
+        status=&quot;release&quot;/&gt;
+    &lt;echo message=&quot;project ${ant.project.name} released with version ${revision}&quot;/&gt;
+&lt;/target&gt;
+</pre>
+<p>This example will publish any libraries built in the directory
+specified by the <span style="font-family: monospace;">dir.build</span>
+property (as well as any corresponding ivy files), for example <span
+	style="font-family: monospace;">RatlBankWeb.jar</span> and <span
+	style="font-family: monospace;">RatlBankWeb.xml</span>. The location to
+publish to is specified by the resolver, in this case it is the &quot;<span
+	style="font-style: italic;">buildmeister</span>&quot; resolver which
+refers to the shared directory location containing the organizations
+libraries - as described in the previous section. To generate a unique
+version number for the library you can use Ant's <a
+	href="http://ant.apache.org/manual/CoreTasks/buildnumber.html">buildnumber</a>
+task to automatically increment the version number (as referenced by the
+<span style="font-family: monospace;">build.number</span> property).</p>
+<h3>Other capabilities and integrations</h3>
+<p>The scenarios discussed above, only cover a subset of the
+capabilities that Ivy possesses. There are more wide ranging capabilties
+that can be used to support the majority of projects. One that is
+certainly worth mentioning specifically is the graphical dependency
+reports that the tool can automatically create - as in the following:</p>
+<div align="center"><img
+	style="border: 0px solid; width: 299px; height: 212px;"
+	alt="Ivy Report" src="%image_dir%/ivy-report-small.jpg" /><br />
+<a href="%image_dir%/ivy-report.jpg" target="_blank">larger image</a></div>
+<p>More examples of reports such as these can be seen on the Ivy <a
+	href="http://jayasoft.org/ivy/features">website</a>.</p>
+<p>Ivy also integrates well with a number of popular open source
+tools. Obviously, it integrates seamlessly with Apache Ant, however
+there is also a plugin for integrating Ivy into the <a
+	href="http://www.eclipse.org">Eclipse</a> development environment (or
+any commercial tools based on it). This integration gives you an editor
+for creating Ivy files as well as a really useful capability for
+resolving libraries and adding the resultant set of libraries to your
+Eclipse project's buildpath - as illustrated in the following:</p>
+<div align="center"><img style="width: 299px; height: 359px;"
+	alt="Eclipse Integration" src="%image_dir%/ivy-eclipse.jpg" /></div>
+<p>Finally, Ivy can also integrate with <a
+	href="viewarticle.php?id=17">CruiseControl</a> - the popular open
+source Continuous Integration toolkit. This allows you to automate the
+building of interdependent projects for Continous Integration.</p>
 <h2>Summary</h2>
 <p>In summary, Ivy is an extremely powerful addition to Apache Ant
 supporting dependency management. It is quick and very straightforward
