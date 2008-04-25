@@ -1,7 +1,7 @@
 <?php
 /**
  * Process.php
- * 
+ *
  * The Process class is meant to simplify the task of processing
  * user submitted forms, redirecting the user to the correct
  * pages if errors are found, or if form is successful, either
@@ -49,12 +49,20 @@ class Process
       else if(isset($_POST['subarticle'])) {
           $this->procSubmitArticle();
       }
+      // user submitting new tip
+	  else if(isset($_POST['subtip'])) {
+	      $this->procSubmitTip();
+      }
       else if (isset($_POST['subartcom'])) {
           $this->procSubmitArticleComment();
       }
       // user submitting a comment on a glossary item
       else if (isset($_POST['subgcom'])) {
           $this->procSubmitGlossaryComment();
+      }
+      // user submitting a comment on a tip
+	  else if (isset($_POST['subtipcom'])) {
+	            $this->procSubmitTipComment();
       }
       // user sent us a message
       else if (isset($_POST['subcontact'])) {
@@ -86,7 +94,7 @@ class Process
       global $session, $form;
       /* Login attempt */
       $retval = $session->login($_POST['user'], $_POST['pass'], isset($_POST['remember']));
-                
+
       /* Login successful */
       if($retval){
          header("Location: ". $session->referrer);
@@ -98,7 +106,7 @@ class Process
          header("Location: " . $session->referrer);
       }
    }
-   
+
    /**
     * procLogout - Simply attempts to log the user out of the system
     * given that there is no logout form to process.
@@ -108,7 +116,7 @@ class Process
       $retval = $session->logout();
       header("Location: " . SITE_BASEDIR . "/index.php");
    }
-   
+
    /**
     * Processes the user submitted registration form,
     * if errors are found, the user is redirected to correct the
@@ -123,12 +131,12 @@ class Process
       if (ALL_LOWERCASE){
          $_POST['reguser'] = strtolower($_POST['reguser']);
       }
-      
+
       // attempt registration
-      $retval = $session->register($_POST['reguser'], $_POST['regpass'], 
-          $_POST['regfirst'], $_POST['reglast'], $_POST['regemail'], 
+      $retval = $session->register($_POST['reguser'], $_POST['regpass'],
+          $_POST['regfirst'], $_POST['reglast'], $_POST['regemail'],
           $_POST['regmailok']);
-      
+
       // succesful
       if ($retval == 0) {
          $_SESSION['reguname'] = $_POST['reguser'];
@@ -147,16 +155,16 @@ class Process
          header("Location: ".$session->referrer);
       }
    } // procRegister
-   
+
    /**
     * Submit a new book into the database.
     */
    function procSubmitBook() {
       global $session, $form;
-      
+
       // submission attemp
       $retval = $session->submitBook($_POST['booktitle'], $_POST['bookauthor'], $_POST['bookurl'], $_POST['booksummary']);
-      
+
       // successful
       if ($retval == 0){
          $_SESSION['booksuccess'] = true;
@@ -174,16 +182,16 @@ class Process
          header("Location: ".$session->referrer);
       }
    } // procSubmitBook
-   
+
    /**
     * Submit a new glossary item into the database.
     */
    function procSubmitGloss() {
       global $session, $form;
-      
+
       // submission attemp
       $retval = $session->submitGlossItem($_POST['glosstitle'], $_POST['glosssummary']);
-      
+
       // successful
       if ($retval == 0){
          $_SESSION['glosssuccess'] = true;
@@ -201,16 +209,16 @@ class Process
          header("Location: ".$session->referrer);
       }
    } // procSubmitGlossItem
-   
+
    /**
     * Submit a new link into the database.
     */
    function procSubmitLink() {
       global $session, $form;
-      
+
       // submission attemp
       $retval = $session->submitLink($_POST['linktitle'], $_POST['linkurl'], $_POST['linksummary']);
-      
+
       // successful
       if ($retval == 0){
          $_SESSION['linksuccess'] = true;
@@ -228,16 +236,16 @@ class Process
          header("Location: ".$session->referrer);
       }
    } // procSubmitLink
-   
+
    /**
     * Submit a new article into the database.
     */
    function procSubmitArticle() {
       global $session, $form;
-      
+
       // submission attemp
       $retval = $session->submitArticle($_POST['articletitle'], $_POST['articlesummary'], $_POST['articlecontent']);
-      
+
       // successful
       if ($retval == 0){
          $_SESSION['articlesuccess'] = true;
@@ -255,16 +263,43 @@ class Process
          header("Location: ".$session->referrer);
       }
    } // procSubmitArticle
-   
+
+   /**
+    * Submit a new tip into the database.
+    */
+   function procSubmitTip() {
+      global $session, $form;
+
+      // submission attemp
+      $retval = $session->submitTip($_POST['tiptitle'], $_POST['tipsummary'], $_POST['tipcontent']);
+
+      // successful
+      if ($retval == 0){
+         $_SESSION['tipsuccess'] = true;
+         header("Location: ".$session->referrer);
+      }
+      // error found with form
+      else if ($retval == 1){
+         $_SESSION['value_array'] = $_POST;
+         $_SESSION['error_array'] = $form->getErrorArray();
+         header("Location: ".$session->referrer);
+      }
+      // failed
+      else if($retval == 2){
+         $_SESSION['tipsuccess'] = false;
+         header("Location: ".$session->referrer);
+      }
+   } // procSubmitTip
+
    /**
     * Submit a comment on an article into the database.
     */
    function procSubmitArticleComment() {
       global $session, $form;
-      
+
       // submission attempt
       $retval = $session->submitArticleComment($_POST['artid'], $_POST['comment']);
-      
+
       // successful
       if ($retval == 0){
          $_SESSION['artcomsuccess'] = true;
@@ -282,16 +317,16 @@ class Process
          header("Location: ".$session->referrer);
       }
    } // procSubmitArticleComment
-   
+
    /**
     * Submit a comment on a glossary item into the database.
     */
    function procSubmitGlossaryComment() {
       global $session, $form;
-      
+
       // submission attempt
       $retval = $session->submitGlossaryComment($_POST['glossid'], $_POST['comment']);
-      
+
       // successful
       if ($retval == 0){
          $_SESSION['gcomsuccess'] = true;
@@ -309,16 +344,43 @@ class Process
          header("Location: ".$session->referrer);
       }
    } // procSubmitGlossaryComment
-   
+
+   /**
+    * Submit a comment on a tip into the database.
+    */
+   function procSubmitTipComment() {
+      global $session, $form;
+
+      // submission attempt
+      $retval = $session->submitTipComment($_POST['tipid'], $_POST['comment']);
+
+      // successful
+      if ($retval == 0){
+         $_SESSION['tipcomsuccess'] = true;
+         header("Location: ".$session->referrer);
+      }
+      // error found with form
+      else if ($retval == 1){
+         $_SESSION['value_array'] = $_POST;
+         $_SESSION['error_array'] = $form->getErrorArray();
+         header("Location: ".$session->referrer);
+      }
+      // failed
+      else if($retval == 2){
+         $_SESSION['tipcomsuccess'] = false;
+         header("Location: ".$session->referrer);
+      }
+   } // procSubmitTipComment
+
    /**
     * Send a contact email
     */
    function procContactUs() {
       global $session, $form;
-      
+
       // mail attempt
       $retval = $session->contactUs($_POST['curfirst'], $_POST['curlast'], $_POST['email'], $_POST['message']);
-      
+
       // successful
       if ($retval == 0) {
          $_SESSION['contacted'] = true;
@@ -336,7 +398,7 @@ class Process
          header("Location: ".$session->referrer);
       }
    } // procContactUs
-   
+
    /**
     * procForgotPass - Validates the given username then if
     * everything is fine, a new password is generated and
@@ -359,7 +421,7 @@ class Process
             $form->setError($field, "* Username does not exist<br>");
          }
       }
-      
+
       /* Errors exist, have user correct them */
       if($form->num_errors > 0){
          $_SESSION['value_array'] = $_POST;
@@ -369,11 +431,11 @@ class Process
       else{
          /* Generate new password */
          $newpass = $session->generateRandStr(8);
-         
+
          /* Get email of user */
          $usrinf = $database->getUserInfo($subuser);
          $email  = $usrinf['email'];
-         
+
          /* Attempt to send the email with new password */
          if($mailer->sendNewPass($subuser,$email,$newpass)){
             /* Email sent, update database */
@@ -385,10 +447,10 @@ class Process
             $_SESSION['forgotpass'] = false;
          }
       }
-      
+
       header("Location: ".$session->referrer);
    }
-   
+
    /**
     * Attempts to edit the user's account
     * information, including the password, which must be verified
@@ -398,9 +460,9 @@ class Process
    function procEditAccount() {
       global $session, $form;
       // account edit attempt
-      $retval = $session->editAccount($_POST['curpass'], $_POST['newpass'], 
+      $retval = $session->editAccount($_POST['curpass'], $_POST['newpass'],
           $_POST['curfirst'], $_POST['curlast'], $_POST['email']);
-          
+
       // account edit successful
       if ($retval) {
          $_SESSION['useredit'] = true;

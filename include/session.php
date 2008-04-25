@@ -1,7 +1,7 @@
 <?php
 /**
  * Session.php
- * 
+ *
  * The Session class is meant to simplify the task of keeping
  * track of logged in users and also guests.
  *
@@ -23,7 +23,7 @@ class Session
    var $url;          //The page url current being viewed
    var $referrer;     //Last recorded site page viewed
    var $result_str;   // results string to be displayed.
-   
+
    /**
     * Note: referrer should really only be considered the actual
     * page referrer in process.php, any other time it may be
@@ -37,9 +37,9 @@ class Session
    }
 
    /**
-    * startSession - Performs all the actions necessary to 
+    * startSession - Performs all the actions necessary to
     * initialize this session object. Tries to determine if the
-    * the user has logged in already, and sets the variables 
+    * the user has logged in already, and sets the variables
     * accordingly. Also takes advantage of this page load to
     * update the active visitors tables.
     */
@@ -63,11 +63,11 @@ class Session
       else{
          $database->addActiveUser($this->username, $this->time);
       }
-      
+
       /* Remove inactive visitors from database */
       $database->removeInactiveUsers();
       $database->removeInactiveGuests();
-      
+
       /* Set referrer page */
       if(isset($_SESSION['url'])){
          $this->referrer = $_SESSION['url'];
@@ -83,7 +83,7 @@ class Session
     * checkLogin - Checks if the user has already previously
     * logged in, and a session with the user has already been
     * established. Also checks to see if user has been remembered.
-    * If so, the database is queried to make sure of the user's 
+    * If so, the database is queried to make sure of the user's
     * authenticity. Returns true if the user has logged in.
     */
    function checkLogin(){
@@ -96,7 +96,7 @@ class Session
 
       /* Username and userid have been set and not guest */
       if (isset($_SESSION['username']) && isset($_SESSION['userid']) &&
-         $_SESSION['username'] != GUEST_NAME){                      
+         $_SESSION['username'] != GUEST_NAME){
          /* Confirm that username and userid are valid */
          if ($database->confirmUserID($_SESSION['username'], $_SESSION['userid']) != 0) {
             /* Variables are incorrect, user not logged in */
@@ -104,7 +104,7 @@ class Session
             unset($_SESSION['userid']);
             return false;
          }
-         
+
          /* User is logged in, set class variables */
          $this->userinfo  = $database->getUserInfo($_SESSION['username']);
          $this->username  = $this->userinfo['username'];
@@ -144,7 +144,7 @@ class Session
       if(!$subpass){
          $form->setError($field, "* Password not entered");
       }
-      
+
       /* Return if form errors exist */
       if($form->num_errors > 0){
          return false;
@@ -163,13 +163,13 @@ class Session
          $field = "pass";
          $form->setError($field, "* Invalid password");
       }
-           
+
       // check if user has been activated
       if ($database->confirmUserActive($subuser) == 0) {
          $field = "user";
          $form->setError($field, "Username has not been activated.");
       }
-      
+
       /* Return if form errors exist */
       if($form->num_errors > 0){
          return false;
@@ -180,12 +180,12 @@ class Session
       $this->username  = $_SESSION['username'] = $this->userinfo['username'];
       $this->userid    = $_SESSION['userid']   = $this->generateRandID();
       $this->userlevel = $this->userinfo['userlevel'];
-      
+
       /* Insert userid into database and update active users table */
       $database->updateUserField($this->username, "userid", $this->userid);
       $database->addActiveUser($this->username, $this->time);
       $database->removeActiveGuest($_SERVER['REMOTE_ADDR']);
-      
+
       /* Reflect fact that user has logged in */
       $this->logged_in = true;
 
@@ -231,14 +231,14 @@ class Session
 
       /* Reflect fact that user has logged out */
       $this->logged_in = false;
-      
+
       /**
        * Remove from active users table and add to
        * active guests tables.
        */
       $database->removeActiveUser($this->username);
       $database->addActiveGuest($_SERVER['REMOTE_ADDR'], $this->time);
-      
+
       /* Set user level to guest */
       $this->username  = GUEST_NAME;
       $this->userlevel = GUEST_LEVEL;
@@ -253,11 +253,11 @@ class Session
     * @param string $subemail
     * @param bool $mailok
     * @return 0 if no errors with the fields, 1 if errors
-    * or 2 if the registration attempt failed. 
+    * or 2 if the registration attempt failed.
     */
    function register($subuser, $subpass, $subfirst, $sublast, $subemail, $mailok) {
       global $database, $form, $mailer;  // the database, form and mailer object
-      
+
       // username error checking
       $field = "user";  // use field name for username
       if (!$subuser || strlen($subuser = trim($subuser)) == 0) {
@@ -293,7 +293,7 @@ class Session
             $form->setError($field, "Password should contain alpha numeric characters only.");
          }
       }
-           
+
       // email error checking
       $field = "email";  // use field name for email
       if (!$subemail || strlen($subemail = trim($subemail)) == 0){
@@ -309,11 +309,11 @@ class Session
          $subemail = stripslashes($subemail);
       }
 
-      
+
       // Errors exist, have user correct them
       if ($form->num_errors > 0) {
-         return 1;  
-      } else {       
+         return 1;
+      } else {
          // calculate verifystring
          for ($i = 0; $i < 16; $i++) {
              $randomstring .= chr(mt_rand(32, 126));
@@ -339,30 +339,31 @@ class Session
     */
    function submitArticle($articletitle, $articlesummary, $articlecontent) {
       global $database, $form, $mailer;  // the database, form and mailer object
-      
+
       // article title error checking
-      $field = "title"; 
+      $field = "title";
       if (!$articletitle || strlen($articletitle = trim($articletitle)) == 0) {
          $form->setError($field, "An article title is required.");
       }
-           
+
       // article summary error checking
-      $field = "summary"; 
+      $field = "summary";
       if (!$articlesummary || strlen($articlesummary = trim($articlesummary)) == 0) {
          $form->setError($field, "An article summary is required.");
       }
-      
+
       // article content error checking
-      $field = "summary"; 
+      $field = "content";
       if (!$articlecontent || strlen($articlecontent = trim($articlecontent)) == 0) {
          $form->setError($field, "Article content is required.");
       }
+      $articlecontent = nl2br(htmlentities($articlecontent));
       $articlecontent = addslashes($articlecontent);
-      
+
       // errors exist, have user correct them
       if ($form->num_errors > 0) {
-         return 1;  
-      } else {       
+         return 1;
+      } else {
          if ($database->addNewArticle($this->username, $articletitle, $articlesummary, $articlecontent)) {
              $mailer->sendNotification("New article added by " . $this->username . ": " . $articletitle);
              return 0;      // new inactive article added succesfully
@@ -370,10 +371,135 @@ class Session
              return 2;      // submission attempt failed
          }
       }
-   } // submitArticle   
-   
+   } // submitArticle
+
    /**
-    * Submit a new book, checking the paramters supplied.
+    * Submit a new tip, checking the paramters supplied.
+    *
+    * @param string $tiptitle
+    * @param string $tipsummary
+    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+    */
+   function submitTip($tiptitle, $tipsummary, $tipcontent) {
+      global $database, $form, $mailer;  // the database, form and mailer object
+
+      // tip title error checking
+      $field = "title";
+      if (!$tiptitle || strlen($tiptitle = trim($tiptitle)) == 0) {
+         $form->setError($field, "A tip title is required.");
+      }
+
+      // tip summary error checking
+      $field = "summary";
+      if (!$tipsummary || strlen($tipsummary = trim($tipsummary)) == 0) {
+         $form->setError($field, "A tip summary is required.");
+      }
+      $tipsummary = htmlentities($tipsummary);
+      $tipsummary = addslashes($tipsummary);
+
+      // tip content error checking
+	  $field = "content";
+	  if (!$tipcontent || strlen($tipcontent = trim($tipcontent)) == 0) {
+	      $form->setError($field, "Tip content is required.");
+	  }
+
+	  $tipcontent = nl2br(htmlentities( $tipcontent));
+      $tipcontent = addslashes($tipcontent);
+
+      // errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;
+      } else {
+         if ($database->addNewTip($this->username, $tiptitle, $tipsummary, $tipcontent)) {
+             $mailer->sendNotification("New tip added by " . $this->username . ": " . $tiptitle);
+             return 0;      // new inactive tip added succesfully
+         } else {
+             return 2;      // submission attempt failed
+         }
+      }
+   } // submitTip
+
+   /**
+    * Submit a new glossary item, checking the paramters supplied.
+    *
+    * @param string $glosstitle
+    * @param string $glosssummary
+    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+    */
+   function submitGlossItem($glosstitle, $glosssummary){
+      global $database, $form, $mailer;  // the database, form and mailer object
+
+      // gloss title error checking
+      $field = "title";
+      if (!$glosstitle || strlen($glosstitle = trim($glosstitle)) == 0) {
+         $form->setError($field, "A glossary term is required.");
+      }
+
+      // gloss summary error checking
+      $field = "summary";
+      if (!$glosssummary || strlen($glosssummary = trim($glosssummary)) == 0) {
+         $form->setError($field, "A glossary definition is required.");
+      }
+      $glosssummary = addslashes($glosssummary);
+
+      // errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;
+      } else {
+         if ($database->addNewGlossItem($this->username, $glosstitle, $glosssummary)) {
+             return 0;      // new inactive glossary item added succesfully
+         } else {
+             return 2;      // submission attempt failed
+         }
+      }
+   } // submitGlossItem
+
+   /**
+    * Submit a new link, checking the parameters supplied.
+    *
+    * @param string $linktitle
+    * @param string $linkurl
+    * @param string $linksummary
+    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+    */
+   function submitLink($linktitle, $linkurl, $linksummary){
+      global $database, $form, $mailer;  // the database, form and mailer object
+
+      // link title error checking
+      $field = "title";
+      if (!$linktitle || strlen($linktitle = trim($linktitle)) == 0) {
+         $form->setError($field, "A link title is required.");
+      }
+
+      // link email error checking
+      $field = "url";
+      if (!$linkurl || strlen($linkurl = trim($linkurl)) == 0) {
+         $form->setError($field, "A link URL is required.");
+      }
+      $linkurl = stripslashes($linkurl);
+
+      // link summary error checking
+      $field = "summary";
+      if (!$linksummary || strlen($linksummary = trim($linksummary)) == 0) {
+         $form->setError($field, "A link summary is required.");
+      }
+      $linksummary = addslashes($linksummary);
+
+      // errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;
+      } else {
+         if ($database->addNewLinkItem($this->username, $linktitle, $linkurl, $linksummary)) {
+             $mailer->sendNotification("New link added by " . $this->username . ": " . $linktitle);
+             return 0;      // new inactive link added succesfully
+         } else {
+             return 2;      // submission attempt failed
+         }
+      }
+   } // submitLink
+
+   /**
+    * Submit a new book, checking the parameters supplied.
     *
     * @param string $booktitle
     * @param string $bookauthor
@@ -383,34 +509,38 @@ class Session
     */
    function submitBook($booktitle, $bookauthor, $bookurl, $booksummary){
       global $database, $form, $mailer;  // the database, form and mailer object
-      
+
       // book title error checking
-      $field = "title"; 
+      $field = "title";
       if (!$booktitle || strlen($booktitle = trim($booktitle)) == 0) {
          $form->setError($field, "A book title is required.");
       }
-      
+
       // book author error checking
-      $field = "author"; 
-      if (!$bookauthor || strlen($bookauthor = trim($bookauthor)) == 0) {
-         $form->setError($field, "A book author is required.");
+	  $field = "author";
+	  if (!$bookauthor || strlen($bookauthor = trim($bookauthor)) == 0) {
+	      $form->setError($field, "A book author is required.");
       }
-     
-      // book email error checking
-      $bookurl = stripslashes($bookurl);
-      
-      // book author error checking
-      $field = "summary"; 
+
+      // book url error checking
+      $field = "url";
+      if (!$bookurl || strlen($bookurl = trim($bookurl)) == 0) {
+         $form->setError($field, "A book URL is required.");
+      }
+      $linkurl = stripslashes($bookurl);
+
+      // book summary error checking
+      $field = "summary";
       if (!$booksummary || strlen($booksummary = trim($booksummary)) == 0) {
          $form->setError($field, "A book summary is required.");
       }
       $booksummary = addslashes($booksummary);
-      
+
       // errors exist, have user correct them
       if ($form->num_errors > 0) {
-         return 1;  
-      } else {       
-         if ($database->addNewBook($this->username, $booktitle, $bookauthor, $bookurl, $booksummary)) {
+         return 1;
+      } else {
+         if ($database->addNewBookItem($this->username, $booktitle, $bookauthor, $bookurl, $booksummary)) {
              $mailer->sendNotification("New book added by " . $this->username . ": " . $booktitle);
              return 0;      // new inactive book added succesfully
          } else {
@@ -418,136 +548,29 @@ class Session
          }
       }
    } // submitBook
-   
+
    /**
-    * Submit a new glossary item, checking the paramters supplied.
+    * Submit a new comment on an article, checking the parameters supplied.
     *
-    * @param string $glosstitle
-    * @param string $booksummary
+    * @param string $artid
+    * @param string $comment
     * @return 0 if succesfull, 1 if form errors or 2 if submission failed
     */
-   function submitGlossItem($glosstitle, $glosssummary){
-      global $database, $form, $mailer;  // the database, form and mailer object
-      
-      // gloss title error checking
-      $field = "title"; 
-      if (!$glosstitle || strlen($glosstitle = trim($glosstitle)) == 0) {
-         $form->setError($field, "A glossary term is required.");
-      }
-           
-      // gloss summary error checking
-      $field = "summary"; 
-      if (!$glosssummary || strlen($glosssummary = trim($glosssummary)) == 0) {
-         $form->setError($field, "A glossary definition is required.");
-      }
-      $glosssummary = addslashes($glosssummary);
-      
-      // errors exist, have user correct them
-      if ($form->num_errors > 0) {
-         return 1;  
-      } else {       
-         if ($database->addNewGlossItem($this->username, $glosstitle, $glosssummary)) {
-             return 0;      // new inactive glossary item added succesfully
-         } else {
-             return 2;      // submission attempt failed
-         }
-      }
-   } // submitGlossItem
-   
-   /**
-    * Submit a new link, checking the parameters supplied.
-    *
-    * @param string $linktitle
-    * @param string $linkauthor
-    * @param string $linkurl
-    * @param string $linksummary
-    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
-    */
-   function submitLink($linktitle, $linkurl, $linksummary){
-      global $database, $form, $mailer;  // the database, form and mailer object
-      
-      // book title error checking
-      $field = "title"; 
-      if (!$linktitle || strlen($linktitle = trim($linktitle)) == 0) {
-         $form->setError($field, "A link title is required.");
-      }
-          
-      // link email error checking
-      $field = "url"; 
-      if (!$linkurl || strlen($linkurl = trim($linkurl)) == 0) {
-         $form->setError($field, "A link URL is required.");
-      }
-      $linkurl = stripslashes($linkurl);
-      
-      // link summary error checking
-      $field = "summary"; 
-      if (!$linksummary || strlen($linksummary = trim($linksummary)) == 0) {
-         $form->setError($field, "A link summary is required.");
-      }
-      $linksummary = addslashes($linksummary);
-      
-      // errors exist, have user correct them
-      if ($form->num_errors > 0) {
-         return 1;  
-      } else {       
-         if ($database->addNewLinkItem($this->username, $linktitle, $linkurl, $linksummary)) {
-             $mailer->sendNotification("New link added by " . $this->username . ": " . $linktitle);
-             return 0;      // new inactive link added succesfully
-         } else {
-             return 2;      // submission attempt failed
-         }
-      }
-   } // submitBook
-   
-    /**
-     * Submit a new comment on a glossary item, checking the parameters supplied.
-     *
-     * @param string $glossid
-     * @param string $comment
-     * @return 0 if succesfull, 1 if form errors or 2 if submission failed
-     */
-   function submitGlossaryComment($glossid, $comment) {
-      global $database, $form, $mailer;  // the database, form and mailer object
-      
-      // comment error checking
-      $field = "comment"; 
-      if (!$comment || strlen($comment = trim($comment)) == 0) {
-         $form->setError($field, "A comment is required.");
-      }     
-      
-      // errors exist, have user correct them
-      if ($form->num_errors > 0) {
-         return 1;  
-      } else {       
-         if ($database->addNewGlossaryComment($this->username, $glossid, $comment)) {
-             $mailer->sendNotification("New glossary comment added by " . $this->username . ": " . $comment);
-             return 0;      // new inactive comment added succesfully
-         } else {
-             return 2;      // submission attempt failed
-         }
-      }
-   } // submitGlossaryComment
-   
-    /**
-     * Submit a new comment on an article, checking the parameters supplied.
-     *
-     * @param string $artid
-     * @param string $comment
-     * @return 0 if succesfull, 1 if form errors or 2 if submission failed
-     */
    function submitArticleComment($artid, $comment) {
       global $database, $form, $mailer;  // the database, form and mailer object
-      
+
       // comment error checking
-      $field = "comment"; 
+      $field = "comment";
       if (!$comment || strlen($comment = trim($comment)) == 0) {
          $form->setError($field, "A comment is required.");
-      }     
-      
+      }
+      $comment = nl2br(htmlentities($comment));
+      $comment = addslashes($comment);
+
       // errors exist, have user correct them
       if ($form->num_errors > 0) {
-         return 1;  
-      } else {       
+         return 1;
+      } else {
          if ($database->addNewArticleComment($this->username, $artid, $comment)) {
              $mailer->sendNotification("New article comment added by " . $this->username . ": " . $comment);
              return 0;      // new inactive comment added succesfully
@@ -556,10 +579,79 @@ class Session
          }
       }
    } // submitArticleComment
-   
+
+   /**
+    * Submit a new comment on a glossary item, checking the parameters supplied.
+    *
+    * @param string $glossid
+    * @param string $comment
+    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+    */
+   function submitGlossaryComment($glossid, $comment) {
+      global $database, $form, $mailer;  // the database, form and mailer object
+
+      // comment error checking
+      $field = "comment";
+      if (!$comment || strlen($comment = trim($comment)) == 0) {
+         $form->setError($field, "A comment is required.");
+      }
+      $comment = nl2br(htmlentities($comment));
+      $comment = addslashes($comment);
+
+      // errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;
+      } else {
+         if ($database->addNewGlossaryComment($this->username, $glossid, $comment)) {
+             $mailer->sendNotification("New glossary comment added by " . $this->username . ": " . $comment);
+             return 0;      // new inactive comment added succesfully
+         } else {
+             return 2;      // submission attempt failed
+         }
+      }
+   } // submitGlossaryComment
+
+   /**
+    * Submit a new comment on a tip, checking the parameters supplied.
+    *
+    * @param string $tipid
+    * @param string $comment
+    * @return 0 if succesfull, 1 if form errors or 2 if submission failed
+    */
+   function submitTipComment($tipid, $comment) {
+      global $database, $form, $mailer;  // the database, form and mailer object
+
+      // comment error checking
+      $field = "comment";
+      if (!$comment || strlen($comment = trim($comment)) == 0) {
+         $form->setError($field, "A comment is required.");
+      }
+      $comment = nl2br(htmlentities($comment));
+      $comment = addslashes($comment);
+
+      // errors exist, have user correct them
+      if ($form->num_errors > 0) {
+         return 1;
+      } else {
+         if ($database->addNewTipComment($this->username, $tipid, $comment)) {
+             $mailer->sendNotification("New tip comment added by " . $this->username . ": " . $comment);
+             return 0;      // new inactive comment added succesfully
+         } else {
+             return 2;      // submission attempt failed
+         }
+      }
+   } // submitTipComment
+
+   /**
+    * Sends a contact email to the webmaster
+    * @param string $firstname
+    * @param string $lastname
+    * @param string $subemail
+    * @param string $submessage
+    */
    function contactUs($firstname, $lastname, $subemail, $submessage) {
       global $database, $form, $mailer;  // the database, form and mailer object
-      
+
       // email error checking
       $field = "email";  // use field name for email
       if (!$subemail || strlen($subemail = trim($subemail)) == 0){
@@ -574,25 +666,25 @@ class Session
          }
          $subemail = stripslashes($subemail);
       }
-      
+
       // comment error checking
-      $field = "message"; 
+      $field = "message";
       if (!$submessage || strlen($submessage = trim($submessage)) == 0) {
          $form->setError($field, "A message is required.");
-      }     
-      
+      }
+
       // errors exist, have user correct them
       if ($form->num_errors > 0) {
-         return 1;  
-      } else {       
+         return 1;
+      } else {
          if ($mailer->sendNotification("New message from: " . $subemail . ":\n\n" . $submessage)) {
              return 0;      // new message sent succesfully
          } else {
              return 2;      // submission attempt failed
          }
       }
-   } // submitArticleComment
-   
+   } // contactUs
+
    /**
     * Attempts to edit the user's account information
     * including the password, which it first makes sure is correct
@@ -608,8 +700,8 @@ class Session
     * @return true if user is succesfully updated else false
     */
    function editAccount($subcurpass, $subnewpass, $subnewfirst, $subnewlast, $subemail){
-      global $database, $form;  
-      
+      global $database, $form;
+
       // new password entered
       if ($subnewpass) {
          // current Password error checking
@@ -628,7 +720,7 @@ class Session
                $form->setError($field, "The Current Password is incorrect.");
             }
          }
-         
+
          // new Password error checking
          $field = "newpass";  // use field name for new password
          // spruce up password and check length
@@ -647,7 +739,7 @@ class Session
          $field = "newpass";  // use field name for new password
          $form->setError($field, "A New Password has not been entered.");
       }
-      
+
       // email error checking
       $field = "email";  // use field name for email
       if ($subemail && strlen($subemail = trim($subemail)) > 0) {
@@ -660,36 +752,36 @@ class Session
          }
          $subemail = stripslashes($subemail);
       }
-      
+
       // errors exist, have user correct them */
       if($form->num_errors > 0){
          return false;  // errors with form
       }
-      
+
       // update password since there were no errors
       if ($subcurpass && $subnewpass) {
          $database->updateUserField($this->username, "password", md5($subnewpass));
       }
-      
+
       // change Email
       if ($subemail) {
          $database->updateUserField($this->username, "email", $subemail);
       }
-      
+
       // change firstname
       if ($subnewfirst) {
           $database->updateUserField($this->username, "firstname", $subnewfirst);
       }
-      
+
       // change lastname
       if ($subnewlast) {
           $database->updateUserField($this->username, "lastname", $subnewlast);
       }
-      
+
       // success!
       return true;
    }
-   
+
    /**
     * isAdmin - Returns true if currently logged in user is
     * an administrator, false otherwise.
@@ -698,7 +790,7 @@ class Session
       return ($this->userlevel == ADMIN_LEVEL ||
               $this->username  == ADMIN_NAME);
    }
-   
+
    /**
     * generateRandID - Generates a string made up of randomized
     * letters (lower and upper case) and digits and returns
@@ -707,7 +799,7 @@ class Session
    function generateRandID(){
       return md5($this->generateRandStr(16));
    }
-   
+
    /**
     * generateRandStr - Generates a string made up of randomized
     * letters (lower and upper case) and digits, the length
@@ -727,7 +819,7 @@ class Session
       }
       return $randstr;
    }
-   
+
    /**
     * Display a dialog box for results
     *

@@ -1,15 +1,15 @@
 <?php
 /**
  * @package Database
- * 
+ *
  * The Database class is meant to simplify the task of accessing
  * information from the website's database.
  *
  * @author Kevin A. Lee <kevin.lee@buildmeister.com>
- * Based on code originally written by: Jpmaster77. 
+ * Based on code originally written by: Jpmaster77.
  */
 include("constants.php");
-      
+
 class MySQLDB {
    var $connection;         // the MySQL database connection
    var $num_active_users;   // number of active users viewing site
@@ -17,18 +17,18 @@ class MySQLDB {
    var $num_members;        // number of signed-up users
 
    /**
-	* Class constructor 
+	* Class constructor
 	*/
    function MySQLDB() {
       // connect to database
       $this->connection = mysql_connect(DB_SERVER, DB_USER, DB_PASS) or die(mysql_error());
       mysql_select_db(DB_NAME, $this->connection) or die(mysql_error());
-      
+
       // only query database to find out number of members
       // when getNumMembers() is called for the first time,
       // until then, default value set.
       $this->num_members = -1;
-      
+
       if (TRACK_VISITORS){
          // calculate number of users at site
          $this->calcNumActiveUsers();
@@ -38,13 +38,13 @@ class MySQLDB {
    } // MySQLDB
 
    /**
-    * Checks whether or not the given username is in the database, 
-    * if so it checks if the given password is the same password 
+    * Checks whether or not the given username is in the database,
+    * if so it checks if the given password is the same password
     * in the database for that user.
     *
     * @param string $username
     * @param string $password
-    * @return If the user doesn't exist or if the passwords don't match up, 
+    * @return If the user doesn't exist or if the passwords don't match up,
     * it returns an error code (1 or 2). On success it returns 0.
     */
    function confirmUserPass($username, $password) {
@@ -72,10 +72,10 @@ class MySQLDB {
          return 2; // indicates password failure
       }
    } // confirmUserPass
-   
+
    /**
-    * Checks whether or not the given username is in 
-    * the database, if so it checks if the given userid 
+    * Checks whether or not the given username is in
+    * the database, if so it checks if the given userid
     * is the same userid in the database for that user.
     *
     * @param string $username
@@ -109,12 +109,12 @@ class MySQLDB {
          return 2; // indicates userid invalid
       }
    } // confirmUserID
-   
+
    /**
     * Checks whether the given user has been activated.
     *
     * @param string $username
-    * @return If the user doesn't exist or is inactive 
+    * @return If the user doesn't exist or is inactive
     * returns 1 otherwise returns 0.
     */
    function confirmUserActive($username){
@@ -141,7 +141,7 @@ class MySQLDB {
          return 1; // user is inactive
       }
    } // confirmUserActive
-   
+
    /**
     * Checks whether the given user is inactive.
     *
@@ -173,7 +173,7 @@ class MySQLDB {
          return 1; // user is already active
       }
    } // confirmUserInActive
-   
+
    /**
     * Checks whether the specified username is already taken.
     *
@@ -189,13 +189,13 @@ class MySQLDB {
       $result = mysql_query($q, $this->connection);
       return (mysql_numrows($result) > 0);
    } // usernameTaken
-   
+
    /**
     * Checks whether the specified username has been
     * banned by the administrator.
     *
     * @param string $username
-    * @return true if the username has been banned, 
+    * @return true if the username has been banned,
     * otherwise false.
     */
    function usernameBanned($username) {
@@ -206,7 +206,7 @@ class MySQLDB {
       $result = mysql_query($q, $this->connection);
       return (mysql_numrows($result) > 0);
    } // usernameBanned
-   
+
    /**
     * Inserts the given user into the database.
     * By default the user is inactive.
@@ -226,12 +226,12 @@ class MySQLDB {
       }else{
          $ulevel = USER_LEVEL;
       }
-      $q = "INSERT INTO " . TBL_USERS 
-      . " VALUES ('$username', '$password', '$firstname', '$lastname', 
+      $q = "INSERT INTO " . TBL_USERS
+      . " VALUES ('$username', '$password', '$firstname', '$lastname',
       '0', $ulevel, '$email', $time, $mailok, '$verifystring', 0)";
       return mysql_query($q, $this->connection);
    } // addNewUser
-     
+
    /**
     * Adds a new book into the database.
     * By default the book is inactive.
@@ -248,7 +248,7 @@ class MySQLDB {
       . " VALUES (now(), '$username', '$booktitle', '$bookauthor', '$booksummary', '$bookurl')";
       return mysql_query($q, $this->connection);
    } // addNewBook
-   
+
    /**
     * Adds a new glossary item into the database.
     * By default the item is inactive.
@@ -263,7 +263,7 @@ class MySQLDB {
       . " VALUES ('$username', '$glosstitle', '$glosssummary')";
       return mysql_query($q, $this->connection);
    } // addNewGlossItem
-   
+
    /**
     * Adds a new link item to the database.
     * By default the item is inactive.
@@ -279,7 +279,7 @@ class MySQLDB {
       . " VALUES (now(), '$username', '$linktitle', '$linksummary', '$linkurl')";
       return mysql_query($q, $this->connection);
    } // addNewLinkItem
-   
+
    /**
     * Adds a new article into the database.
     * By default the article is inactive.
@@ -294,10 +294,26 @@ class MySQLDB {
       . " VALUES (now(), '$username', '$articletitle', '$articlesummary', '$articlecontent')";
       return mysql_query($q, $this->connection);
    } // addNewArticle
-   
+
+   /**
+    * Adds a new tip into the database.
+    * By default the tip is inactive.
+    *
+    * @param string $username
+    * @param string $tiptitle
+    * @param string $tipsummary
+    * @param string $tipcontent
+    * @return true on success, false otherwise.
+    */
+   function addNewTip($username, $tiptitle, $tipsummary, $tipcontent) {
+      $q = "INSERT INTO " . TBL_TIPS . " (date_posted, posted_by, title, summary, content)"
+      . " VALUES (now(), '$username', '$tiptitle', '$tipsummary', '$tipcontent')";
+      return mysql_query($q, $this->connection);
+   } // addNewTip
+
    /**
     * Adds a new glossary item comment into the database.
-    * By default the article is inactive.
+    * By default the comment is inactive.
     *
     * @param string $username
     * @param string $glossid
@@ -309,10 +325,25 @@ class MySQLDB {
       . " VALUES (now(), '$username', '$glossid', '$comment')";
       return mysql_query($q, $this->connection);
    } // addNewGlossaryComment
-   
+
+   /**
+    * Adds a new tip item comment into the database.
+    * By default the comment is inactive.
+    *
+    * @param string $username
+    * @param string $tipid
+    * @param string $comment
+    * @return true on success, false otherwise.
+    */
+   function addNewTipComment($username, $tipid, $comment) {
+      $q = "INSERT INTO " . TBL_TIPCOM . " (date_posted, posted_by, tip_id, comment)"
+      . " VALUES (now(), '$username', '$tipid', '$comment')";
+      return mysql_query($q, $this->connection);
+   } // addNewTipComment
+
    /**
     * Adds a new article comment into the database.
-    * By default the article is inactive.
+    * By default the comment is inactive.
     *
     * @param string $username
     * @param string $artid
@@ -324,7 +355,7 @@ class MySQLDB {
       . " VALUES (now(), '$username', '$artid', '$comment')";
       return mysql_query($q, $this->connection);
    } // addNewArticleComment
-   
+
    /**
     * Updates a field in the user's row.
     *
@@ -334,17 +365,17 @@ class MySQLDB {
     * @return true on success, false otherwise.
     */
    function updateUserField($username, $field, $value) {
-      $q = "UPDATE " . TBL_USERS . " SET " . $field 
+      $q = "UPDATE " . TBL_USERS . " SET " . $field
       . " = '$value' WHERE username = '$username'";
       return mysql_query($q, $this->connection);
    } // updateUserField
-   
+
    /**
     * Gets all the information for a specific user.
     *
     * @param string $username
-    * @return the result array with all information stored 
-    * regarding the given username. If query fails, NULL 
+    * @return the result array with all information stored
+    * regarding the given username. If query fails, NULL
     * is returned.
     */
    function getUserInfo($username) {
@@ -358,13 +389,13 @@ class MySQLDB {
       $dbarray = mysql_fetch_array($result);
       return $dbarray;
    } // getUserInfo
-   
+
    /**
     * Gets the number of signed-up users (excluding banned
-    * members). The first time the function is called on 
-    * page load, the database is queried, on subsequent calls, 
-    * the stored result is returned. This is to improve 
-    * efficiency, effectively not querying the database when 
+    * members). The first time the function is called on
+    * page load, the database is queried, on subsequent calls,
+    * the stored result is returned. This is to improve
+    * efficiency, effectively not querying the database when
     * no call is made.
     *
     * @return number of users
@@ -377,9 +408,9 @@ class MySQLDB {
       }
       return $this->num_members;
    } // getNumMembers
-   
+
    /**
-    * Finds out how many active users are viewing site and 
+    * Finds out how many active users are viewing site and
     * sets class variable accordingly.
     */
    function calcNumActiveUsers(){
@@ -387,9 +418,9 @@ class MySQLDB {
       $result = mysql_query($q, $this->connection);
       $this->num_active_users = mysql_numrows($result);
    } // calcNumActiveUsers
-   
+
    /**
-    * Finds out how many active guests are viewing site 
+    * Finds out how many active guests are viewing site
     * and sets class variable accordingly.
     */
    function calcNumActiveGuests() {
@@ -397,9 +428,9 @@ class MySQLDB {
       $result = mysql_query($q, $this->connection);
       $this->num_active_guests = mysql_numrows($result);
    } // calcNumActiveGuests
-   
+
    /**
-    * Updates username's last active timestamp in the 
+    * Updates username's last active timestamp in the
     * database, and also adds him to the table of
     * active users, or updates timestamp if already there.
     *
@@ -409,13 +440,13 @@ class MySQLDB {
    function addActiveUser($username, $time) {
       $q = "UPDATE " . TBL_USERS . " SET timestamp = '$time' WHERE username = '$username'";
       mysql_query($q, $this->connection);
-      
+
       if (!TRACK_VISITORS) return;
       $q = "REPLACE INTO " . TBL_ACTIVE_USERS . " VALUES ('$username', '$time')";
       mysql_query($q, $this->connection);
       $this->calcNumActiveUsers();
    } // addActiveUser
-   
+
    /**
     * Activate a previously created user.
     *
@@ -425,10 +456,10 @@ class MySQLDB {
       $q = "UPDATE " . TBL_USERS . " SET active = '1' WHERE email = '$email'";
       mysql_query($q, $this->connection);
    } // activateUser
-   
+
    /**
 	* Adds guest to active guests table
-	* 
+	*
 	* @param string ip
 	* @param datetime time
 	*/
@@ -438,7 +469,7 @@ class MySQLDB {
       mysql_query($q, $this->connection);
       $this->calcNumActiveGuests();
    } // addActiveGuest
-   
+
    /**
     * Updates the views field for an article
     *
@@ -448,14 +479,14 @@ class MySQLDB {
    function updateArticleViews($artid) {
        $q = "SELECT views FROM " . TBL_ARTICLES . " where id = " . $artid;
        $result = mysql_query($q, $this->connection);
-       $row = mysql_fetch_row($result);       
+       $row = mysql_fetch_row($result);
        $num_views = $row[0];
        $num_views++;
        $q = "UPDATE " . TBL_ARTICLES . " SET views =  " . $num_views
            . " where id = " . $artid;
        return mysql_query($q, $this->connection);
    } // updateArticleViews
-   
+
    /**
     * Removes an active user.
     *
@@ -467,7 +498,7 @@ class MySQLDB {
       mysql_query($q, $this->connection);
       $this->calcNumActiveUsers();
    } // removeActiveUser
-   
+
    /**
     * Removes an active guest.
     *
@@ -479,7 +510,7 @@ class MySQLDB {
       mysql_query($q, $this->connection);
       $this->calcNumActiveGuests();
    } // removeActiveGuest
-   
+
    /**
     * Removes all inactive users.
     */
@@ -502,7 +533,7 @@ class MySQLDB {
       mysql_query($q, $this->connection);
       $this->calcNumActiveGuests();
    } // removeInactiveGuests
-   
+
    /**
     * Performs the given query on the database and
     * returns the result.
