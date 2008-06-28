@@ -6,7 +6,7 @@ $_SESSION['SESS_NAVITEM'] = 0;
 
 include("include/header.php");
 ?>
-
+<script src="http://www.surveymonkey.com/jsPop.aspx?sm=0Z_2bLjdPvU1BOBDURXH6I6Q_3d_3d"> </script>
 <div id="toptitle">
 <h2>Welcome to <i>The Buildmeister</i></h2>
 </div>
@@ -50,11 +50,11 @@ include("include/header.php");
 	<tbody>
 		<tr>
 			<td width="100%">
-			<p><font size="2">If you are interested in improving the maturity of Build and Release Management,
-			   then please share your knowledge and thoughts by completing
+			<p>If you are interested in improving the maturity of Build and Release Management,
+			   then please share your knowledge and thoughts by completing The Buildmeister's
 			   <a target="_blank" href="http://www.surveymonkey.com/s.aspx?sm=mvNuGTwtYj7obhgxFnmeqw_3d_3d">
-			       The Buildmeister - Build and Release Management survey</a>.
-			   The results will be published on this site.</font></p>
+			       Build and Release Management survey</a>.<br/><br/>
+			   To see the results so far <a target="_blank" href="http://www.surveymonkey.com/sr.aspx?sm=OQpX5dXH7FQFraTZvE8leNkNhdURIu_2b8inNt7RPTelY_3d">click here</a>.</p>
 			</td>
 		</tr>
 	</tbody>
@@ -116,8 +116,6 @@ if ($numrows != 0) {
 ?>
 
 <div id="dashed-spacer"></div>
-
-<script src="http://www.surveymonkey.com/jsPop.aspx?sm=0Z_2bLjdPvU1BOBDURXH6I6Q_3d_3d"> </script>
 
 <?php
 include("include/footer.php");
