@@ -4,9 +4,8 @@
 session_register("SESS_NAVITEM");
 $_SESSION['SESS_NAVITEM'] = 0;
 
-include("include/header.php");
+include ("include/header.php");
 ?>
-<script src="http://www.surveymonkey.com/jsPop.aspx?sm=0Z_2bLjdPvU1BOBDURXH6I6Q_3d_3d"> </script>
 <div id="toptitle">
 <h2>Welcome to <i>The Buildmeister</i></h2>
 </div>
@@ -50,11 +49,15 @@ include("include/header.php");
 	<tbody>
 		<tr>
 			<td width="100%">
-			<p>If you are interested in improving the maturity of Build and Release Management,
-			   then please share your knowledge and thoughts by completing The Buildmeister's
-			   <a target="_blank" href="http://www.surveymonkey.com/s.aspx?sm=mvNuGTwtYj7obhgxFnmeqw_3d_3d">
-			       Build and Release Management survey</a>.<br/><br/>
-			   To see the results so far <a target="_blank" href="http://www.surveymonkey.com/sr.aspx?sm=OQpX5dXH7FQFraTZvE8leNkNhdURIu_2b8inNt7RPTelY_3d">click here</a>.</p>
+			<p>If you are interested in improving the maturity of Build and
+			Release Management, then please share your knowledge and thoughts by
+			completing The Buildmeister's <a target="_blank"
+				href="http://www.surveymonkey.com/s.aspx?sm=mvNuGTwtYj7obhgxFnmeqw_3d_3d">
+			Build and Release Management survey</a>.<br />
+			<br />
+			To see the results so far <a target="_blank"
+				href="http://www.surveymonkey.com/sr.aspx?sm=OQpX5dXH7FQFraTZvE8leNkNhdURIu_2b8inNt7RPTelY_3d">click
+			here</a>.</p>
 			</td>
 		</tr>
 	</tbody>
@@ -65,32 +68,37 @@ include("include/header.php");
 	<tbody>
 		<tr>
 			<td width="75%" style="vertical-align: top;">
-			<div align="center">
-			<p style="align: center"><img alt="[Buildmeister Books]"
-                             src="images/buildmeisterbookslogo_small.gif"
-                             vspace="5">
-			</p>
-			</div>
+			<div align="center"><img alt="[Buildmeister Books]"
+				src="images/buildmeisterbookslogo_small.gif"></div>
 			<p>If you enjoy this site then you can help to keep it going by
-			purchasing a copy of <a
-				href="http://www.lulu.com/content/409652">The
-			Buildmeister's Guide - Achieving Agile Software Delivery</a> - the book of this website, which contains a
-			collection of the best articles and information from this site
-			together with some significant and new unpublished content. A hardcopy version of the book
-			is also available from&nbsp;<a href="http://stores.lulu.com/buildmeisterbooks">stores.lulu.com/buildmeisterbooks</a>.&nbsp;</p>
-			<p>Download <a href="whitepapers/AgileSCMInTheEnterprise.pdf">Implementing Agile SCM in the Enterprise</a> &ndash;
-			an introduction to the concept of Agile SCM (a lightweight and well designed form of SCM) and
-			how it can be implemented across a large enterprise organization.</p>
+			purchasing a copy of <a href="http://www.lulu.com/content/409652">The
+			Buildmeister's Guide - Achieving Agile Software Delivery</a> - the
+			book of this website, which contains a collection of the best
+			articles and information from this site together with some
+			significant and new unpublished content. A hardcopy version of the
+			book is also available from <a
+				href="http://www.lulu.com/items/volume_63/4152000/4152376/1/print/AgileSCMInTheEnterprise.pdf">stores.lulu.com/buildmeisterbooks</a>.&nbsp;</p>
+			<p>Download <a href="whitepapers/AgileSCMInTheEnterprise.pdf">Implementing
+			Agile SCM in the Enterprise</a> &ndash; an introduction to the
+			concept of Agile SCM (a lightweight and well designed form of SCM)
+			and how it can be implemented across a large enterprise organization.</p>
 			</td>
 			<td>
-			<div align="center">
-			<a href="http://www.lulu.com/content/409652">
-            <img style="border: 0px;"
-				alt="[The Buildmeister's Guide]"
-				src="images/The_Buildmeisters_Guide_cover_small.jpg" hspace="5"
-				vspace="5"></a><br>
+			<div align="center"><a href="http://www.lulu.com/content/409652"> <img
+				style="border: 0px;" alt="[The Buildmeister's Guide]"
+				src="images/bmg.jpg" hspace="5" vspace="5"></a><br>
 			<div style="text-align: center;"><a
 				href="http://www.lulu.com/content/409652"> <img
+				src="http://www.lulu.com/services/buy_now_buttons/images/book_blue2.gif"
+				alt="Buy now" border="0"></a></div>
+			</div>
+			</td>
+			<td>
+			<div align="center"><a href="http://www.lulu.com/content/1022721"> <img
+				style="border: 0px;" alt="[Apache Ant - The Buildmeister's Guide]"
+				src="images/bmg-ant.jpg" hspace="5" vspace="5"></a><br>
+			<div style="text-align: center;"><a
+				href="http://www.lulu.com/content/1022721"> <img
 				src="http://www.lulu.com/services/buy_now_buttons/images/book_blue2.gif"
 				alt="Buy now" border="0"></a></div>
 			</div>
@@ -102,15 +110,18 @@ include("include/header.php");
 <div id="boxedtitle">Selected Articles</div>
 <?php
 # fetch latest articles
-$sql = "SELECT * from " . TBL_ARTICLES . " where active = 1 ORDER BY date_posted DESC LIMIT 5;";
+$sql = "SELECT * from " . TBL_ARTICLES .
+    " where active = 1 ORDER BY date_posted DESC LIMIT 5;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
-if ($numrows != 0) {
-    while ($row = mysql_fetch_assoc($result)) {
-        echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>" . $row['title'] . "</a></strong><br/>"
-        . $row['summary'] . "</div>";
-    }
+if ($numrows != 0)
+{
+while ($row = mysql_fetch_assoc($result))
+{
+echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] .
+            "'>" . $row['title'] . "</a></strong><br/>" . $row['summary'] . "</div>";
+}
 }
 
 ?>
@@ -118,5 +129,5 @@ if ($numrows != 0) {
 <div id="dashed-spacer"></div>
 
 <?php
-include("include/footer.php");
+include ("include/footer.php");
 ?>

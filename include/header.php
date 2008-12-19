@@ -30,27 +30,7 @@ function clearField(obj) {
 	</div>
 	<!-- advert begin -->
 	<div id="advert">
-	<script type="text/javascript"><!--
-         google_ad_client = "pub-3805144493754901";
-		 google_alternate_color = "F4F4F4";
-		 google_ad_width = 468;
-		 google_ad_height = 60;
-		 google_ad_format = "468x60_as";
-		 google_ad_type = "text_image";
-		 //2007-07-19: buildmeister.com
-		 google_ad_channel = "7986490318";
-		 google_color_border = "F4F4F4";
-		 google_color_bg = "F4F4F4";
-		 google_color_link = "0000FF";
-		 google_color_text = "000000";
-		 google_color_url = "008000";
-		 google_ui_features = "rc:6";
-		 //-->
-	</script> 
-	<script type="text/javascript"
-	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-    </script>
-    </div>
+	    <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=207249&amp;type=7" width="210" height="62" border="0" alt="SourceForge.net Logo" /></a>    </div>
 	<!-- advert end -->
 	</div>
 	<!-- header end --> 
@@ -134,14 +114,9 @@ if ($session->logged_in) {
 		<div id="spacer">&nbsp;</div>
 
 		<!-- related reading begin -->
-		<div id="reading">
-			<p>Related Reading</p>
-			<form id="reading-form">
-			<div align="center">
-				<iframe src="http://rcm.amazon.com/e/cm?t=thebuildmeist-20&o=1&p=8&l=st1&mode=books&search=software%20build%20development%20agile&nou=1&fc1=000000&lt1=_blank&lc1=3366FF&bg1=FFFFFF&f=ifr" marginwidth="0" marginheight="0" width="120" height="240" border="0" frameborder="0" style="border:none;" scrolling="no"></iframe>
-			</div>
-			</form>
-		</div>
+		<div align="center">		
+    		<a href="http://sourceforge.net/donate/index.php?group_id=207249"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support This Project" /> </a>
+        </div>		
 		<!-- related reading end -->
 
 		<div id="spacer">&nbsp;</div>

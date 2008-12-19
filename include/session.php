@@ -3,7 +3,7 @@
  * Session.php
  *
  * The Session class is meant to simplify the task of keeping
- * track of logged in users and also guests.
+ * track of logged in users.
  *
  * Written by: Jpmaster77 a.k.a. The Grandmaster of C++ (GMC)
  * Last Updated: August 19, 2004
@@ -50,23 +50,14 @@ class Session
       /* Determine if user is logged in */
       $this->logged_in = $this->checkLogin();
 
-      /**
-       * Set guest value to users not logged in, and update
-       * active guests table accordingly.
-       */
-      if(!$this->logged_in){
-         $this->username = $_SESSION['username'] = GUEST_NAME;
-         $this->userlevel = GUEST_LEVEL;
-         $database->addActiveGuest($_SERVER['REMOTE_ADDR'], $this->time);
-      }
       /* Update users last active timestamp */
-      else{
+      if($this->logged_in){      
          $database->addActiveUser($this->username, $this->time);
       }
 
       /* Remove inactive visitors from database */
       $database->removeInactiveUsers();
-      $database->removeInactiveGuests();
+      #$database->removeInactiveGuests();
 
       /* Set referrer page */
       if(isset($_SESSION['url'])){
@@ -95,8 +86,7 @@ class Session
       }
 
       /* Username and userid have been set and not guest */
-      if (isset($_SESSION['username']) && isset($_SESSION['userid']) &&
-         $_SESSION['username'] != GUEST_NAME){
+      if (isset($_SESSION['username']) && isset($_SESSION['userid'])) {
          /* Confirm that username and userid are valid */
          if ($database->confirmUserID($_SESSION['username'], $_SESSION['userid']) != 0) {
             /* Variables are incorrect, user not logged in */
@@ -184,7 +174,7 @@ class Session
       /* Insert userid into database and update active users table */
       $database->updateUserField($this->username, "userid", $this->userid);
       $database->addActiveUser($this->username, $this->time);
-      $database->removeActiveGuest($_SERVER['REMOTE_ADDR']);
+      #$database->removeActiveGuest($_SERVER['REMOTE_ADDR']);
 
       /* Reflect fact that user has logged in */
       $this->logged_in = true;
@@ -237,11 +227,11 @@ class Session
        * active guests tables.
        */
       $database->removeActiveUser($this->username);
-      $database->addActiveGuest($_SERVER['REMOTE_ADDR'], $this->time);
+      #$database->addActiveGuest($_SERVER['REMOTE_ADDR'], $this->time);
 
       /* Set user level to guest */
-      $this->username  = GUEST_NAME;
-      $this->userlevel = GUEST_LEVEL;
+      #$this->username  = GUEST_NAME;
+      #$this->userlevel = GUEST_LEVEL;
    }
 
    /**

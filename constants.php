@@ -10,7 +10,7 @@
  */
 
 // database constants for MySQL
-define("DB_SERVER", "localhost");
+define("DB_SERVER", "mysql-b");
 define("DB_USER", "b207249admin");
 define("DB_PASS", "redrock71");
 define("DB_NAME", "b207249_buildmeister");
