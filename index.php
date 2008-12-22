@@ -44,25 +44,6 @@ include ("include/header.php");
 </table>
 </div>
 
-<div id="boxedtitle">Build and Release Management Survey</div>
-<table style="width: 100%;">
-	<tbody>
-		<tr>
-			<td width="100%">
-			<p>If you are interested in improving the maturity of Build and
-			Release Management, then please share your knowledge and thoughts by
-			completing The Buildmeister's <a target="_blank"
-				href="http://www.surveymonkey.com/s.aspx?sm=mvNuGTwtYj7obhgxFnmeqw_3d_3d">
-			Build and Release Management survey</a>.<br />
-			<br />
-			To see the results so far <a target="_blank"
-				href="http://www.surveymonkey.com/sr.aspx?sm=OQpX5dXH7FQFraTZvE8leNkNhdURIu_2b8inNt7RPTelY_3d">click
-			here</a>.</p>
-			</td>
-		</tr>
-	</tbody>
-</table>
-
 <div id="boxedtitle">Books and Whitepapers</div>
 <table style="width: 100%;">
 	<tbody>
@@ -106,6 +87,18 @@ include ("include/header.php");
 		</tr>
 	</tbody>
 </table>
+
+<div id="boxedtitle">Reference Applications</div>
+<table style="width: 100%;">
+	<tbody>
+		<tr>
+			<td width="100%">
+
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 
 <div id="boxedtitle">Selected Articles</div>
 <?php
