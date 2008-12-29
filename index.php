@@ -59,10 +59,6 @@ include ("include/header.php");
 			significant and new unpublished content. A hardcopy version of the
 			book is also available from <a
 				href="http://www.lulu.com/items/volume_63/4152000/4152376/1/print/AgileSCMInTheEnterprise.pdf">stores.lulu.com/buildmeisterbooks</a>.&nbsp;</p>
-			<p>Download <a href="whitepapers/AgileSCMInTheEnterprise.pdf">Implementing
-			Agile SCM in the Enterprise</a> &ndash; an introduction to the
-			concept of Agile SCM (a lightweight and well designed form of SCM)
-			and how it can be implemented across a large enterprise organization.</p>
 			</td>
 			<td>
 			<div align="center"><a href="http://www.lulu.com/content/409652"> <img
