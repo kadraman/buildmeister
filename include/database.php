@@ -21,8 +21,8 @@ class MySQLDB {
 	*/
    function MySQLDB() {
       // connect to database
-      $this->connection = mysql_connect("localhost", "webmaster@buildmeister.com", "redrock71") or die(mysql_error());
-      mysql_select_db("buildmeister_com_1", $this->connection) or die(mysql_error());
+      $this->connection = mysql_connect(DB_SERVER, DB_USER, DB_PASS) or die(mysql_error());
+      mysql_select_db(DB_NAME, $this->connection) or die(mysql_error());
 
       // only query database to find out number of members
       // when getNumMembers() is called for the first time,

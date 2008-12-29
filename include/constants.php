@@ -10,10 +10,10 @@
  */
  
 // database constants for MySQL
-define("DB_SERVER", "localhost");
-define("DB_USER", "webmaster@buildmeister.com");
+define("DB_SERVER", "rdbms.strato.de");
+define("DB_USER", "U493819");
 define("DB_PASS", "redrock71");
-define("DB_NAME", "buildmeister_com_1");
+define("DB_NAME", "DB493819");
 
 // database tables
 define("TBL_USERS", "users");

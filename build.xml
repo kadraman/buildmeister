@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="buildmeister.com" default="help" basedir=".">
     
-    <property name="dir.lib"    value="lib"/>
-    <property name="dir.build"    value="build"/>
-    <property name="dir.dist"    value="dist"/>
-    <property name="dir.doc"    value="doc"/>
+    <property name="dir.classes"   value="include"/>
+    <property name="dir.dist"      value="dist"/>
+    <property name="dir.build"     value="build"/>
+    <property name="dir.doc"       value="doc"/>
+    <property name="dir.db"        value="db"/>
     <property environment="env"/>
         
     <property file="build.properties"/>
@@ -13,20 +14,14 @@
     <!-- define a patternset for PHP Web sources -->
     <patternset id="php.sources">
         <include name="admin/**"/>        
-	<include name="articles/**"/>     
-	<include name="images/**"/>     
-	<include name="include/**"/>     
-	<include name="javascript/**"/>     
-	<include name="stylesheets/**"/>     
-        <exclude name="**/.svn/**"/>	
+        <include name="articles/**"/>     
+        <include name="images/**"/>     
+        <include name="include/**"/>     
+        <include name="javascript/**"/>     
+        <include name="stylesheets/**"/>     
+        <exclude name="**/.svn/**"/>    
     </patternset>
-    
-    <!-- define an internal classpath for -->
-    <path id="internal.classpath">
-        <!-- include local libraries -->
-        <fileset dir="${dir.lib}"/>
-    </path>
-    
+       
     <!-- create output directories -->
     <target name="init" description="create directory structure">
         <mkdir dir="${dir.dist}"/>
@@ -40,22 +35,20 @@
     </target>
 
     <!-- generate documentation -->
-    <target name="phpdoc"> 
-	    <phpdoc title="API Documentation"
-	      destdir="apidocs"
-	      sourcecode="no"
-	      output="HTML:Smarty:PHP">
-	       <fileset dir="./include">
-		  <include name="**/*.php" />
-	       </fileset>
-	       <projdocfileset dir=".">
-		       <include name="**/*.php" />
-	       </projdocfileset>
-	    </phpdoc>
+    <target name="phpdoc" description="generate class documentation"> 
+        <phpdoc title="API Documentation" destdir="apidocs"
+            sourcecode="no" output="HTML:Smarty:PHP">
+            <fileset dir="${dir.classes}">
+                <include name="**/*.php" />
+            </fileset>
+            <projdocfileset dir=".">
+               <include name="**/*.php" />
+            </projdocfileset>
+        </phpdoc>
     </target>
     
     <!-- get a formatted release number -->
-    <target name="get-relnum">
+    <target name="get-relnum" description="get the release number">
         <input message="Enter release Number:" addproperty="rel.num"/>
         <!--condition property="legal-relnum">
             <matches pattern="^\d\.\d.\d(-rc\d|-alpha\d|-beta\d)*$"
@@ -69,26 +62,28 @@
     </target>
             
     <!-- prepare a release -->
-    <target name="release-package" depends="get-relnum">
-        <zip destfile="${ant.project.name}-${rel.num}.zip">
+    <target name="package" depends="get-relnum"
+        description="package up the release">
+    <zip destfile="${dir.dist}/${phing.project.name}-${rel.num}.zip">
              <fileset dir="${basedir}/..">
                  <include name="**/**/*"/>
                  <exclude name="**/build.properties"/>
                  <exclude name="**/release.properties"/>
             </fileset>
         </zip>
-        <checksum file="${ant.project.name}-src-${rel.num}.zip"/>
+    <checksum file="${dir.dist}/${phing.project.name}-${rel.num}.zip"/>
     </target>
 
     <!-- get environment -->
-    <target name="get-env">
-	<input propertyname="environment">Enter environment name [dev|test|prod]</input>
+    <target name="get-env" description="get the environment for an action">
+        <input propertyname="environment">Enter environment name [dev|test|prod]</input>
     </target> 
 
     <!-- configure application for specific environment -->
-    <target name="config" depends="get-env">
-       <input propertyname="db.pass">Enter database password for ${environment}:</input>
-	<property file="${environment}.properties"/>
+    <target name="config" depends="get-env"
+        description="configure application for a specific environment">
+        <input propertyname="db.pass">Enter database password for ${environment}:</input>
+        <property file="${environment}.properties"/>
         <copy overwrite="true" file="stylesheets/template_main.css" 
             tofile="stylesheets/main.css">
             <filterchain>
@@ -111,9 +106,39 @@
         </copy>        
     </target>
 
-    <!-- deploy application to specific environment --> 
-    <target name="deploy" depends="config">
-	<exec command="upload\FTPSync.exe prod /INCREMENTAL /FTPSYNCDATA:upload" />
+    <!-- update the relevant database -->  
+    <target name="updatedb" depends="get-env" 
+        description="update database of a specific environment">     
+        <input propertyname="db.pass">Enter database password for ${environment}:</input>
+        <property file="${environment}.properties"/>
+
+        <!-- load the dbdeploy task -->  
+        <taskdef name="dbdeploy" classname="phing.tasks.ext.dbdeploy.DbDeployTask"/>  
+
+        <tstamp/>
+  
+        <!-- name of the deploy and undo files -->  
+        <property name="name.dbdeploy.deployfile" 
+            value="${dir.build}/deploy-${DSTAMP}${TSTAMP}.sql" />  
+        <property name="name.dbdeploy.undofile" 
+            value="${dir.build}/undo-${DSTAMP}${TSTAMP}.sql" />  
+  
+        <!-- generate the deployment scripts -->  
+        <dbdeploy url="mysql:host=${db.server};dbname=${db.name}"  
+            userid="${db.user}" password="${db.pass}"  
+            dir="${dir.db}/db/deltas"  
+            outputfile="${name.dbdeploy.deployfile}"  
+            undooutputfile="${name.dbdeploy.undofile}" />  
+  
+        <!-- execute the SQL -->  
+        <exec command="${mysqlexe} -h${db.server} -u${db.user} -p${db.pass} ${db.name} &lt; ${name.dbdeploy.deployfile}"  
+            dir="${dir.db}" checkreturn="true" />  
+    </target> 
+    
+    <!-- update the application files in the specific environment --> 
+    <target name="update" depends="config"
+        description="update the application files in a specific environment">
+        <exec command="upload\FTPSync.exe ${environment} /INCREMENTAL /FTPSYNCDATA:upload" />
     </target>
 
     <!-- help -->
