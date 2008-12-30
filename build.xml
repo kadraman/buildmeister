@@ -133,14 +133,6 @@
         <!-- load the dbdeploy task -->  
         <taskdef name="dbdeploy" classname="phing.tasks.ext.dbdeploy.DbDeployTask"/>  
 
-        <tstamp/>
-  
-        <!-- name of the deploy and undo files -->  
-        <property name="name.dbdeploy.deployfile" 
-            value="deploy-${DSTAMP}${TSTAMP}.sql" />  
-        <property name="name.dbdeploy.undofile" 
-            value="undo-${DSTAMP}${TSTAMP}.sql" />  
-  
         <!-- generate the deployment scripts -->  
         <dbdeploy url="mysql:host=${db.server};dbname=${db.name}"  
             userid="${db.user}" password="${db.pass}"  
@@ -149,8 +141,7 @@
             undooutputfile="${dir.build}/undo-all-deltas.sql" />  
   
         <!-- execute the SQL -->  
-        <exec command="${mysqlexe} -h${db.server} -u${db.user} -p${db.pass} ${db.name} &lt; ${name.dbdeploy.deployfile}"  
-            dir="${dir.db}" checkreturn="true" />  
+        <exec command="${mysqlexe} -h${db.server} -u${db.user} -p${db.pass} ${db.name} &lt; ${dir.build}\all-deltas.sql" checkreturn="true" />  
     </target> 
     
     <!-- update the application files in the specific environment --> 
