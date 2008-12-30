@@ -25,12 +25,14 @@
     <!-- create output directories -->
     <target name="init" description="create directory structure">
         <mkdir dir="${dir.dist}"/>
+        <mkdir dir="${dir.build}"/>        
         <mkdir dir="${dir.doc}"/>
     </target>
     
     <!-- remove generated files -->
     <target name="clean" description="remove generated files">
         <delete dir="${dir.dist}"/>
+        <delete dir="${dir.build}"/>
         <delete dir="${dir.doc}"/>
     </target>
 
@@ -75,7 +77,8 @@
     </target>
 
     <!-- get environment -->
-    <target name="get-env" description="get the environment for an action">
+    <target name="get-env" depends="init"
+        description="get the environment for an action">
         <input propertyname="environment">Enter environment name [dev|test|prod]</input>
     </target> 
 
@@ -106,6 +109,21 @@
         </copy>        
     </target>
 
+    <!-- bootstrap the relevant database for dbdeploy-->  
+    <target name="bootstrapdb" depends="get-env" 
+        description="bootstrap database of a specific environment">     
+        <input propertyname="db.pass">Enter database password for ${environment}:</input>
+        <property file="${environment}.properties"/>
+        
+        <!-- rename if using a different database - unlikely with PHP! -->
+        <property name="name.dbdeploy.bootstrapfile" 
+            value="createSchemaVersionTable.mysql.sql"/>
+ 
+        <!-- execute the SQL -->  
+        <exec command="${mysqlexe} -h${db.server} -u${db.user} -p${db.pass} ${db.name} &lt; ${name.dbdeploy.bootstrapfile}"  
+            dir="${dir.db}" checkreturn="true" />  
+    </target> 
+
     <!-- update the relevant database -->  
     <target name="updatedb" depends="get-env" 
         description="update database of a specific environment">     
@@ -119,16 +137,16 @@
   
         <!-- name of the deploy and undo files -->  
         <property name="name.dbdeploy.deployfile" 
-            value="${dir.build}/deploy-${DSTAMP}${TSTAMP}.sql" />  
+            value="deploy-${DSTAMP}${TSTAMP}.sql" />  
         <property name="name.dbdeploy.undofile" 
-            value="${dir.build}/undo-${DSTAMP}${TSTAMP}.sql" />  
+            value="undo-${DSTAMP}${TSTAMP}.sql" />  
   
         <!-- generate the deployment scripts -->  
         <dbdeploy url="mysql:host=${db.server};dbname=${db.name}"  
             userid="${db.user}" password="${db.pass}"  
-            dir="${dir.db}/db/deltas"  
-            outputfile="${name.dbdeploy.deployfile}"  
-            undooutputfile="${name.dbdeploy.undofile}" />  
+            dir="${project.basedir}/${dir.db}/deltas"
+            outputfile="${dir.build}/all-deltas.sql"  
+            undooutputfile="${dir.build}/undo-all-deltas.sql" />  
   
         <!-- execute the SQL -->  
         <exec command="${mysqlexe} -h${db.server} -u${db.user} -p${db.pass} ${db.name} &lt; ${name.dbdeploy.deployfile}"  
