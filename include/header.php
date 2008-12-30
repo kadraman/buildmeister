@@ -7,18 +7,31 @@ include("include/session.php");
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 	<title><?php echo SITE_NAME; ?></title>
-	<link type="text/css" title="www" rel="stylesheet" media="screen"
-		href="stylesheets/main.css" />
-	<link type="text/css" title="www" rel="stylesheet" media="screen"
-		href="stylesheets/article.css" />
-<script language="javascript" type="text/javascript">
-function clearField(obj) {
-	if (obj.defaultValue==obj.value) obj.value = '';
-}
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.2/dojo/dojo.xd.js"></script>
+	<style type="text/css">
+		@import "http://ajax.googleapis.com/ajax/libs/dojo/1.2/dojo/resources/dojo.css";
+		@import "http://ajax.googleapis.com/ajax/libs/dojo/1.2/dijit/themes/soria/soria.css";
+		@import "http://ajax.googleapis.com/ajax/libs/dojo/1.2/dijit/themes/soria/soria_rtl.css";
+		@import	"http://ajax.googleapis.com/ajax/libs/dojo/1.2/dojox/image/resources/image.css";
+		@import "stylesheets/main.css";
+		@import "stylesheets/dialogs.css";
+		@import "stylesheets/article.css";
+	</style>
+	<script type="text/javascript" src="javascript/dojoRequires.js"></script>
+	<script type="text/javascript" src="javascript/actionProcessors.js"></script>
+	<script type="text/javascript" src="javascript/contentLoaders.js"></script>
+	<script type="text/javascript">
+		/*dojo.addOnLoad(function(){
+        });*/
+	</script>
+    <script language="javascript" type="text/javascript">
+        function clearField(obj) {
+    	if (obj.defaultValue==obj.value) obj.value = '';
+    }
 </script>
 </head>
 
-<body id="buildmeister">
+<body id="buildmeister" class="soria">
 	<div id="container">
 	
 	<!-- header begin -->
