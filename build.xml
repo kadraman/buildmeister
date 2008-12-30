@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="buildmeister.com" default="help" basedir=".">
     
-    <property name="dir.classes"   value="include"/>
+    <property name="dir.public"    value="public"/>
+    <property name="dir.bin"       value="bin"/>
     <property name="dir.dist"      value="dist"/>
     <property name="dir.build"     value="build"/>
     <property name="dir.doc"       value="doc"/>
     <property name="dir.db"        value="db"/>
+    <property name="dir.classes"   value="${dir.public}/include"/>
     <property environment="env"/>
         
     <property file="build.properties"/>
@@ -67,7 +69,7 @@
     <target name="package" depends="get-relnum"
         description="package up the release">
     <zip destfile="${dir.dist}/${phing.project.name}-${rel.num}.zip">
-             <fileset dir="${basedir}/..">
+             <fileset dir="${phing.basedir}/..">
                  <include name="**/**/*"/>
                  <exclude name="**/build.properties"/>
                  <exclude name="**/release.properties"/>
@@ -87,16 +89,16 @@
         description="configure application for a specific environment">
         <input propertyname="db.pass">Enter database password for ${environment}:</input>
         <property file="${environment}.properties"/>
-        <copy overwrite="true" file="stylesheets/template_main.css" 
-            tofile="stylesheets/main.css">
+	<copy overwrite="true" file="${dir.public}/stylesheets/template_main.css" 
+		tofile="${dir.public}/stylesheets/main.css">
             <filterchain>
                 <replacetokens begintoken="@" endtoken="@">
                   <token key="image_dir" value="${image.dir}" />
                 </replacetokens>
             </filterchain>
         </copy>
-        <copy overwrite="true" file="include/template_constants.php" 
-            tofile="include/constants.php">
+	<copy overwrite="true" file="${dir.public}/include/template_constants.php" 
+		tofile="${dir.public}/include/constants.php">
             <filterchain>
                 <replacetokens begintoken="@" endtoken="@">
                     <token key="db_server" value="${db.server}" />
@@ -147,7 +149,7 @@
     <!-- update the application files in the specific environment --> 
     <target name="update" depends="config"
         description="update the application files in a specific environment">
-        <exec command="upload\FTPSync.exe ${environment} /INCREMENTAL /FTPSYNCDATA:upload" />
+        <exec command="${dir.bin}\FTPSync.exe ${environment} /INCREMENTAL /FTPSYNCDATA:upload" />
     </target>
 
     <!-- help -->
