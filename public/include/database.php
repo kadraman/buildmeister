@@ -233,6 +233,98 @@ class MySQLDB {
    } // addNewUser
 
    /**
+    * Adds a new article into the database.
+    * By default the article is inactive.
+    *
+    * @param unknown_type $title
+    * @param unknown_type $summary
+    * @param unknown_type $category
+    * @param unknown_type $date
+    * @param unknown_type $text
+    * @return true on success, false otherwise.
+    */
+    function addNewArticle($title, $summary, $category, $date, $text) {
+      $retval = true;
+      # add article into database
+      $q = "INSERT INTO " . TBL_ARTICLES . " (date_posted, summary, title, content, active)"
+      . " VALUES ('$date', '$summary', '$title', '$text', '1')";
+      if (!mysql_query($q, $this->connection)) {
+          $retval = false;
+      } else {
+          $artid = mysql_insert_id();
+          # add categories
+          $categories = explode(",", $category);
+          foreach ($categories as $catid) {
+              $q = "INSERT INTO " . TBL_ARTICLE_CATEGORIES . " (article_id, cat_id)"
+                  . " VALUES ('$artid', '$catid')";
+              if (!mysql_query($q, $this->connection)) { 
+                  $retval = false; 
+                  break;
+              }
+          }
+      }
+      return $retval;
+    } // addNewArticle
+
+    /**
+    * Updates an article in the database.
+    * By default the article remains active.
+    *
+    * @param unknown_type $id
+    * @param unknown_type $title
+    * @param unknown_type $summary
+    * @param unknown_type $category
+    * @param unknown_type $date
+    * @param unknown_type $text
+    * @return true on success, false otherwise.
+    */
+    function updateArticle($artid, $title, $summary, $category, $date, $text) {
+      $retval = true;
+      # update article in database
+      //$mysqldate = date( 'Y-m-d H:i:s', strtotime($date));      
+      $q = "UPDATE " . TBL_ARTICLES . " SET date_posted = STR_TO_DATE('$date','%d-%m-%Y'), " .
+		"title = '$title', summary = '$summary', content = '$text' WHERE id = '$artid'";
+      if (!mysql_query($q, $this->connection)) {
+          $retval = false;
+      } else {
+          # update categories
+          # delete existing refernces to category
+          $q = "DELETE FROM " . TBL_ARTICLE_CATEGORIES . " WHERE article_id = '$artid'";
+          if (!mysql_query($q, $this->connection)) {
+              $retval = false;
+              break;
+          } else {
+              # add again
+              foreach ($category as $catid) {
+                  $q = "INSERT INTO " . TBL_ARTICLE_CATEGORIES . " (article_id, cat_id)"
+                      . " VALUES ('$artid', '$catid')";
+                  if (!mysql_query($q, $this->connection)) { 
+                      $retval = false; 
+                      break;
+                  }
+              }
+          }
+      }
+      return $retval;
+    } // updateArticle
+
+    /**
+    * Delete an article from the database.
+    *
+    * @param unknown_type $postid
+    * @return true on success, false otherwise.
+    */
+    function deleteArticle($artid) {
+      $retval = true;
+      # delete article
+      $q = "DELETE FROM " . TBL_ARTICLES . " WHERE id = '$artid'";
+      if (!mysql_query($q, $this->connection)) {
+          $retval = false;
+      }
+      return $retval;
+    } // deleteArticle   
+   
+   /**
     * Adds a new book into the database.
     * By default the book is inactive.
     *
@@ -289,12 +381,12 @@ class MySQLDB {
     * @param string $articlesummary
     * @return true on success, false otherwise.
     */
-   function addNewArticle($username, $articletitle, $articlesummary, $articlecontent) {
+   /*function addNewArticle($username, $articletitle, $articlesummary, $articlecontent) {
       $q = "INSERT INTO " . TBL_ARTICLES . " (date_posted, posted_by, title, summary, content)"
       . " VALUES (now(), '$username', '$articletitle', '$articlesummary', '$articlecontent')";
       return mysql_query($q, $this->connection);
    } // addNewArticle
-
+*/
    /**
     * Adds a new tip into the database.
     * By default the tip is inactive.
@@ -351,8 +443,8 @@ class MySQLDB {
     * @return true on success, false otherwise.
     */
    function addNewArticleComment($username, $artid, $comment) {
-      $q = "INSERT INTO " . TBL_ARTCOM . " (date_posted, posted_by, art_id, comment)"
-      . " VALUES (now(), '$username', '$artid', '$comment')";
+      $q = "INSERT INTO " . TBL_ARTCOM . " (date_posted, posted_by, art_id, comment, active)"
+      . " VALUES (now(), '$username', '$artid', '$comment', 1)";
       return mysql_query($q, $this->connection);
    } // addNewArticleComment
 

@@ -10,17 +10,19 @@
  */
  
 // database constants for MySQL
-define("DB_SERVER", "rdbms.strato.de");
-define("DB_USER", "U493819");
-define("DB_PASS", "redrock71");
-define("DB_NAME", "DB493819");
+define("DB_SERVER", "localhost");
+define("DB_USER", "root");
+define("DB_PASS", "root");
+define("DB_NAME", "buildmeister");
 
 // database tables
 define("TBL_USERS", "users");
 define("TBL_ACTIVE_USERS",  "active_users");
 define("TBL_ACTIVE_GUESTS", "active_guests");
 define("TBL_BANNED_USERS",  "banned_users");
+define("TBL_CATEGORIES", "categories");
 define("TBL_ARTICLES", "articles");
+define("TBL_ARTICLE_CATEGORIES", "article_categories");
 define("TBL_BOOKS", "books");
 define("TBL_GLOSSARY", "glossary");
 define("TBL_LINKS", "links");
@@ -30,7 +32,8 @@ define("TBL_ARTCOM", "article_comm");
 define("TBL_GLOSSCOM", "glossary_comm");
 
 // special names and level constants
-define("SITE_BASEDIR", "http://www.buildmeister.com");
+define("SITE_BASEDIR", "http://127.0.0.1/buildmeister.com/public");
+define("SITE_BASEPREFIX", "/public/");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");
@@ -58,20 +61,20 @@ define("EMAIL_WELCOME", false);
 define("ALL_LOWERCASE", false);
 
 // navigation menu
-$navmenu_main = array( array( Title => "Home",
-                              Link  => "index.php"
+$navmenu_main = array( array( 'Title' => "Home",
+                              'Link'  => "index.php"
                             ),
-                       array( Title => "Articles",
-                              Link  => "articles.php"
+                       array( 'Title' => "Articles",
+                              'Link'  => "articles.php"
                             ),
-                       array( Title => "Books",
-                              Link  => "books.php",
+                       array( 'Title' => "Books",
+                              'Link'  => "books.php",
                            ),
-                       array( Title => "Glossary",
-                              Link  => "glossary.php",
+                       array( 'Title' => "Glossary",
+                              'Link'  => "glossary.php",
                             ),
-                       array( Title => "Links",
-                              Link  => "links.php",
+                       array( 'Title' => "Links",
+                              'Link'  => "links.php",
                        )
                 );
 ?>

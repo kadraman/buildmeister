@@ -54,7 +54,7 @@ class Mailer {
     */
    function sendNewPass($user, $email, $pass){
       $from = "From: ".EMAIL_FROM_NAME." <".EMAIL_FROM_ADDR.">";
-      $subject = "Jpmaster77's Site - Your new password";
+      $subject = "The Buildmeister - Your new password";
       $body = $user.",\n\n"
              ."We've generated a new password for you at your "
              ."request, you can use this new password with your "

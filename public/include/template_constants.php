@@ -21,6 +21,7 @@ define("TBL_ACTIVE_USERS",  "active_users");
 define("TBL_ACTIVE_GUESTS", "active_guests");
 define("TBL_BANNED_USERS",  "banned_users");
 define("TBL_ARTICLES", "articles");
+define("TBL_ARTICLE_CATEGORIES", "article_categories");
 define("TBL_BOOKS", "books");
 define("TBL_GLOSSARY", "glossary");
 define("TBL_LINKS", "links");
@@ -31,6 +32,7 @@ define("TBL_GLOSSCOM", "glossary_comm");
 
 // special names and level constants
 define("SITE_BASEDIR", "@site_basedir@");
+define("SITE_BASEPREFIX", "@site_prefix@");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");
@@ -58,20 +60,20 @@ define("EMAIL_WELCOME", false);
 define("ALL_LOWERCASE", false);
 
 // navigation menu
-$navmenu_main = array( array( Title => "Home",
-                              Link  => "index.php"
+$navmenu_main = array( array( 'Title' => "Home",
+                              'Link'  => "index.php"
                             ),
-                       array( Title => "Articles",
-                              Link  => "articles.php"
+                       array( 'Title' => "Articles",
+                              'Link'  => "articles.php"
                             ),
-                       array( Title => "Books",
-                              Link  => "books.php",
+                       array( 'Title' => "Books",
+                              'Link'  => "books.php",
                            ),
-                       array( Title => "Glossary",
-                              Link  => "glossary.php",
+                       array( 'Title' => "Glossary",
+                              'Link'  => "glossary.php",
                             ),
-                       array( Title => "Links",
-                              Link  => "links.php",
+                       array( 'Title' => "Links",
+                              'Link'  => "links.php",
                        )
                 );
 ?>

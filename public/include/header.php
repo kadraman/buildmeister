@@ -1,5 +1,5 @@
 <?php
-include("include/session.php");
+include_once("include/session.php");
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -7,23 +7,15 @@ include("include/session.php");
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 	<title><?php echo SITE_NAME; ?></title>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.2/dojo/dojo.xd.js"></script>
+	<script type="text/javascript" src="javascript/jquery-1.2.6.js"></script>
+	<script type="text/javascript" src="javascript/datetimepicker.js"></script>	
 	<style type="text/css">
-		@import "http://ajax.googleapis.com/ajax/libs/dojo/1.2/dojo/resources/dojo.css";
-		@import "http://ajax.googleapis.com/ajax/libs/dojo/1.2/dijit/themes/soria/soria.css";
-		@import "http://ajax.googleapis.com/ajax/libs/dojo/1.2/dijit/themes/soria/soria_rtl.css";
-		@import	"http://ajax.googleapis.com/ajax/libs/dojo/1.2/dojox/image/resources/image.css";
 		@import "stylesheets/main.css";
 		@import "stylesheets/dialogs.css";
 		@import "stylesheets/article.css";
 	</style>
-	<script type="text/javascript" src="javascript/dojoRequires.js"></script>
 	<script type="text/javascript" src="javascript/actionProcessors.js"></script>
 	<script type="text/javascript" src="javascript/contentLoaders.js"></script>
-	<script type="text/javascript">
-		/*dojo.addOnLoad(function(){
-        });*/
-	</script>
     <script language="javascript" type="text/javascript">
         function clearField(obj) {
     	if (obj.defaultValue==obj.value) obj.value = '';
@@ -31,7 +23,7 @@ include("include/session.php");
 </script>
 </head>
 
-<body id="buildmeister" class="soria">
+<body id="buildmeister">
 	<div id="container">
 	
 	<!-- header begin -->
@@ -93,7 +85,7 @@ if ($session->logged_in) {
 					Account</a></li>
 <?php
 	if ($session->isAdmin()) {
-	    echo "<li><a href=\"admin\admin.php\">Admin Center</a></li>";
+	    echo "<li><a href='admin/admin.php'>Administration</a></li>";
 	}
 ?>
 				<li><a href="include/process.php">Logout</a></li>

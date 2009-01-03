@@ -23,4 +23,24 @@ function pf_check_number($value) {
 	}
 }
 
+function short_date($date) {
+	return "(" . date("m-d", strtotime($date)) . ")";
+}
+
+function clean_data($string) {
+	if (get_magic_quotes_gpc()) {
+		$string = stripslashes($string);
+	}
+	return mysql_real_escape_string($string);
+}
+
+function clean_html_data($string) {
+	if (get_magic_quotes_gpc()) {
+		$string = htmlspecialchars(stripslashes($string));
+	} else {
+		$string = htmlspecialchars($string);
+	}
+	return mysql_real_escape_string($string);
+}
+
 ?>

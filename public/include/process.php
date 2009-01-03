@@ -64,6 +64,10 @@ class Process
 	  else if (isset($_POST['subtipcom'])) {
 	            $this->procSubmitTipComment();
       }
+      // administrator updating an article
+	  else if (isset($_POST['updateart'])) {
+	            $this->procUpdateArticle();
+      }
       // user sent us a message
       else if (isset($_POST['subcontact'])) {
           $this->procContactUs();
@@ -298,23 +302,27 @@ class Process
       global $session, $form;
 
       // submission attempt
-      $retval = $session->submitArticleComment($_POST['artid'], $_POST['comment']);
+      $retval = $session->submitArticleComment($_POST['articleid'], $_POST['comment'], 
+      	$_POST['captcha_code']);
 
       // successful
       if ($retval == 0){
-         $_SESSION['artcomsuccess'] = true;
-         header("Location: ".$session->referrer);
+         //$_SESSION['artcomsuccess'] = true;
+         $_SESSION['value_array'] = $_POST;
+         header("Location: " . SITE_BASEDIR . "/viewarticle.php?id=" . $_POST['articleid']
+         	. "#submitcomment");
       }
       // error found with form
       else if ($retval == 1){
          $_SESSION['value_array'] = $_POST;
          $_SESSION['error_array'] = $form->getErrorArray();
-         header("Location: ".$session->referrer);
+         header("Location: " . SITE_BASEDIR . "/viewarticle.php?id=" . $_POST['articleid']
+         	. "#submitcomment");
       }
       // failed
       else if($retval == 2){
-         $_SESSION['artcomsuccess'] = false;
-         header("Location: ".$session->referrer);
+         $_SESSION['comment_failure'] = true;
+         header("Location: " . SITE_BASEDIR . "/viewarticle.php?id=" . $_POST['articleid']);
       }
    } // procSubmitArticleComment
 
@@ -372,6 +380,36 @@ class Process
       }
    } // procSubmitTipComment
 
+   /**
+    * Update an existing article in the database.
+    */
+   function procUpdateArticle() {
+      global $session, $form;
+
+      // submission attempt
+      $retval = $session->updateArticle(clean_data($_POST['articleid']), 
+      	clean_data($_POST['articletitle']), clean_data($_POST['articlesummary']), 
+      	$_POST['articlecategory'], clean_data($_POST['articledate']), 
+      	clean_html_data($_POST['articlecontent']));
+
+      // successful
+      if ($retval == 0){
+         $_SESSION['articlesuccess'] = true;
+         header("Location: " . SITE_BASEDIR . "/viewarticle.php?id=" . $_POST['articleid']);
+      }
+      // error found with form
+      else if ($retval == 1){
+         $_SESSION['value_array'] = $_POST;
+         $_SESSION['error_array'] = $form->getErrorArray();
+         header("Location: " . SITE_BASEDIR . "/editarticle.php?id=" . $_POST['articleid']);
+      }
+      // failed
+      else if($retval == 2){
+         $_SESSION['articlesuccess'] = false;
+         header("Location: " . SITE_BASEDIR . "/editarticle.php?id=" . $_POST['articleid']);
+      }
+   } // procUpdateArticle
+   
    /**
     * Send a contact email
     */
