@@ -44,7 +44,7 @@ include ("include/header.php");
 </table>
 </div>
 
-<div id="boxedtitle">Books and Whitepapers</div>
+<div id="boxedtitle">Buildmeister Books</div>
 <table style="width: 100%;">
 	<tbody>
 		<tr>
@@ -83,18 +83,6 @@ include ("include/header.php");
 		</tr>
 	</tbody>
 </table>
-
-<div id="boxedtitle">Reference Applications</div>
-<table style="width: 100%;">
-	<tbody>
-		<tr>
-			<td width="100%">
-
-			</td>
-		</tr>
-	</tbody>
-</table>
-
 
 <div id="boxedtitle">Selected Articles</div>
 <?php

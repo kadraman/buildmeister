@@ -32,35 +32,27 @@ if (isset($_SESSION['articlesuccess'])) {
 <div id="toptitle"><h2>Articles</h2></div>
 
 <div id="introductory">
-<p>This page lists all of the categorized articles that are contained on this site. 
+<p>This page lists all of the articles that are contained on this site. 
 If you have an idea for an article or have written some content yourself, then please 
 <a href="contact.php">contact us</a> for more information or <a href="#submit">submit</a> 
-your content using the form at the bottom of this page.</p>
+your outline content using the form at the bottom of this page.</p>
 </div>
 
 <?php
-// fetch category and display it
-function displayCategory($title, $cat_id) {
-    
-    echo "<div id='boxedtitle'>$title</div>\n";
-    $sql = "SELECT * from " . TBL_ARTICLES . " where cat_id = "
-        . $cat_id . " AND active = 1 ORDER BY date_posted DESC;";
-    $result = mysql_query($sql);
-    $numrows = mysql_num_rows($result);
+// fetch all articles
+$sql = "SELECT * from " . TBL_ARTICLES . " where active = 1 ORDER BY date_posted DESC;";
+$result = mysql_query($sql);
+$numrows = mysql_num_rows($result);
 
-    if ($numrows != 0) {
-        while ($row = mysql_fetch_assoc($result)) {
-            echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
-    		    . $row['title'] . "</a></strong><br/>"
+if ($numrows != 0) {
+    while ($row = mysql_fetch_assoc($result)) {
+        echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
+ 		    . $row['title'] . "</a></strong><br/>"
 		    . $row['summary'] . "</div>";
-        }
     }
-    echo "<div id='spacer'>&nbsp;</div>\n";
-} // displayCategory
+}
+echo "<div id='spacer'>&nbsp;</div>\n";
 
-displayCategory("Process", 1);
-displayCategory("Tools", 2);
-displayCategory("Miscellaneous", 3)
 ?>
 
 <a id="submit"></a>	    

@@ -8,6 +8,7 @@ if ($session->logged_in) {
         SITE_BASEDIR . "/index.php");
 } else {
 ?>
+<div align="center">
 <form method="post" action="include/process.php">
     <fieldset style="width: 250px">
         <legend>User Login</legend> 
@@ -45,6 +46,7 @@ if ($session->logged_in) {
 		</table>
 	</fieldset>
 </form>
+</div>
 
 <?php
 }

@@ -10,6 +10,7 @@ if(!$req_user || strlen($req_user) == 0 ||
 }
 ?>
 
+<div align="center">
 <form>
 	<fieldset style="width:250px">
 
@@ -67,8 +68,11 @@ if (strcmp($session->username,$req_user) == 0){
 	</table>
 	</fieldset>
 </form>
+</div>
 
-<?php	
+<?php
+	// TODO: display articles and/or comments by this user
+
 require("include/footer.php");
 ?>
 

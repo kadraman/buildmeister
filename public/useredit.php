@@ -12,6 +12,7 @@ if (isset($_SESSION['useredit'])) {
     if($session->logged_in) {
 ?>
 
+<div align="center">
 <form action="include/process.php" method="post">
 	<fieldset style="width:280px">
 	<legend>Edit Account: <?php echo $session->username; ?></legend>
@@ -88,6 +89,7 @@ if($form->value("email") == ""){
 	</table>
 </fieldset>
 </form>
+</div>
 
 <?php
 	}

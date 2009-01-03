@@ -27,6 +27,7 @@ if ($session->logged_in) {
     // fill out the registration form
 ?>
 
+<div align="center">
 <form name='userinfo' id='userinfo' action='include/process.php' method='post' onsubmit='return validate_userinfo();'>
 <fieldset style="width:580px"><legend>User Registration</legend>
 <table>
@@ -95,6 +96,7 @@ By clicking Register below you agree to be bound by these conditions.
 </table>
 </fieldset>
 </form>
+</div>
 
 <script type='text/javascript'>
 <!--//
