@@ -7,6 +7,7 @@
     <property name="dir.build"     value="build"/>
     <property name="dir.doc"       value="doc"/>
     <property name="dir.db"        value="db"/>
+    <property name="dir.sync"      value="sync"/>
     <property name="dir.classes"   value="${dir.public}/include"/>
     <property environment="env"/>
         
@@ -106,13 +107,14 @@
                     <token key="db_pass" value="${db.pass}" />
                     <token key="db_name" value="${db.name}" />
                     <token key="site_basedir" value="${site.basedir}" />
+                	<token key="site_baseprefix" value="${site.baseprefix}" />
                 </replacetokens>
             </filterchain>
         </copy>        
     </target>
 
     <!-- bootstrap the relevant database for dbdeploy-->  
-    <target name="bootstrapdb" depends="get-env" 
+    <target name="db.bootstrap" depends="get-env" 
         description="bootstrap database of a specific environment">     
         <input propertyname="db.pass">Enter database password for ${environment}:</input>
         <property file="${environment}.properties"/>
@@ -127,7 +129,7 @@
     </target> 
 
     <!-- update the relevant database -->  
-    <target name="updatedb" depends="get-env" 
+    <target name="db.update" depends="get-env" 
         description="update database of a specific environment">     
         <input propertyname="db.pass">Enter database password for ${environment}:</input>
         <property file="${environment}.properties"/>
@@ -146,10 +148,10 @@
         <exec command="${mysqlexe} -h${db.server} -u${db.user} -p${db.pass} ${db.name} &lt; ${dir.build}\all-deltas.sql" checkreturn="true" />  
     </target> 
     
-    <!-- update the application files in the specific environment --> 
-    <target name="update" depends="config"
+    <!-- sync the application files to the specific environment --> 
+    <target name="sync" depends="config"
         description="update the application files in a specific environment">
-        <exec command="${dir.bin}\FTPSync.exe ${environment} /INCREMENTAL /FTPSYNCDATA:upload" />
+	<exec command="${project.basedir}\${dir.bin}\FTPSync.exe ${environment} /FTPSYNCDATA:${project.basedir}\${dir.sync} /DIFFERENTIAL" />
     </target>
 
     <!-- help -->

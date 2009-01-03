@@ -6,7 +6,6 @@
  * make it easier to tweak the application.
  *
  * @author Kevin A. Lee <kevin.lee@buildmeister.com>
- * Based on code originally written by: Jpmaster77. 
  */
  
 // database constants for MySQL
@@ -33,11 +32,12 @@ define("TBL_GLOSSCOM", "glossary_comm");
 
 // special names and level constants
 define("SITE_BASEDIR", "http://127.0.0.1/buildmeister.com/public");
-define("SITE_BASEPREFIX", "/public/");
+define("SITE_BASEPREFIX", "/buildmeister.com/public/");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");
 define("ADMIN_LEVEL", 9);
+define("EDITOR_LEVEL", 5);
 define("USER_LEVEL",  1);
 define("GUEST_LEVEL", 0);
 
