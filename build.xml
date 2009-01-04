@@ -151,7 +151,7 @@
     <!-- sync the application files to the specific environment --> 
     <target name="sync" depends="config"
         description="update the application files in a specific environment">
-	<exec command="${project.basedir}\${dir.bin}\FTPSync.exe ${environment} /FTPSYNCDATA:${project.basedir}\${dir.sync} /DIFFERENTIAL" />
+	<exec command="${project.basedir}\${dir.bin}\FTPSync.exe ${environment} /FTPSYNCDATA:${project.basedir}\${dir.sync} /INCREMENTAL" />
     </target>
 
     <!-- help -->

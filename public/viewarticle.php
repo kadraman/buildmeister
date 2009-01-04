@@ -42,7 +42,7 @@ if (isset($_SESSION['comment_failure'])) {
     		while ($row = mysql_fetch_assoc($result)) {
     			# display article
         		echo "<h1>" . $row['title'] . "</h1>\n";
-        		echo "<p><small>Last updated on " . $row['newdate'];
+        		echo "<p><small>Posted on " . $row['newdate'];
         		
         		/*
         		// get user who created/edited the post
@@ -75,11 +75,11 @@ if (isset($_SESSION['comment_failure'])) {
 				$cat_numrows = mysql_num_rows($cat_result);
 				if ($cat_numrows != 0) {
     				while ($cat_row = mysql_fetch_assoc($cat_result)) {
-						echo "<a class=\"labels\" href=\"viewcategory('" . $cat_row['cat_id'] . "')\">" . 
+						echo "<a class=\"labels\" href=\"viewcategory.php?catid=" . $cat_row['cat_id'] . "\">" . 
 						$cat_row['name'] . "</a>&nbsp;\n";
 					}
 				} else {
-					echo "<a class=\"labels\" href=\"viewcategory('0')\">Uncategorized</a>\n";
+					echo "Uncategorized\n";
 				}
 				
 				echo "</p>";

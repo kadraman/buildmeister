@@ -44,14 +44,14 @@ include ("include/header.php");
 </table>
 </div>
 
-<div id="boxedtitle">Buildmeister Books</div>
+<div id="boxedtitle">The Buildmeister's Guide</div>
 <table style="width: 100%;">
 	<tbody>
 		<tr>
 			<td width="75%" style="vertical-align: top;">
 			<div align="center"><img alt="[Buildmeister Books]"
 				src="images/buildmeisterbookslogo_small.gif"></div>
-			<p>If you enjoy this site then you can help to keep it going by
+			<p>If you enjoy this site then you can help keep it going by
 			purchasing a copy of <a href="http://www.lulu.com/content/409652">The
 			Buildmeister's Guide - Achieving Agile Software Delivery</a> - the
 			book of this website, which contains a collection of the best
@@ -64,27 +64,12 @@ include ("include/header.php");
 			<div align="center"><a href="http://www.lulu.com/content/409652"> <img
 				style="border: 0px;" alt="[The Buildmeister's Guide]"
 				src="images/bmg.jpg" hspace="5" vspace="5"></a><br>
-			<div style="text-align: center;"><a
-				href="http://www.lulu.com/content/409652"> <img
-				src="http://www.lulu.com/services/buy_now_buttons/images/book_blue2.gif"
-				alt="Buy now" border="0"></a></div>
-			</div>
-			</td>
-			<td>
-			<div align="center"><a href="http://www.lulu.com/content/1022721"> <img
-				style="border: 0px;" alt="[Apache Ant - The Buildmeister's Guide]"
-				src="images/bmg-ant.jpg" hspace="5" vspace="5"></a><br>
-			<div style="text-align: center;"><a
-				href="http://www.lulu.com/content/1022721"> <img
-				src="http://www.lulu.com/services/buy_now_buttons/images/book_blue2.gif"
-				alt="Buy now" border="0"></a></div>
-			</div>
 			</td>
 		</tr>
 	</tbody>
 </table>
 
-<div id="boxedtitle">Selected Articles</div>
+<div id="boxedtitle">Latest Articles</div>
 <?php
 # fetch latest articles
 $sql = "SELECT * from " . TBL_ARTICLES .

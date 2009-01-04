@@ -11,11 +11,8 @@ include_once("include/session.php");
 	<script type="text/javascript" src="javascript/datetimepicker.js"></script>	
 	<style type="text/css">
 		@import "stylesheets/main.css";
-		@import "stylesheets/dialogs.css";
 		@import "stylesheets/article.css";
 	</style>
-	<script type="text/javascript" src="javascript/actionProcessors.js"></script>
-	<script type="text/javascript" src="javascript/contentLoaders.js"></script>
     <script language="javascript" type="text/javascript">
         function clearField(obj) {
     	if (obj.defaultValue==obj.value) obj.value = '';
@@ -56,7 +53,7 @@ include_once("include/session.php");
 	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     </script>
     </div>
-	<!-- advert end -->
+	<!-- advert end -->	
 	</div>
 	<!-- header end --> 
 	
@@ -148,7 +145,20 @@ if ($session->logged_in) {
 			</form>
 		</div>
 		<!-- related reading end -->
-
+		
+		<div id="spacer">&nbsp;</div>
+		
+		<!-- donation begin -->
+		<div align="center">			
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+				<input type="hidden" name="cmd" value="_s-xclick">
+				<input type="hidden" name="hosted_button_id" value="2260979">
+				<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="">
+				<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+			</form>
+		</div>
+		<!-- donation end -->
+		
 		<div id="spacer">&nbsp;</div>
 		
 	</div>

@@ -24,20 +24,21 @@
 
 global $Config ;
 
-include_once("..\..\..\..\..\session.php");
+//include_once("/buildmeister/include/session.php");
 
 // SECURITY: You must explicitly enable this "connector". (Set it to "true").
 // WARNING: don't just set "$Config['Enabled'] = true ;", you must be sure that only
 //		authenticated users can access this file or use some kind of session checking.
-if ($session->isAdmin()) {
+//if ($session->isAdmin()) {
 	$Config['Enabled'] = true ;
-} else {	
-	$Config['Enabled'] = false ;
-}
+//} else {	
+//	$Config['Enabled'] = false ;
+//}
 
 
 // Path to user files relative to the document root.
-$Config['UserFilesPath'] = SITE_BASEPREFIX . 'userfiles/' ;
+//$Config['UserFilesPath'] = SITE_BASEPREFIX . 'userfiles/' ;
+$Config['UserFilesPath'] = '/userfiles/' ;
 
 // Fill the following value it you prefer to specify the absolute path for the
 // user files directory. Useful if you are using a virtual directory, symbolic
