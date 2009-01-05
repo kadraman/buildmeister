@@ -15,15 +15,17 @@
     <property file="default.properties"/>
 
     <!-- define a patternset for PHP Web sources -->
-    <patternset id="php.sources">
-        <include name="admin/**"/>        
-        <include name="articles/**"/>     
-        <include name="images/**"/>     
-        <include name="include/**"/>     
-        <include name="javascript/**"/>     
-        <include name="stylesheets/**"/>     
+    <fileset dir="${dir.public}" id="php.sources">
+        <include name="**"/>     
+	<exclude name="images/**"/>
         <exclude name="**/.svn/**"/>    
-    </patternset>
+    </fileset>
+
+    <!-- define a patternset for PHP Web sources -->
+    <fileset dir="${dir.public}/images" id="php.images">
+	<include name="**"/>
+        <exclude name="**/.svn/**"/>    
+    </fileset>
        
     <!-- create output directories -->
     <target name="init" description="create directory structure">
@@ -83,13 +85,13 @@
     <target name="get-env" depends="init"
         description="get the environment for an action">
         <input propertyname="environment">Enter environment name [dev|test|prod]</input>
+	<property file="${environment}.properties"/>
     </target> 
 
     <!-- configure application for specific environment -->
     <target name="config" depends="get-env"
         description="configure application for a specific environment">
         <input propertyname="db.pass">Enter database password for ${environment}:</input>
-        <property file="${environment}.properties"/>
 	<copy overwrite="true" file="${dir.public}/stylesheets/template_main.css" 
 		tofile="${dir.public}/stylesheets/main.css">
             <filterchain>
@@ -147,7 +149,22 @@
         <!-- execute the SQL -->  
         <exec command="${mysqlexe} -h${db.server} -u${db.user} -p${db.pass} ${db.name} &lt; ${dir.build}\all-deltas.sql" checkreturn="true" />  
     </target> 
-    
+
+    <!-- deploy the applications files to the specific environment -->
+    <target name="deploy" depends="get-env"
+        description="update the application files in a specific environment">
+	<ftpdeploy host="${ftp.server}" port="${ftp.port}" 
+	    username="${ftp.user}" password="${ftp.pass}" 
+	    dir="." mode="ascii" clearfirst="true">
+	    <fileset refid="php.sources"/>
+	</ftpdeploy>
+	<ftpdeploy host="${ftp.server}" port="${ftp.port}" 
+	    username="${ftp.user}" password="${ftp.pass}" 
+	    dir="images" mode="binary" clearfirst="true">
+	    <fileset refid="php.images"/>
+	</ftpdeploy>
+    </target>
+     
     <!-- sync the application files to the specific environment --> 
     <target name="sync" depends="config"
         description="update the application files in a specific environment">
