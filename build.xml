@@ -84,7 +84,7 @@
     <!-- get environment -->
     <target name="get-env" depends="init"
         description="get the environment for an action">
-        <input propertyname="environment">Enter environment name [dev|test|prod]</input>
+        <input propertyname="environment" validargs="dev,test,prod">Enter environment name </input>
 	<property file="${environment}.properties"/>
     </target> 
 

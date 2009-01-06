@@ -73,7 +73,7 @@ include ("include/header.php");
 <?php
 # fetch latest articles
 $sql = "SELECT * from " . TBL_ARTICLES .
-    " where active = 1 ORDER BY date_posted DESC LIMIT 5;";
+    " where state = 1 ORDER BY date_posted DESC LIMIT 5;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 

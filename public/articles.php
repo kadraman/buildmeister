@@ -23,7 +23,7 @@ include("include/header.php");
 
 <?php
 // fetch all articles
-$sql = "SELECT * from " . TBL_ARTICLES . " where active = 1 ORDER BY date_posted DESC;";
+$sql = "SELECT * from " . TBL_ARTICLES . " where state = 1 ORDER BY date_posted DESC;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 

@@ -246,8 +246,8 @@ class MySQLDB {
     function addNewArticle($title, $summary, $category, $date, $text) {
       $retval = true;
       # add article into database
-      $q = "INSERT INTO " . TBL_ARTICLES . " (date_posted, summary, title, content, active)"
-      . " VALUES ('$date', '$summary', '$title', '$text', '1')";
+      $q = "INSERT INTO " . TBL_ARTICLES . " (date_posted, summary, title, content, state)"
+      . " VALUES ('$date', '$summary', '$title', '$text', '0')";
       if (!mysql_query($q, $this->connection)) {
           $retval = false;
       } else {

@@ -40,7 +40,7 @@ $sql = "SELECT a.id, DATE_FORMAT(a.date_posted, \"%M %D, %Y, %l:%i%p\") " .
 		"as newdate , a.posted_by, a.title, a.summary FROM " .
 		TBL_ARTICLES . " a, " . TBL_CATEGORIES . " c, " .
 		TBL_ARTICLE_CATEGORIES . " ac WHERE ac.cat_id = " . $catid . 
-		" AND c.id = ac.cat_id AND a.id = ac.article_id AND a.active = 1;";
+		" AND c.id = ac.cat_id AND a.id = ac.article_id AND a.state = 1;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 

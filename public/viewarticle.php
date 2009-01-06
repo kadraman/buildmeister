@@ -98,7 +98,7 @@ if (isset($_SESSION['comment_failure'])) {
 
         # fetch comments
         $sql = "SELECT id, posted_by, comment, DATE_FORMAT(date_posted, \"%M %D, %Y\") " .
-        	"as newdate from " . TBL_ARTCOM . " where active = 1 AND art_id = ". $currentid . ";";
+        	"as newdate from " . TBL_ARTCOM . " where state = 1 AND art_id = ". $currentid . ";";
         $result = mysql_query($sql);
         $numrows = mysql_num_rows($result);
 
