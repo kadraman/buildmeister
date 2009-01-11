@@ -147,7 +147,7 @@
             undooutputfile="${dir.build}/undo-all-deltas.sql" />  
   
         <!-- execute the SQL -->  
-        <exec command="${mysqlexe} -h${db.server} -u${db.user} -p${db.pass} ${db.name} &lt; ${dir.build}\all-deltas.sql" checkreturn="true" />  
+        <!--exec command="${mysqlexe} -h${db.server} -u${db.user} -p${db.pass} ${db.name} &lt; ${dir.build}\all-deltas.sql" checkreturn="true" /-->  
     </target> 
 
     <!-- deploy the applications files to the specific environment -->

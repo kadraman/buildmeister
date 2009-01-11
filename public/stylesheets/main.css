@@ -35,7 +35,7 @@ img { border:0px; }
 #container {
 	background-color:#FFF;
 	background:#FFF
-		url("/buildmeister.com/public/images/template-background.gif")
+		url("/images/template-background.gif")
 		repeat-y 50% 0px;
 	margin:0px auto;
 	padding:0px 10px;
@@ -45,7 +45,7 @@ img { border:0px; }
 /* header bar - including logo */
 #header {
 	background:#FFF
-		url("/buildmeister.com/public/images/template-gradient.gif")
+		url("/images/template-gradient.gif")
 		repeat-x 50% 0%;
 	margin:0px;
 	height: 88px;
@@ -84,7 +84,7 @@ img { border:0px; }
  * footer - for extra links */
 #footer {
 	background:
-		url("/buildmeister.com/public/images/template-links-gradient.gif")
+		url("/images/template-links-gradient.gif")
 		repeat-x;
 	clear:both;
 	margin:0px;
@@ -117,7 +117,7 @@ img { border:0px; }
 /* shadow - for bottom shadow */
 #shadow {
 	background:
-		url("/buildmeister.com/public/images/template-bottom.gif")
+		url("/images/template-bottom.gif")
 		no-repeat 50% 0%;
 	margin:0px;
 	padding:16px 0px 0px 0px;
@@ -135,7 +135,7 @@ img { border:0px; }
 	width:180px;
 }
 #navigation ul {
-	background:#C8D7E3 url("/buildmeister.com/public/images/template-leftnav.gif")
+	background:#C8D7E3 url("/images/template-leftnav.gif")
 		no-repeat 100% 100%;
 	line-height:1.25em;
 	list-style-type:none;
@@ -143,7 +143,7 @@ img { border:0px; }
 	padding:0px 0px 21px;
 }
 #navigation li a.subsection {
-	background:#FFF url("/buildmeister.com/public/images/template-right-arrow.gif")
+	background:#FFF url("/images/template-right-arrow.gif")
 		no-repeat 6px 0.33em;
 	border-top:none;
 	border-bottom:1px solid #FFF;
@@ -154,7 +154,7 @@ img { border:0px; }
 	padding:3px 4px 3px 20px;
 }
 #navigation li a.subsection:hover {
-	background:#98B1C4 url("/buildmeister.com/public/images/template-right-arrow.gif")
+	background:#98B1C4 url("/images/template-right-arrow.gif")
 		no-repeat 6px 0.33em;
 	border-top:none;
 	border-bottom:1px solid #FFF;
@@ -166,7 +166,7 @@ img { border:0px; }
 }
 #navigation li a {
 	background:#7A96AB
-		url("/buildmeister.com/public/images/template-box.gif")
+		url("/images/template-box.gif")
 		repeat-x 0px 50%;
 	border-top:1px solid #E6EDF2;
 	display:block;
@@ -181,7 +181,7 @@ img { border:0px; }
 	padding-top:5px;
 	padding-bottom:3px;
 	background:#FFF
-		url("/buildmeister.com/public/images/template-leftnav-selected.gif")
+		url("/images/template-leftnav-selected.gif")
 		repeat-x 0% 0%;
 	border-top:1px solid #E6EDF2;
 }
@@ -199,7 +199,7 @@ img { border:0px; }
  *
  */
 #search {
-	background:#C8D7E3 url("/buildmeister.com/public/images/template-leftnav2.gif")
+	background:#C8D7E3 url("/images/template-leftnav2.gif")
 		no-repeat 100% 100%;
 	position:relative;
 	float:left;
@@ -235,7 +235,7 @@ input.sa {
  * login/logout and user functionality
  */
 #login {
-	background:#C8D7E3 url("/buildmeister.com/public/images/template-leftnav2.gif")
+	background:#C8D7E3 url("/images/template-leftnav2.gif")
 		no-repeat 100% 100%;
 	position:relative;
 	float:left;
@@ -260,7 +260,7 @@ input.sa {
 	margin-bottom: 5px;
 }	
 #login ul {
-	background:#FFFFFF url("/buildmeister.com/public/images/template-leftlist.gif")
+	background:#FFFFFF url("/images/template-leftlist.gif")
 		no-repeat 100% 100%;
 	line-height:1.25em;
 	list-style-type:none;
@@ -286,7 +286,7 @@ input.sa {
  *
  */
 #reading {
-	background:#C8D7E3 url("/buildmeister.com/public/images/template-leftnav2.gif")
+	background:#C8D7E3 url("/images/template-leftnav2.gif")
 		no-repeat 100% 100%;
 	position:relative;
 	float:left;
@@ -333,15 +333,31 @@ label.formLabelText {
     color: #000;
     padding: 2px;
     margin-right: 5px;
-    margin-bottom: 0px
-    position: top;
+    margin-bottom: 0px;
     vertical-align: top;
     text-align: left;
 }
 textarea.formTextArea {
     font-size: 8pt;
     color: #000;
+    background-color: #F8F7EF;
+    padding: 2px;
+    border: solid 1px #C8D7E3;
+    margin-right: 5px;
+    margin-bottom: 5px;    
     align: left;
+}
+textarea.formTextArea:hover {
+    color: #000;
+    background-color: #FFFFBB;
+    border: solid 1px #C8D7E3;
+    cursor: pointer;
+}
+textarea.formTextArea:focus {
+    color: #000;
+    background-color: #BFF;
+    border: solid 1px #0066FF; 
+    cursor: text;
 }
 input.formInputText  {
     font-size: 8pt;
@@ -352,8 +368,8 @@ input.formInputText  {
     margin-right: 5px;
     margin-bottom: 5px;
     height: 15px;
-    width:150px;
-    align:left;
+    width: 150px;
+    align: left;
 }
 input.formInputText:hover {
     color: #000;
@@ -367,7 +383,29 @@ input.formInputText:focus {
     border: solid 1px #0066FF; 
     cursor: text;
 }
-
+select.formSelect  {
+    font-size: 8pt;
+    color: #000;
+    background-color: #F8F7EF;
+    padding: 2px;
+    border: solid 1px #C8D7E3;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    width: 200px;
+    align: left;
+}
+select.formSelect:hover {
+    color: #000;
+    background-color: #FFFFBB;
+    border: solid 1px #C8D7E3;
+    cursor: pointer;
+}
+select.formSelect:focus {
+    color: #000;
+    background-color: #BFF;
+    border: solid 1px #0066FF; 
+    cursor: text;
+}
 #introductory {text-align: justify; font: 1.2em;
   padding: 0.5em; margin: 0 0 2em 0; background: #F8F7EF;
   border-bottom: 1px dashed #B2B2B2; border-top: 1px dashed #B2B2B2;}

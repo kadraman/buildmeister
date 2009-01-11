@@ -22,6 +22,7 @@ define("TBL_BANNED_USERS",  "banned_users");
 define("TBL_CATEGORIES", "categories");
 define("TBL_ARTICLES", "articles");
 define("TBL_ARTICLE_CATEGORIES", "article_categories");
+define("TBL_STATES", "states");
 define("TBL_BOOKS", "books");
 define("TBL_GLOSSARY", "glossary");
 define("TBL_LINKS", "links");

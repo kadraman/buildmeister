@@ -28,8 +28,10 @@ if (isset($_SESSION['comment_failure'])) {
 	    $currentid = clean_data($_GET['id']);
 	    
 	    // update view count
-	    $database->updateArticleViews($currentid);
-    
+	    if (!$session->isAdmin()) {
+	    	$database->updateArticleViews($currentid);
+	    }
+	    
         # fetch article content
         echo "<div id='article'>\n";       
         

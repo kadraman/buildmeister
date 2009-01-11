@@ -79,7 +79,7 @@ if ($numrows != 0) {
 echo "<h3>Comments</h3>";
 
 # fetch glossary item
-$sql = "SELECT * from " . TBL_GLOSSCOM . " where active = 1 AND gloss_id = ". $glossid . ";";
+$sql = "SELECT * from " . TBL_GLOSSCOM . " where state = 1 AND gloss_id = ". $glossid . ";";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
