@@ -1,6 +1,6 @@
 <?php
 
-# articles page is selected
+// articles page is selected
 session_register("SESS_NAVITEM");
 $_SESSION['SESS_NAVITEM'] = 1;
 
@@ -17,12 +17,18 @@ if (isset($_SESSION['comment_failure'])) {
     }
    	unset($_SESSION['comment_failure']);
 } else {
-    // just displaying an article
-    if (!isset($_GET['id'])) {
-	    $session->displayDialog("No Article",
+	// do we have an article id?
+	if (!isset($_GET['id'])) {
+	    $session->displayDialog("No Article Specified",
 	    	"No article has been specified, please select an article on the "
 	        . "<a href='articles.php'>articles</a> page to see its content.",
-	        $session->referrer);
+	        SITE_BASEDIR . "/articles.php");
+    // does the article exist?	        
+	} else if (!$database->articleExists($_GET['id'])) {
+		$session->displayDialog("Article Does Not Exist",
+	    	"The specified article does not exist, please select an article on the "
+	    	. "<a href='articles.php'>articles</a> page to see its content.",
+	        SITE_BASEDIR . "/articles.php");		        
     } else {
         // retrieve the id of the article to display
 	    $currentid = clean_data($_GET['id']);
@@ -44,31 +50,21 @@ if (isset($_SESSION['comment_failure'])) {
     		while ($row = mysql_fetch_assoc($result)) {
     			# display article
         		echo "<h1>" . $row['title'] . "</h1>\n";
-        		echo "<p><small>Posted on " . $row['newdate'];
-        		
-        		/*
-        		// get user who created/edited the post
-        		$user_sql = "select id, username from " . TBL_USERS . " where id = " 
-        			. $row['posted_by'];
-        		$user_result = mysql_query($user_sql);
-        		if (!$user_result) {
-    				echo " by unknown";
-        		} else {
-					$user_row = mysql_fetch_row($user_result); 	
-        			echo " by <a href='#'>" . $user_row['username'] . "</a>";
-        		}
-        		*/
+        		echo "<p><small>Posted by <a href='userinfo.php?user=" . $row['posted_by'] 
+ 		    		. "'>" . $row['posted_by'] . "</a> on " . $row['newdate'];
         		
         		if ($session->isAdmin()) {
-        			echo "| <a href='editarticle.php?id=" . $row['id'] . "'>Edit</a>";
-					echo "| <a href=\"\" onclick=\"javascript:deletePost(" . $row['id'] . ");return false;\">Delete</a>";
+        			echo " | <a href='editarticle.php?id=" . $row['id'] . "'>Edit</a>";
+					echo " | <a href='deletearticle.php?id=" . $row['id'] . "'"
+						. "onclick=\"return confirm('Are you sure you want to delete this article?')\""
+						. ">Delete</a>";
         		}
 
         		echo "</small></p>\n";
         		echo "<p>";
 				echo "Filed under:&nbsp;\n";
 
-				// TODO: get number of comments
+				# TODO: display number of comments and link to them
 				
 				# get categories for entry
 				$cat_sql = "select a.cat_id, c.name from " . TBL_ARTICLE_CATEGORIES . " a, " .
@@ -112,11 +108,13 @@ if (isset($_SESSION['comment_failure'])) {
             	} else {
             		echo "<div style='background-color:#CDCDBB;padding:5px;margin:10px'>";
             	}
-                echo "<p><small>Posted by <b>" . $row['posted_by'] . "</b> on " .
-                	$row['newdate'];
+                echo "<p><small>Posted by <a href='userinfo.php?user=" . $row['posted_by'] 
+ 		    		. "'>" . $row['posted_by'] . "</a> on " . $row['newdate'];
             	if ($session->isAdmin()) {
-        			echo "| <a href='editcomment.php?id=" . $row['id'] . "'>Edit</a>";
-					echo "| <a href=\"\" onclick=\"javascript:deleteComment(" . $row['id'] . ");return false;\">Delete</a>";
+        			echo " | <a href='editcomment.php?id=" . $row['id'] . "'>Edit</a>";
+        			echo " | <a href='deletecomment.php?id=" . $row['id'] . "'"
+						. "onclick=\"return confirm('Are you sure you want to delete this comment?')\""
+						. ">Delete</a>";					
         		}	
                 echo "</small></p>";
                 echo "<p>" . htmlspecialchars_decode($row['comment']) . "</p>";

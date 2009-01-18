@@ -1,13 +1,11 @@
 <?php
-include_once("include/session.php");
+    include_once("include/session.php");
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 	<title><?php echo SITE_NAME; ?></title>
-	<script type="text/javascript" src="javascript/jquery-1.2.6.js"></script>
 	<script type="text/javascript" src="javascript/datetimepicker.js"></script>	
 	<style type="text/css">
 		@import "stylesheets/main.css";
@@ -23,37 +21,35 @@ include_once("include/session.php");
 <body id="buildmeister">
 	<div id="container">
 	
-	<!-- header begin -->
-	<div id="header">
-	<div id="logo">
-		<a href="http://www.buildmeister.com"> 
-			<img src="images/logo.gif" alt="The Buildmeister" /> 
-		</a>
-	</div>
-	<!-- advert begin -->
-	<div id="advert">
-	<script type="text/javascript"><!--
-         google_ad_client = "pub-3805144493754901";
-		 google_alternate_color = "F4F4F4";
-		 google_ad_width = 468;
-		 google_ad_height = 60;
-		 google_ad_format = "468x60_as";
-		 google_ad_type = "text_image";
-		 //2007-07-19: buildmeister.com
-		 google_ad_channel = "7986490318";
-		 google_color_border = "F4F4F4";
-		 google_color_bg = "F4F4F4";
-		 google_color_link = "0000FF";
-		 google_color_text = "000000";
-		 google_color_url = "008000";
-		 google_ui_features = "rc:6";
-		 //-->
-	</script> 
-	<script type="text/javascript"
-	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-    </script>
-    </div>
-	<!-- advert end -->	
+	    <!-- header begin -->
+	    <div id="header">
+	        <div id="logo">
+		        <a href="http://www.buildmeister.com"> 
+			        <img src="images/logo.gif" alt="The Buildmeister" /> 
+		        </a>
+	        </div>
+	    <!-- advert begin -->
+	    <div id="advert">
+	        <script type="text/javascript"><!--
+                google_ad_client = "pub-3805144493754901";
+		        google_alternate_color = "F4F4F4";
+		        google_ad_width = 468;
+		        google_ad_height = 60;
+		        google_ad_format = "468x60_as";
+		        google_ad_type = "text_image";
+         		//2007-07-19: buildmeister.com
+		        google_ad_channel = "7986490318";
+		        google_color_border = "F4F4F4";
+		        google_color_bg = "F4F4F4";
+		        google_color_link = "0000FF";
+		        google_color_text = "000000";
+		        google_color_url = "008000";
+		        google_ui_features = "rc:6";
+		        //-->
+	        </script> 
+	        <script type="text/javascript"	src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+        </div>
+	    <!-- advert end -->	
 	</div>
 	<!-- header end --> 
 	
@@ -61,77 +57,73 @@ include_once("include/session.php");
 	<div id="sidebar">
 		<!-- navigation menu begin -->
 		<div id="navigation">
-		<ul id="links">
+	 	    <ul id="links">
 <?php
 include("navigation.php");
 ?>
-		</ul>
+		    </ul>
 		</div>
-		<!-- navigation bar end --> 
+		<!-- navigation bar end -->
+		 		
+		<!-- search begin -->
+		<div id="search">
+			<p>Search</p>
+			<form id="search-form" method="get" action="search.php">
+				<input class="formInputText" style="width:150px" type="text" 
+					name="searchKeywords" maxlength="80" value="Enter keyword(s)" 
+					onfocus="clearField(this)"/>
+				<input id="search-button" type="submit" value="Search"/>			
+			</form>
+			</form>
+		</div>
+		<!-- search end -->
+
+		<div id="spacer">&nbsp;</div>
+		
 		<!-- user menu begin -->
 		<div id="login">
 			<p>User Menu</p>
 			<form id="login-form">
 <?php
 if ($session->logged_in) {
-    ?>
-			<ul>
-				<li><a href="userinfo.php?user=<?php echo $session->username; ?>">View
-					My Account</a></li>
-				<li><a href="useredit.php?user=<?php echo $session->username; ?>">Edit
-					Account</a></li>
-<?php
-	if ($session->isAdmin()) {
-	    echo "<li><a href='admin/admin.php'>Administration</a></li>";
-	}
 ?>
+			<ul>
+				<li><a href="userinfo.php?user=<?php echo $session->username; ?>">View My Account</a></li>
+				<li><a href="useredit.php?user=<?php echo $session->username; ?>">Edit Account</a></li>
 				<li><a href="include/process.php">Logout</a></li>
 			</ul>
-	<?php
+<?php
 } else {
-    ?>
+?>
 			<ul>
 				<li><a href="login.php">Login</a></li>
 				<li><a href="forgotpass.php">Forgotten password?</a></li>
 				<li><a href="register.php">Register now?</a></li>
 			</ul>
-    <?php
+<?php
 }
 ?>
 			</form>
 		</div>
-		<!-- login end -->
+		<!-- user menu end -->
 
+<?php 
+if ($session->isAdmin()) {
+?>
 		<div id="spacer">&nbsp;</div>
-
-		<!-- search begin -->
-		<div id="search">
-			<p>Search</p>
-			<form id="search-form" method="get" action="search.php">
-			<input class="formInputText" type="text" name="q" maxlength="255"
-				value="" id="sbi">
-			<br />
-			<input type="radio" name="sitesearch" checked id="ss0"></input>
-			<label for="ss0" title="Search the Web">The Web</label>
-			<input type="radio" name="sitesearch" checked
-				value="www.buildmeister.com" id="ss1"></input>
-			<label for="ss1" title="Search www.buildmeister.com">This Site</label>
-			<label for="sbi" style="display: none">Enter your search terms</label>
-			<label for="sbb" style="display: none">Submit search form</label>
-			<input type="hidden" name="domains" value="www.buildmeister.com"></input>
-			<div align=left><input type="submit" name="sa" value="Search" id="sa"></input></div>
-			<input type="hidden" name="client" value="pub-3805144493754901"></input>
-			<input type="hidden" name="forid" value="1"></input>
-			<input type="hidden" name="channel" value="1628619554"></input>
-			<input type="hidden" name="ie" value="ISO-8859-1"></input>
-			<input type="hidden" name="oe" value="ISO-8859-1"></input>
-			<input type="hidden" name="safe" value="active"></input>
-			<input type="hidden" name="cof"
-				value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFF;LBGC:336699;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;FORID:11"></input>
-			<input type="hidden" name="hl" value="en"></input>
+		<!-- administration menu begin -->
+		<div id="menu">
+			<p>Administration Menu</p>
+			<form id="menu-form">
+			<ul>
+				<li><a href="">admin 1</a></li>
+			</ul>
 			</form>
-		</div>
-		<!-- search end -->
+		</div>				
+		<!-- administration menu end -->		
+<?php 
+}
+?>
 
 		<div id="spacer">&nbsp;</div>
 
@@ -148,16 +140,11 @@ if ($session->logged_in) {
 		
 		<div id="spacer">&nbsp;</div>
 		
-		<!-- donation begin -->
+		<!-- logos begin -->
 		<div align="center">			
-			<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-				<input type="hidden" name="cmd" value="_s-xclick">
-				<input type="hidden" name="hosted_button_id" value="2260979">
-				<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="">
-				<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
-			</form>
+			
 		</div>
-		<!-- donation end -->
+		<!-- logos end -->
 		
 		<div id="spacer">&nbsp;</div>
 		

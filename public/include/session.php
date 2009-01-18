@@ -659,7 +659,8 @@ class Session
 	 * @return 0 if succesfull, 1 if form errors or 2 if submission failed
 	 */
 	function updateArticle($articleid, $articletitle, $articlesummary, 
-		$articlecategory, $articledate, $articlecontent) {
+		$articlecategory, $articledate, $articlestate, $articleauthor,
+		$articlecontent) {
 		global $database, $form, $mailer;  // the database, form and mailer object
 
 		// article title error checking
@@ -685,6 +686,18 @@ class Session
 		if (!$articledate || strlen($articledate  = trim($articledate)) == 0) {
 			$form->setError($field, "An article date is required.");
 		}
+		
+		// article state error checking
+		$field = "state";
+		if (!$articlestate || strlen($articlestate  = trim($articlestate)) == 0) {
+			$form->setError($field, "An article state is required.");
+		}
+		
+		// article author error checking
+		$field = "author";
+		if (!$articleauthor || strlen($articleauthor  = trim($articleauthor)) == 0) {
+			$form->setError($field, "An article author is required.");
+		}
 
 		// article content error checking
 		$field = "content";
@@ -699,7 +712,8 @@ class Session
 			return 1;
 		} else {
 			if ($database->updateArticle($articleid, $articletitle, $articlesummary, 
-				$articlecategory, $articledate, $articlecontent)) {
+				$articlecategory, $articledate, $articlestate, $articleauthor,
+				$articlecontent)) {
 				return 0;      // article updated succesfully
 			} else {
 				return 2;      // submission attempt failed
@@ -846,7 +860,7 @@ class Session
 		// success!
 		return true;
 	}
-
+	
 	/**
 	 * isAdmin - Returns true if currently logged in user is
 	 * an administrator, false otherwise.

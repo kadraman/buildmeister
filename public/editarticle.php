@@ -7,22 +7,25 @@ $_SESSION['SESS_NAVITEM'] = 1;
 include_once("include/header.php");
 include_once("include/fckeditor/fckeditor.php") ;
 
-// has an article been specified?
 if (!isset($_GET['id'])) {
-	// NO, return to articles page
+	// do we have an article id?
 	$session->displayDialog("No Article Specified",
 	 	"No article has been specified, please select an article on the "
 	   	. "<a href='articles.php'>articles</a> page to edit its content.",
-	   	SITE_BASEDIR . "/articles.php");
-} else {	   	
-	// YES, do we have permission to edit articles?
+	   	SITE_BASEDIR . "/articles.php");        
+} else if (!$database->articleExists($_GET['id'])) {
+	// does the article exist?
+	$session->displayDialog("Article Does Not Exist",
+	   	"The specified article does not exist, please select an article on the "
+	   	. "<a href='articles.php'>articles</a> page to see its content.",
+	    SITE_BASEDIR . "/articles.php");		   	
+} else {
+	// do we have permission to edit articles?	   	
 	if (!$session->isAdmin()) {
-		// NO
 		$session->displayDialog("Insufficient Permission",
     		"Sorry you do not have permission to edit articles.",
     		SITE_BASEDIR . "/articles.php");
 	} else {
-
 		// have we just updated article
 		if (isset($_SESSION['articlesuccess'])) {
     		if (!$_SESSION['articlesuccess']) {
@@ -37,7 +40,7 @@ if (!isset($_GET['id'])) {
 	
 		// fetch article data
 		$sql = "SELECT id, title, summary, state, DATE_FORMAT(date_posted, \"%d-%m-%Y\")" .
-    		" as newdate, content from " . TBL_ARTICLES . " where id = " . $currentid;
+    		" as newdate, posted_by, content from " . TBL_ARTICLES . " where id = " . $currentid;
 		$result = mysql_query($sql);
 		$numrows = mysql_num_rows($result);
 
@@ -48,6 +51,7 @@ if (!isset($_GET['id'])) {
         		$article_summary = $row['summary'];
         		$article_date  = $row['newdate'];
         		$article_state  = $row['state'];
+        		$article_author = $row['posted_by'];
         		$article_text  = htmlspecialchars_decode($row['content']);
         
 				# get categories for entry
@@ -108,6 +112,29 @@ if (!isset($_GET['id'])) {
         		} else {
      	       		# no states
         		}
+        		
+    			# get all the users with admin permission and select the appropriate one
+				$users_authors_sql = "SELECT username, userlevel from " . TBL_USERS 
+					. " WHERE userlevel >= " . EDITOR_LEVEL . ";";
+        		$result = mysql_query($users_authors_sql);
+        		$numrows = mysql_num_rows($result);
+        		$article_authors_html = "";
+        
+	        	if ($numrows != 0) {
+    	        	while ($row = mysql_fetch_assoc($result)) {
+        	        	if ($row['username'] == $article_author) {
+            	        	$article_authors_html = $article_authors_html . 
+		        	        	"<option value='" . $row['username'] . "' selected>" .
+		            	    	$row['username'] . "</option> ";
+                		} else {
+		            		$article_authors_html = $article_authors_html . 
+		                		"<option value='" . $row['username'] . "'>" .
+		         	       		$row['username'] . "</option> ";
+		        		}
+		    		}
+        		} else {
+     	       		# no authors
+        		}
 			}
 		}
 ?>
@@ -156,11 +183,20 @@ if (!isset($_GET['id'])) {
 		<tr>
 		<td><label class="formLabelText" for="articlestatus">State:</label></td>	
 		<td>
-			<select class="formSelect" style="width:100px" name="articlestatus">
+			<select class="formSelect" style="width:100px" name="articlestate">
 				<?php echo $article_states_html?>
 			</select>
 		</td>
 	</tr> 
+	</tr>
+		<tr>
+		<td><label class="formLabelText" for="articleauthor">Author:</label></td>	
+		<td>
+			<select class="formSelect" style="width:100px" name="articleauthor">
+				<?php echo $article_authors_html?>
+			</select>
+		</td>
+	</tr> 	
 	<tr>
 		<td width="100%" colspan="2">
 <?php

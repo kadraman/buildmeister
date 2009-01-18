@@ -320,7 +320,7 @@ class Process
          	. "#submitcomment");
       }
       // failed
-      else if($retval == 2){
+      else if ($retval == 2){
          $_SESSION['comment_failure'] = true;
          header("Location: " . SITE_BASEDIR . "/viewarticle.php?id=" . $_POST['articleid']);
       }
@@ -390,6 +390,7 @@ class Process
       $retval = $session->updateArticle(clean_data($_POST['articleid']), 
       	clean_data($_POST['articletitle']), clean_data($_POST['articlesummary']), 
       	$_POST['articlecategory'], clean_data($_POST['articledate']), 
+      	clean_data($_POST['articlestate']), clean_data($_POST['articleauthor']),
       	clean_html_data($_POST['articlecontent']));
 
       // successful
@@ -404,7 +405,7 @@ class Process
          header("Location: " . SITE_BASEDIR . "/editarticle.php?id=" . $_POST['articleid']);
       }
       // failed
-      else if($retval == 2){
+      else if ($retval == 2){
          $_SESSION['articlesuccess'] = false;
          header("Location: " . SITE_BASEDIR . "/editarticle.php?id=" . $_POST['articleid']);
       }

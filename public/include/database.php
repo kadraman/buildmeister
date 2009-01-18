@@ -266,6 +266,24 @@ class MySQLDB {
       return $retval;
     } // addNewArticle
 
+   /**
+    * Checks whether an article exists
+    *
+    * @param integer $artid
+    * @return true on success, false otherwise.
+    */
+    function articleExists($artid) {
+   		$retval = true;
+      	# select article
+      	$q = "SELECT id FROM " . TBL_ARTICLES . " WHERE id = '$artid'";
+     	$result = mysql_query($q, $this->connection);
+      	# error occurred, article does not exist
+      	if (!$result || (mysql_numrows($result) < 1)) {
+        	$retval = false;
+      	}      	
+      	return $retval;
+    } // articleExists
+    
     /**
     * Updates an article in the database.
     * By default the article remains active.
@@ -275,15 +293,20 @@ class MySQLDB {
     * @param unknown_type $summary
     * @param unknown_type $category
     * @param unknown_type $date
+    * @param unknown_type $state
+    * @param unknown_type $author
     * @param unknown_type $text
     * @return true on success, false otherwise.
     */
-    function updateArticle($artid, $title, $summary, $category, $date, $text) {
+    function updateArticle($artid, $title, $summary, $category, $date, 
+    	$state, $author, $text) {
       $retval = true;
       # update article in database
-      //$mysqldate = date( 'Y-m-d H:i:s', strtotime($date));      
+      //$mysqldate = date( 'Y-m-d H:i:s', strtotime($date));     
+      // TODO: turn state into number 
       $q = "UPDATE " . TBL_ARTICLES . " SET date_posted = STR_TO_DATE('$date','%d-%m-%Y'), " .
-		"title = '$title', summary = '$summary', content = '$text' WHERE id = '$artid'";
+		"title = '$title', summary = '$summary', content = '$text', " .
+        "posted_by = '$author' WHERE id = '$artid'";
       if (!mysql_query($q, $this->connection)) {
           $retval = false;
       } else {
@@ -311,7 +334,7 @@ class MySQLDB {
     /**
     * Delete an article from the database.
     *
-    * @param unknown_type $postid
+    * @param integer $postid
     * @return true on success, false otherwise.
     */
     function deleteArticle($artid) {
@@ -322,7 +345,7 @@ class MySQLDB {
           $retval = false;
       }
       return $retval;
-    } // deleteArticle   
+    } // deleteArticle  
    
    /**
     * Adds a new book into the database.
@@ -443,11 +466,45 @@ class MySQLDB {
     * @return true on success, false otherwise.
     */
    function addNewArticleComment($username, $artid, $comment) {
-      $q = "INSERT INTO " . TBL_ARTCOM . " (date_posted, posted_by, art_id, comment, active)"
+      $q = "INSERT INTO " . TBL_ARTCOM . " (date_posted, posted_by, art_id, comment, state)"
       . " VALUES (now(), '$username', '$artid', '$comment', 1)";
       return mysql_query($q, $this->connection);
    } // addNewArticleComment
 
+   /**
+    * Checks whether an article comment exists
+    *
+    * @param integer $comid
+    * @return true on success, false otherwise.
+    */
+    function articleCommentExists($comid) {
+   		$retval = true;
+      	# select comment
+      	$q = "SELECT id FROM " . TBL_ARTCOM . " WHERE id = '$comid'";
+     	$result = mysql_query($q, $this->connection);
+      	# error occurred, comment does not exist
+      	if (!$result || (mysql_numrows($result) < 1)) {
+        	$retval = false;
+      	}      	
+      	return $retval;
+    } // articleCommentExists
+    
+   /**
+    * Delete an article comment from the database.
+    *
+    * @param integer $comid
+    * @return true on success, false otherwise.
+    */
+    function deleteArticleComment($comid) {
+      $retval = true;
+      # delete comment
+      $q = "DELETE FROM " . TBL_ARTCOM . " WHERE id = '$comid'";
+      if (!mysql_query($q, $this->connection)) {
+          $retval = false;
+      }
+      return $retval;
+    } // deleteArticleComment  
+    
    /**
     * Updates a field in the user's row.
     *

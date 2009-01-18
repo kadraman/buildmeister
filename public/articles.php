@@ -22,18 +22,22 @@ include("include/header.php");
 	</div>
 
 <?php
-// fetch all articles
-$sql = "SELECT * from " . TBL_ARTICLES . " where state = 1 ORDER BY date_posted DESC;";
-$result = mysql_query($sql);
-$numrows = mysql_num_rows($result);
+	# fetch all published articles
+	$sql = "SELECT id, title, posted_by, DATE_FORMAT(date_posted, \"%M %D, %Y\")" .
+    	" as newdate, summary from " . TBL_ARTICLES . " where state = 1 ORDER BY date_posted DESC;";
+	$result = mysql_query($sql);
+	$numrows = mysql_num_rows($result);
 
-if ($numrows != 0) {
-    while ($row = mysql_fetch_assoc($result)) {
-        echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
- 		    . $row['title'] . "</a></strong><br/>"
-		    . $row['summary'] . "</div>";
-    }
-}
+	if ($numrows != 0) {
+    	while ($row = mysql_fetch_assoc($result)) {
+			echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
+ 		    	. $row['title'] . "</a></strong><br/>"
+ 		    	. "<small>Posted by <a href='userinfo.php?user=" . $row['posted_by'] 
+ 		    	. "'>" . $row['posted_by'] . "</a> on "
+ 		    	. $row['newdate'] . "</small><br/>"
+		    	. $row['summary'] . "</div>";
+    	}
+	}
 
 ?>
 
