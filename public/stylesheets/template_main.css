@@ -279,7 +279,54 @@ input.sa {
 	text-decoration:underline;
 	padding:4px 10px;
 }
-
+/* 
+ * admin and user functionality
+ */
+#menu {
+	background:#C8D7E3 url("/buildmeister.com/public/images/template-leftnav2.gif")
+		no-repeat 100% 100%;
+	position:relative;
+	float:left;
+	width:180px;
+	margin-left:10px;
+	margin-right:10px;
+	padding: 0px 0px 20px 0px;
+}	
+#menu-form {
+	background:#FFF;
+	/*clear:left;
+	float:left;*/
+	padding:0px 0px 10px 0px;
+	border-left:1px solid #E6EDF2;
+	border-right:1px solid #E6EDF2;
+}
+#menu p {
+	color:#228;
+	text-decoration:none;
+	padding:0px 0px 0px 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}	
+#menu ul {
+	background:#FFFFFF url("/buildmeister.com/public/images/template-leftlist.gif")
+		no-repeat 100% 100%;
+	line-height:1.25em;
+	list-style-type:none;
+	margin:0px;
+	padding:10px 0px 0px;
+	line-height:1.25em;
+	text-align:left;
+}
+#menu li a {
+	display:block;
+	margin:0px;
+	padding:4px 10px;
+}
+#menu li a:hover {
+	display:block;
+	text-decoration:underline;
+	padding:4px 10px;
+}
 /*
  *
  * related reading form 
@@ -446,6 +493,12 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
 
 /* error message */
 #error {
+	color:#ff0000;
+	margin:0px;
+	padding:0px;
+}
+/* error message */
+p.error {
 	color:#ff0000;
 	margin:0px;
 	padding:0px;

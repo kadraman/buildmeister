@@ -1,17 +1,19 @@
+    	</div>
+    	<!--  content end -->
+
+    	<!-- footer begin -->
+    	<div id="footer">
+        	<ul>
+            	<li class="first"><a href="about.php">About</a></li>
+            	<li><a href="contact.php">Contact</a></li>
+            	<li><a href="terms.php">Terms of Use</a></li>
+       		</ul>
+    	</div>
+    	<!-- footer end -->
 
     </div>
-
-    <!-- footer begin -->
-    <div id="footer">
-        <ul>
-            <li class="first"><a href="about.php">About</a></li>
-            <li><a href="contact.php">Contact</a></li>
-            <li><a href="terms.php">Terms of Use</a></li>
-        </ul>
-    </div>
-    <!-- footer end -->
-
-    </div>
+    <!-- container end -->
+    
     <div id="shadow"></div>
 </body>
 
@@ -22,15 +24,16 @@ _uacct = "UA-899572-1";
 urchinTracker();
 </script>
 
+<!-- TODO: only include if article? -->
 <!-- syntax highlighter -->
-<link type="text/css" rel="stylesheet" href="stylesheets/SyntaxHighlighter.css"></link>
-<script language="javascript" src="javascript/shCore.js"></script>
-<script language="javascript" src="javascript/shBrushXml.js"></script>
-<script language="javascript" src="javascript/shBrushJava.js"></script>
-<script language="javascript" src="javascript/shBrushPhp.js"></script>
-<script language="javascript" src="javascript/shBrushPython.js"></script>
+<link type="text/css" rel="stylesheet" href="<?php echo SITE_PREFIX; ?>/stylesheets/SyntaxHighlighter.css"></link>
+<script language="javascript" src="<?php echo SITE_PREFIX; ?>/javascript/shCore.js"></script>
+<script language="javascript" src="<?php echo SITE_PREFIX; ?>/javascript/shBrushXml.js"></script>
+<script language="javascript" src="<?php echo SITE_PREFIX; ?>/javascript/shBrushJava.js"></script>
+<script language="javascript" src="<?php echo SITE_PREFIX; ?>/javascript/shBrushPhp.js"></script>
+<script language="javascript" src="<?php echo SITE_PREFIX; ?>/javascript/shBrushPython.js"></script>
 <script language="javascript">
-dp.SyntaxHighlighter.ClipboardSwf = '/buildmeister/javascript/clipboard.swf';
+dp.SyntaxHighlighter.ClipboardSwf = '<?php echo SITE_PREFIX; ?>/javascript/clipboard.swf';
 dp.SyntaxHighlighter.HighlightAll('code');
 </script>
 

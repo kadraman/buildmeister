@@ -8,7 +8,7 @@
  * @author Kevin A. Lee <kevin.lee@buildmeister.com>
  * Based on code originally written by: Jpmaster77.
  */
-include("constants.php");
+include_once("constants.php");
 
 class MySQLDB {
    var $connection;         // the MySQL database connection

@@ -1,11 +1,21 @@
 <?php
 
-# home page is selected
+# setup include path
+if (!defined("PATH_SEPARATOR")) {
+  if (strpos($_ENV["OS"], "Win") !== false)
+    define("PATH_SEPARATOR", ";");
+  else define("PATH_SEPARATOR", ":");
+} 
+ini_set("include_path", "." . PATH_SEPARATOR . "../" . PATH_SEPARATOR 
+	. "./include" . PATH_SEPARATOR . "../include");
+
+# home page is selected for navigation menu
 session_register("SESS_NAVITEM");
 $_SESSION['SESS_NAVITEM'] = 0;
-
-include ("include/header.php");
+	
+include_once("header.php");
 ?>
+
 <div id="toptitle">
 <h2>Welcome to <i>The Buildmeister</i></h2>
 </div>
@@ -91,5 +101,5 @@ echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] .
 <div id="dashed-spacer"></div>
 
 <?php
-include ("include/footer.php");
+include_once("footer.php");
 ?>

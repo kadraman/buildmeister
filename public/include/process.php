@@ -10,7 +10,7 @@
  * Written by: Jpmaster77 a.k.a. The Grandmaster of C++ (GMC)
  * Last Updated: August 19, 2004
  */
-include("session.php");
+include_once("session.php");
 
 class Process
 {

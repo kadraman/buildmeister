@@ -1,0 +1,66 @@
+
+#admin {
+	margin: auto
+}
+
+/*
+ * administration table
+ */
+.admintable {		
+	border: 1px solid #ccc;
+	width: 100%;
+}
+.admintable td {
+	border: 1px solid #FFFFFF;
+	padding: 0 2px;
+	color: #228;
+}
+.admintable th {
+	background-color: #eee;
+	font-weight: bold;
+	text-align: center;
+	padding: 4px 4px 4px 14px;
+}
+.admintable tr.altrow {
+	background-color: #eee;
+}
+.admintable tr:hover {
+	background-color: #FFFFBB;
+}	
+
+.rightAlign {
+	text-align: right;
+}
+
+.centerAlign {
+	text-align: center;
+}
+
+.sortedASC {
+	background: url(images/icon-table-sort-asc.png) no-repeat 2px 4px #eee;
+}
+
+.sortedDESC {
+	background: url(images/icon-table-sort-desc.png) no-repeat 2px 10px #eee;
+}
+
+.tableHeaderOver {
+	cursor: pointer;
+	color: #354158;
+}
+
+.tableNav {
+	border: 1px solid #ccc;
+	padding: 2px;
+	height: 25px;
+	margin: 5px 0 5px 0;
+}
+
+.tableSummary {
+	border: 1px solid #ccc;
+	padding: 2px;
+	height: 25px;
+	margin: 5px 0 5px 0;
+}
+
+

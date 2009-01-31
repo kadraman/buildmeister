@@ -109,7 +109,7 @@
                     <token key="db_pass" value="${db.pass}" />
                     <token key="db_name" value="${db.name}" />
                     <token key="site_basedir" value="${site.basedir}" />
-                	<token key="site_baseprefix" value="${site.baseprefix}" />
+                	<token key="site_prefix" value="${site.prefix}" />
                 </replacetokens>
             </filterchain>
         </copy>        

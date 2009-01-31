@@ -33,7 +33,7 @@ define("TBL_GLOSSCOM", "glossary_comm");
 
 // special names and level constants
 define("SITE_BASEDIR", "@site_basedir@");
-define("SITE_BASEPREFIX", "@site_baseprefix@");
+define("SITE_PREFIX", "@site_prefix@");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");
@@ -41,6 +41,9 @@ define("ADMIN_LEVEL", 9);
 define("EDITOR_LEVEL", 5);
 define("USER_LEVEL",  1);
 define("GUEST_LEVEL", 0);
+
+// page row limit for tables
+define("PAGE_LIMIT", 20);
 
 // determine whether to keep active track of visitors
 define("TRACK_VISITORS", false);

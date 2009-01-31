@@ -279,7 +279,6 @@ input.sa {
 	text-decoration:underline;
 	padding:4px 10px;
 }
-
 /* 
  * admin and user functionality
  */
@@ -384,6 +383,7 @@ label.formLabelText {
     margin-bottom: 0px;
     vertical-align: top;
     text-align: left;
+    vertical-align: middle;
 }
 textarea.formTextArea {
     font-size: 8pt;
@@ -418,6 +418,7 @@ input.formInputText  {
     height: 15px;
     width: 150px;
     align: left;
+    vertical-align: middle;
 }
 input.formInputText:hover {
     color: #000;
@@ -494,6 +495,12 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
 
 /* error message */
 #error {
+	color:#ff0000;
+	margin:0px;
+	padding:0px;
+}
+/* error message */
+p.error {
 	color:#ff0000;
 	margin:0px;
 	padding:0px;
