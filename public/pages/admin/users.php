@@ -43,17 +43,21 @@ if (!$session->isAdmin()){
 	<input id="lastButton" type="button" value="&nbsp;&gt;&gt;&nbsp;"/>
 	&nbsp;
 	<label id="searchLabel" for="searchString" class="formInputLabel">Filter:</label>
-	<select id="filterString" class="formInputText">
-		<option id="1">Username</option>
+	<select class="formInputText" id="searchColumn" class="formInputText">
+		<option id="1">username</option>
+		<option id="2">email</option>
 	</select>
 	&nbsp; 
 	<input id="searchString" class="formInputText" style="width:100px" type="text" 
 		name="searchstring" maxlength="40" value=""/>
 	&nbsp;
+	<input id="filterButton" type="button" value="Filter"/>
+	&nbsp;
+	<input id="resetButton" type="button" value="Reset"/>
+	&nbsp;
 	<span id="waiting" style="visibility: hidden">			
 		<img align="top" src="<?php echo SITE_PREFIX; ?>/images/waiter.gif"/>
-		&nbsp;
-		<div id="waitingText" style="display:none"><strong>Loading...<strong></div>
+		&nbsp;<strong>Loading...<strong>
 	</span>	
 </div>
 <div id="results">
@@ -65,7 +69,7 @@ if (!$session->isAdmin()){
 	</table>
 </div>
 <div class="tableSummary">
-	<label id="numUsersLabel" class="formInputLabel"></label>
+	<label id="numEntriesLabel" class="formInputLabel"></label>
 	&nbsp;|&nbsp;
 	<label id="rowsLabel" for="rowsString" class="formInputLabel">Showing </label>
 	<input id="rowsString" class="formInputText" style="width:20px" type="text" 

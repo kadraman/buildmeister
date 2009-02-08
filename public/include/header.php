@@ -10,7 +10,8 @@
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/mootools-1.2-more.js"></script>
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/clientcide-1.2.js"></script>
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/datetimepicker.js"></script>
-	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/functions.js"></script>
+	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/global.js"></script>
+	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/FilterTable.js"></script>
 <?php
 	// include supporting javascript file for page (if present)
     $jsfile = basename($_SERVER['PHP_SELF'], ".php") . ".js";
@@ -72,73 +73,73 @@
 			<!-- navigation bar end -->
 		 		
 			<!-- search begin -->
-			<div id="search">
-				<p>Search</p>
-				<form id="search-form" method="get" action="search.php">
-					<input class="formInputText" style="width:150px" type="text" 
-						name="searchKeywords" maxlength="80" value="Enter keyword(s)" 
-						onfocus="clearField(this)"/>
-					<input id="search-button" type="submit" value="Search"/>			
-				</form>
+			<div id="searchBox" class="sideBox">
+				<div class="sideBoxTitle">Search</div>
+				<div id="searchFields" class="sideBoxContent">
+					<input id="searchKeywords" class="formInputText" 
+						style="width:150px" type="text" maxlength="80" 
+						name="searchKeywords" value="Enter keyword(s)"/>
+					<input id="searchButton" type="submit" value="Search"/>	
+					<div id="searchMessage" style="visibility: hidden"></div>		
+				</div>
 			</div>
 			<!-- search end -->
-
-			<div id="spacer">&nbsp;</div>
 		
 			<!-- user menu begin -->
-			<div id="login">
-				<p>User Menu</p>
+			<div id="userMenuBox" class="sideBox">
+				<div class="sideBoxTitle">User Menu</div>
+				<div id="userMenuFields" class="sideBoxContent">
 <?php
 				if ($session->logged_in) {
 ?>
-					<ul>
-						<li><a href="userinfo.php?user=<?php echo $session->username; ?>">View My Account</a></li>
-						<li><a href="useredit.php?user=<?php echo $session->username; ?>">Edit Account</a></li>
-						<li><a href="include/process.php">Logout</a></li>
+					<ul class="sideBoxList">
+						<li><a class="sideBoxLink" class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/userinfo.php?user=<?php echo $session->username; ?>">View My Account</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/useredit.php?user=<?php echo $session->username; ?>">Edit Account</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/include/process.php">Logout</a></li>
 					</ul>
 <?php
 				} else {
 ?>
-					<ul>
-						<li><a href="login.php">Login</a></li>
-						<li><a href="forgotpass.php">Forgotten password?</a></li>
-						<li><a href="register.php">Register now?</a></li>
+					<ul class="sideBoxList">
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/login.php">Login</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/forgotpass.php">Forgotten password?</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/register.php">Register now?</a></li>
 					</ul>
 <?php
 				}
 ?>
+				</div>
 			</div>
 			<!-- user menu end -->
 
 <?php 
 		if ($session->isAdmin()) {
 ?>
-			<div id="spacer">&nbsp;</div>
 			<!-- administration menu begin -->
-			<div id="menu">
-				<p>Administration Menu</p>
-				<ul>
-					<li><a href="pages/admin/users.php">Users</a></li>
-				</ul>	
+			<div id="adminMenuBox" class="sideBox">
+				<div class="sideBoxTitle">Administration Menu</div>
+				<div id="adminMenuFields" class="sideBoxContent">
+					<ul class="sideBoxList">
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/admin/users.php">Users</a></li>
+					</ul>	
+				</div>
 			</div>				
 			<!-- administration menu end -->		
 <?php 
 		}
 ?>
 
-			<div id="spacer">&nbsp;</div>
-
 			<!-- related reading begin -->
-			<div id="reading">
-				<p>Related Reading</p>
-				<div align="center">
-					<iframe src="http://rcm.amazon.com/e/cm?t=thebuildmeist-20&o=1&p=8&l=st1&mode=books&search=software%20build%20development%20agile&nou=1&fc1=000000&lt1=_blank&lc1=3366FF&bg1=FFFFFF&f=ifr" marginwidth="0" marginheight="0" width="120" height="240" border="0" frameborder="0" style="border:none;" scrolling="no"></iframe>
+			<div id="readingBox" class="sideBox">
+				<div class="sideBoxTitle">Related Reading</div>
+				<div id="advertFields" class="sideBoxContent">
+					<div align="center">
+						<iframe src="http://rcm.amazon.com/e/cm?t=thebuildmeist-20&o=1&p=8&l=st1&mode=books&search=software%20build%20development%20agile&nou=1&fc1=000000&lt1=_blank&lc1=3366FF&bg1=FFFFFF&f=ifr" marginwidth="0" marginheight="0" width="120" height="240" border="0" frameborder="0" style="border:none;" scrolling="no"></iframe>
+					</div>
 				</div>
 			</div>
 			<!-- related reading end -->
-		
-			<div id="spacer">&nbsp;</div>
-		
+				
 			<!-- logos begin -->
 			<div align="center">			
 				<!-- TODO: include logos -->
@@ -150,7 +151,7 @@
 		</div>
 		<!-- sidebar end -->
 
-		<div id="sideseparator"></div>
+		<!-- div id="sideseparator"></div-->
 		
 		<!-- content begin -->
 		<div id="content">

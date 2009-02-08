@@ -43,7 +43,7 @@ define("USER_LEVEL",  1);
 define("GUEST_LEVEL", 0);
 
 // page row limit for tables
-define("PAGE_LIMIT", 20);
+define("PAGE_LIMIT", 40);
 
 // determine whether to keep active track of visitors
 define("TRACK_VISITORS", false);
@@ -66,19 +66,19 @@ define("ALL_LOWERCASE", false);
 
 // navigation menu
 $navmenu_main = array( array( 'Title' => "Home",
-                              'Link'  => "index.php"
+                              'Link'  => "@site_prefix@/index.php"
                             ),
                        array( 'Title' => "Articles",
-                              'Link'  => "articles.php"
+                              'Link'  => "@site_prefix@/articles.php"
                             ),
                        array( 'Title' => "Books",
-                              'Link'  => "books.php",
+                              'Link'  => "@site_prefix@/books.php",
                            ),
                        array( 'Title' => "Glossary",
-                              'Link'  => "glossary.php",
+                              'Link'  => "@site_prefix@/glossary.php",
                             ),
                        array( 'Title' => "Links",
-                              'Link'  => "links.php",
+                              'Link'  => "@site_prefix@/links.php",
                        )
                 );
 ?>

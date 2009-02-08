@@ -1,13 +1,18 @@
 <?php
 include("include/header.php");
 
-// requested Username error checking
-$req_user = trim($_GET['user']);
-if(!$req_user || strlen($req_user) == 0 ||
-   !eregi("^([0-9a-z])+$", $req_user) ||
-   !$database->usernameTaken($req_user)){
-   die("Username not registered");
-}
+if (!isset($_GET['user'])) {
+	// do we have a user
+	$session->displayDialog("No User Specified",
+	 	"No user has been specified.",
+	   	SITE_BASEDIR . "/index.php");        
+} else if (!$database->usernameTaken(clean_data($_GET['user']))) {
+	// does the user exist?
+	$session->displayDialog("User Does Not Exist",
+	   	"The specified user does not exist.",
+	    SITE_BASEDIR . "/index.php");		   	
+} else {
+	$req_user = trim($_GET['user']);
 ?>
 
 <div align="center">
@@ -63,12 +68,12 @@ $req_user_info = $database->getUserInfo($req_user);
 		</tr>
 <?php
 	}
-	# if logged in and user viewing own account, give link to edit
-	if (strcmp($session->username,$req_user) == 0) {
+	# if admin user or logged in and user viewing own account, give link to edit
+	if ($session->isAdmin() || strcmp($session->username,$req_user) == 0) {
 ?>
 		<tr>
 			<td>&nbsp;</td>
-   			<td><a href="useredit.php">Edit Account Information</a></td>
+   			<td><a href="useredit.php?user=<?php echo $req_user; ?>">Edit Account Information</a></td>
    		</tr>
 <?php 
 	}
@@ -81,7 +86,7 @@ $req_user_info = $database->getUserInfo($req_user);
 
 <?php
 	// TODO: display articles and/or comments by this user
-
+    }
 require("include/footer.php");
 ?>
 

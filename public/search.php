@@ -1,17 +1,18 @@
 <?php
 
-# articles page is selected
-session_register("SESS_NAVITEM");
-$_SESSION['SESS_NAVITEM'] = 1;
+sleep(5);
 
-include_once("include/header.php");
+include_once("include/database.php");
+include_once("include/functions.php");
+
+echo "<div id='article'>\n";
+echo "<div id='toptitle'>\n";
 
 if (!isset($_GET['searchKeywords']) || ($_GET['searchKeywords'] == "")
 	|| ($_GET['searchKeywords'] == "Enter keyword(s)")) {
 	// no keywords have been specified
-	$session->displayDialog("No Keywords Specified",
-		"No keywords have been specified, please enter at least one in the search field.",
-	        $session->referrer);
+	echo "<h2>No keywords have been specified...</h2>\n";
+	echo "</div>\n"; 
 } else {
 	# retrieve the keywords
 	$keywordArray = explode(" ", clean_data($_GET['searchKeywords']));
@@ -28,36 +29,22 @@ if (!isset($_GET['searchKeywords']) || ($_GET['searchKeywords'] == "")
 	$result = mysql_query($search_sql);
 	$numrows = mysql_num_rows($result);
 	
-?>
-
-<div id="article">
-
-	<div id="toptitle">
-		<h2>Found <?php echo $numrows ?> matching article(s) with keyword(s): 
-			<u><?php echo $_GET['searchKeywords']?></u></h2>
-	</div>
+	echo "<h2>Found " . $numrows . " matching article(s) with keyword(s): " . 
+		"<u>" . $_GET['searchKeywords'] . "</u></h2>\n";
+	echo "</div>\n";
 	
-<?php
-
-if ($numrows > 0) {
-    while ($row = mysql_fetch_assoc($result)) {
-        echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
- 		    . $row['title'] . "</a></strong><br/>"
- 		    . "<small>Posted by <a href='userinfo.php?user=" . $row['posted_by'] 
- 		    . "'>" . $row['posted_by'] . "</a> on "
- 		    . $row['newdate'] . "</small><br/>"
-		    . $row['summary'] . "</div>";
-    }
+	if ($numrows > 0) {
+    	while ($row = mysql_fetch_assoc($result)) {
+        	echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
+ 		    	. $row['title'] . "</a></strong><br/>"
+ 		    	. "<small>Posted by <a href='userinfo.php?user=" . $row['posted_by'] 
+ 		    	. "'>" . $row['posted_by'] . "</a> on "
+ 		    	. $row['newdate'] . "</small><br/>"
+		    	. $row['summary'] . "</div>";
+    	}
+	}
 }
 
-?>
+echo "</div>\n";
 
-	<div id="spacer">&nbsp;</div>
-
-</div>
-
-<?php
-    }
-    
-include("include/footer.php");
 ?>

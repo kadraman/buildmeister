@@ -3,9 +3,9 @@ include("include/header.php");
 
 // are you already logged in
 if ($session->logged_in) { 
-	$session->displayDialog("Login Successful",
-        "The user <b>$session->username</b> is now successfully logged in.",
-        SITE_BASEDIR . "/index.php");
+	$session->displayDialog("Already logged in",
+        "The user <b>$session->username</b> is already logged in.",
+        SITE_BASEDIR . "/userinfo.php");
 } else {
 ?>
 <div align="center">

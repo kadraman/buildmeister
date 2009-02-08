@@ -13,7 +13,7 @@ if (!isset($_GET['id'])) {
 	 	"No article has been specified, please select an article on the "
 	   	. "<a href='articles.php'>articles</a> page to edit its content.",
 	   	SITE_BASEDIR . "/articles.php");        
-} else if (!$database->articleExists($_GET['id'])) {
+} else if (!$database->articleExists(clean_data($_GET['id']))) {
 	// does the article exist?
 	$session->displayDialog("Article Does Not Exist",
 	   	"The specified article does not exist, please select an article on the "
@@ -32,7 +32,7 @@ if (!isset($_GET['id'])) {
 	       	    // submission failed
         		echo "<div align='center'><p>Error updating article</p></div>";
     		}
-    	   	unset($_SESSION['artcomsuccess']);
+    	   	unset($_SESSION['articlesuccess']);
 		}
 				
 		// retrieve the id of the article to display

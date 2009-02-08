@@ -101,7 +101,7 @@ class Process
 
       /* Login successful */
       if($retval){
-         header("Location: ". $session->referrer);
+         header("Location: ". SITE_BASEDIR . "/userinfo.php?user=" . $_POST['user']);
       }
       /* Login failed */
       else{

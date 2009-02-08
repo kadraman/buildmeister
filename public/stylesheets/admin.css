@@ -3,9 +3,6 @@
 	margin: auto
 }
 
-/*
- * administration table
- */
 .admintable {		
 	border: 1px solid #ccc;
 	width: 100%;
@@ -26,7 +23,13 @@
 }
 .admintable tr:hover {
 	background-color: #FFFFBB;
-}	
+}
+.admintable a {
+	color: #228;
+}
+.admintable a:hover {
+	color: #228;
+}
 
 .rightAlign {
 	text-align: right;
@@ -63,4 +66,51 @@
 	margin: 5px 0 5px 0;
 }
 
+.tableNav input {
+	border: 1px solid #ccc;
+}
+
+.tableNav select {
+	border: 1px solid #ccc;
+}
+
+.tableNav input:hover {
+	border: 1px solid #999;
+	background-color: #FFFFBB;
+}
+
+.tableNav select:hover {
+	border: 1px solid #999;
+	background-color: #FFFFBB;
+}
+
+.tableNav input:focus {
+    color: #000;
+    background-color: #bff;
+    border: 1px solid #999; 
+    cursor: text;
+}
+
+.tableNav select:focus {
+    color: #000;
+    background-color: #bff;
+    border: 1px solid #999; 
+    cursor: text;
+}
+
+.tableSummary input {
+	border: 1px solid #ccc;
+}
+
+.tableSummary input:hover {
+	border: 1px solid #999;
+	background-color: #FFFFBB;
+}
+
+.tableSummary input:focus {
+    color: #000;
+    background-color: #bff;
+    border: 1px solid #999; 
+    cursor: text;
+}
 
