@@ -309,20 +309,20 @@ class Process
       if ($retval == 0){
          //$_SESSION['artcomsuccess'] = true;
          $_SESSION['value_array'] = $_POST;
-         header("Location: " . SITE_BASEDIR . "/viewarticle.php?id=" . $_POST['articleid']
+         header("Location: " . SITE_BASEDIR . "/pages/articles/view.php?id=" . $_POST['articleid']
          	. "#submitcomment");
       }
       // error found with form
       else if ($retval == 1){
          $_SESSION['value_array'] = $_POST;
          $_SESSION['error_array'] = $form->getErrorArray();
-         header("Location: " . SITE_BASEDIR . "/viewarticle.php?id=" . $_POST['articleid']
+         header("Location: " . SITE_BASEDIR . "/pages/articles/view.php?id=" . $_POST['articleid']
          	. "#submitcomment");
       }
       // failed
       else if ($retval == 2){
          $_SESSION['comment_failure'] = true;
-         header("Location: " . SITE_BASEDIR . "/viewarticle.php?id=" . $_POST['articleid']);
+         header("Location: " . SITE_BASEDIR . "/pages/articles/view.php?id=" . $_POST['articleid']);
       }
    } // procSubmitArticleComment
 
@@ -396,18 +396,18 @@ class Process
       // successful
       if ($retval == 0){
          $_SESSION['articlesuccess'] = true;
-         header("Location: " . SITE_BASEDIR . "/viewarticle.php?id=" . $_POST['articleid']);
+         header("Location: " . SITE_BASEDIR . "/pages/articles/view.php?id=" . $_POST['articleid']);
       }
       // error found with form
       else if ($retval == 1){
          $_SESSION['value_array'] = $_POST;
          $_SESSION['error_array'] = $form->getErrorArray();
-         header("Location: " . SITE_BASEDIR . "/editarticle.php?id=" . $_POST['articleid']);
+         header("Location: " . SITE_BASEDIR . "/pages/articles/edit.php?id=" . $_POST['articleid']);
       }
       // failed
       else if ($retval == 2){
          $_SESSION['articlesuccess'] = false;
-         header("Location: " . SITE_BASEDIR . "/editarticle.php?id=" . $_POST['articleid']);
+         header("Location: " . SITE_BASEDIR . "/pages/articles/edit.php?id=" . $_POST['articleid']);
       }
    } // procUpdateArticle
    
@@ -499,19 +499,24 @@ class Process
    function procEditAccount() {
       global $session, $form;
       // account edit attempt
-      $retval = $session->editAccount($_POST['curpass'], $_POST['newpass'],
+      if ($_POST['curusername'] == "") {
+      	$username = $session->username;         
+      } else {
+      	$username = $_POST['curusername'];
+      }
+      $retval = $session->editAccount($username, $_POST['curpass'], $_POST['newpass'],
           $_POST['curfirst'], $_POST['curlast'], $_POST['email']);
 
       // account edit successful
       if ($retval) {
          $_SESSION['useredit'] = true;
-         header("Location: ".$session->referrer);
+         header("Location: " . SITE_BASEDIR . "/pages/admin/users/edit.php?username=" . $username);
       }
       // error found with form
       else {
          $_SESSION['value_array'] = $_POST;
          $_SESSION['error_array'] = $form->getErrorArray();
-         header("Location: ".$session->referrer);
+         header("Location: " . SITE_BASEDIR . "/pages/admin/users/edit.php?username=" . $username);
       }
    } // procEditAccount
 };

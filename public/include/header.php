@@ -6,6 +6,7 @@
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 	<title><?php echo SITE_NAME; ?></title>
+	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/include/config.js"></script>
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/mootools-1.2.1-core.js"></script>
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/mootools-1.2-more.js"></script>
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/clientcide-1.2.js"></script>
@@ -75,13 +76,17 @@
 			<!-- search begin -->
 			<div id="searchBox" class="sideBox">
 				<div class="sideBoxTitle">Search</div>
-				<div id="searchFields" class="sideBoxContent">
-					<input id="searchKeywords" class="formInputText" 
-						style="width:150px" type="text" maxlength="80" 
-						name="searchKeywords" value="Enter keyword(s)"/>
-					<input id="searchButton" type="submit" value="Search"/>	
-					<div id="searchMessage" style="visibility: hidden"></div>		
-				</div>
+				<form id="searchForm" action="<?php echo SITE_PREFIX; ?>/pages/search.submit.php" method="post">					
+					<div id="searchFields" class="sideBoxContent">
+						<input id="searchKeywords" class="txt" 
+							style="width:125px" type="text" maxlength="80" 
+							name="searchKeywords" value="Enter keyword(s)"/>
+						<input type="submit" value="Search" id="submit" class="btn"/>
+						&nbsp;
+						<!-- TODO: advanced search -->
+						<!-- a id="advancedSearch" href="">Advanced</a-->								
+					</div>
+				</form>
 			</div>
 			<!-- search end -->
 		
@@ -101,7 +106,7 @@
 				} else {
 ?>
 					<ul class="sideBoxList">
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/login.php">Login</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/login.php">Login</a></li>
 						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/forgotpass.php">Forgotten password?</a></li>
 						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/register.php">Register now?</a></li>
 					</ul>
@@ -120,7 +125,7 @@
 				<div class="sideBoxTitle">Administration Menu</div>
 				<div id="adminMenuFields" class="sideBoxContent">
 					<ul class="sideBoxList">
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/admin/users.php">Users</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/admin/users/">Users</a></li>
 					</ul>	
 				</div>
 			</div>				
@@ -143,6 +148,7 @@
 			<!-- logos begin -->
 			<div align="center">			
 				<!-- TODO: include logos -->
+				<b>Icons by <a href="http://dryicons.com">DryIcons</a></b>
 			</div>
 			<!-- logos end -->
 		

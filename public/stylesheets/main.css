@@ -1,7 +1,5 @@
 /*
- *
  * default styles 
- *
  */
 body {
 	background: #CCC;
@@ -12,9 +10,118 @@ body {
     list-style-type: disc;
     font-size: 8pt;
 }
-form { margin: 0px; }
+
+/*
+ * default form styles
+ */
+form {  /* set width in form, not fieldset */
+	font: 100% arial, "lucida console", sans-serif;		
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0;	
+}
+
+form fieldset {
+	border: dotted 1px #EEEEDF;  
+  	padding: 0.6em;        
+  	margin-top: 1.4em;
+  	background-color: #F8F7F3;
+}
+
+form fieldset legend {
+	font-size: 1.1em; 
+	color: #000;
+    font-weight: bold;
+    font-variant: small-caps;
+    background-color: #C8D7E3;
+    padding: 0.5em;                      
+}
+
+form div {
+	clear: left;
+	margin: 0;
+	padding: 0;
+	padding-top: 0.6em;
+}
+
+form div label { 
+	font-size: 8pt;
+	float: left; 
+	width: 20%; 
+	padding: 0; 
+	margin: 8px 0 0; /* set top margin same as form input - textarea etc. elements */
+	text-align: right; 
+	vertical-align: bottom;
+}
+
+#fckeditor {
+	font-size: 8pt;
+	color: #228;
+	padding: 0.2em;    
+	margin: 5px 0 0 10px; 
+	font: 100% arial, "lucida console", sans-serif;	                          
+}
+
+form input.txt, textarea.txt {
+	font-size: 8pt;
+	color: #228;
+	padding: 0.2em;
+	background-color: #FFF;
+	border: 1px solid #CCC;	
+	width: 150px;      
+	margin: 5px 0 0 10px; 
+	vertical-align: bottom;
+	font: 100% arial, "lucida console", sans-serif;	                          
+}
+
+form img.txt {
+	padding: 0.2em;	   
+	margin: 5px 10px 0 10px; 
+	vertical-align: bottom;
+	width: 175px;  
+	border: solid 1px #CCC;                         
+}
+
+form input.txt:hover, textarea.txt:hover {
+	border: 1px solid #888;                          
+}
+
+form input.btn {
+	font-size: 8pt;
+	padding: 0.3em;
+	margin: 5px 0 0 10px;
+	vertical-align: middle;
+}
+
+textarea { overflow: auto; }
+
+form p {
+	font-size: 0.9em;
+	float: left; 
+	width: auto; 
+	padding: 0; 
+	margin: 0 0 5px 0;
+	text-align: left; 
+	vertical-align: bottom;  
+}
+
+form .invalid { color: red; }
+form .required { font-weight:bold; }
+
+form br { clear:left; }
+
+#response {
+	font-size: 1.1em;    
+	margin: 5px 0 0 10px; 
+	vertical-align: bottom;	
+	text-align: center;
+}
+
 img { border: 0px; }
-fieldset {
+
+/*form { margin: 0px; }*/
+
+/*fieldset {
     color: #000;
     padding: 2px;
     border: solid 2px #C8D7E3;
@@ -26,11 +133,11 @@ legend {
     background-color: #C8D7E3;
     padding: 2px 6px;
     margin-bottom: 8px;
-}
+}*/
 
 /*
  * form styles
- */
+ *
 label.formLabelText {
     font-size: 8pt;
     color: #000;
@@ -72,7 +179,7 @@ input.formInputText  {
     margin-right: 5px;
     margin-bottom: 5px;
     height: 15px;
-    width: 150px;
+    width: auto;
     align: left;
     vertical-align: middle;
 }
@@ -110,7 +217,7 @@ select.formSelect:focus {
     background-color: #BFF;
     border: solid 1px #0066FF; 
     cursor: text;
-}
+}*/
 /* blank line spacer */
 #spacer {
 	position:relative;
@@ -125,6 +232,9 @@ select.formSelect:focus {
 	padding:0px;
 }
 
+#formContainer: {
+	text-align: center;
+}
 /*
  * document structure:
  *
@@ -222,7 +332,14 @@ select.formSelect:focus {
 #content h2 a {font-weight: bold; text-transform: uppercase;}
 #content .item {border-bottom: 1px dashed #B2B2B2;}
 #content h3 {margin-bottom: 0.5em; font: 1.5em; letter-spacing: 2px;}
-#content h4 {margin: 0.25em 0 0.5em;}
+#content h3.sub {
+	margin-top: 1.0em;
+	margin-bottom: 0.5em; 
+	font: 1.5em; 
+	letter-spacing: 2px; 
+	border-bottom: 1px dashed #B2B2B2;
+	}
+#content h4 {margin: 0.25em 0 0.5em; border-bottom: 1px dashed #B2B2B2;}
 #splitsection {text-align: justify; 
   padding: 0.5em; margin: 0 2em 1.5em 1.5em;
   border-bottom: 1px dashed #B2B2B2; }  
@@ -412,4 +529,10 @@ a:hover.sideBoxLink {
 	border-bottom:1px dotted #CCC;
 }
 
+#reload {
+	width: 600px;
+	margin: 0px auto;
+	padding: 20px;
+	font-size: 1.25em;
+}
 /* end */

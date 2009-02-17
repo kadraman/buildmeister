@@ -41,6 +41,7 @@ define("ADMIN_LEVEL", 9);
 define("EDITOR_LEVEL", 5);
 define("USER_LEVEL",  1);
 define("GUEST_LEVEL", 0);
+define("PUBLISHED_STATE", 3); // state at which article is visible to all users
 
 // page row limit for tables
 define("PAGE_LIMIT", 40);
@@ -69,7 +70,7 @@ $navmenu_main = array( array( 'Title' => "Home",
                               'Link'  => "@site_prefix@/index.php"
                             ),
                        array( 'Title' => "Articles",
-                              'Link'  => "@site_prefix@/articles.php"
+                              'Link'  => "@site_prefix@/pages/articles/"
                             ),
                        array( 'Title' => "Books",
                               'Link'  => "@site_prefix@/books.php",

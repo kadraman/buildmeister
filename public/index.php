@@ -1,15 +1,16 @@
 <?php
 
-# setup include path
+// setup include path
 if (!defined("PATH_SEPARATOR")) {
-  if (strpos($_ENV["OS"], "Win") !== false)
-    define("PATH_SEPARATOR", ";");
-  else define("PATH_SEPARATOR", ":");
+	if (strpos($_ENV["OS"], "Win") !== false)
+		define("PATH_SEPARATOR", ";");
+	else define("PATH_SEPARATOR", ":");
 } 
 ini_set("include_path", "." . PATH_SEPARATOR . "../" . PATH_SEPARATOR 
-	. "./include" . PATH_SEPARATOR . "../include");
+	. "./include" . PATH_SEPARATOR . "../include" . PATH_SEPARATOR
+	. "./include/blocks" . PATH_SEPARATOR . "../include/blocks");
 
-# home page is selected for navigation menu
+// home page is selected for navigation menu
 session_register("SESS_NAVITEM");
 $_SESSION['SESS_NAVITEM'] = 0;
 	
@@ -79,27 +80,7 @@ include_once("header.php");
 	</tbody>
 </table>
 
-<div id="boxedtitle">Latest Articles</div>
 <?php
-# fetch latest articles
-$sql = "SELECT * from " . TBL_ARTICLES .
-    " where state = 1 ORDER BY date_posted DESC LIMIT 5;";
-$result = mysql_query($sql);
-$numrows = mysql_num_rows($result);
-
-if ($numrows != 0)
-{
-while ($row = mysql_fetch_assoc($result))
-{
-echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] .
-            "'>" . $row['title'] . "</a></strong><br/>" . $row['summary'] . "</div>";
-}
-}
-
-?>
-
-<div id="dashed-spacer"></div>
-
-<?php
+include_once("latest_articles.php");
 include_once("footer.php");
 ?>

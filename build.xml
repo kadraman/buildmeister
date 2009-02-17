@@ -92,7 +92,7 @@
     <target name="config" depends="get-env"
         description="configure application for a specific environment">
         <input propertyname="db.pass">Enter database password for ${environment}:</input>
-	<copy overwrite="true" file="${dir.public}/stylesheets/template_main.css" 
+		<copy overwrite="true" file="${dir.public}/stylesheets/template_main.css" 
 		tofile="${dir.public}/stylesheets/main.css">
             <filterchain>
                 <replacetokens begintoken="@" endtoken="@">
@@ -100,7 +100,7 @@
                 </replacetokens>
             </filterchain>
         </copy>
-	<copy overwrite="true" file="${dir.public}/include/template_constants.php" 
+		<copy overwrite="true" file="${dir.public}/include/template_constants.php" 
 		tofile="${dir.public}/include/constants.php">
             <filterchain>
                 <replacetokens begintoken="@" endtoken="@">
@@ -112,7 +112,21 @@
                 	<token key="site_prefix" value="${site.prefix}" />
                 </replacetokens>
             </filterchain>
-        </copy>        
+        </copy>
+		<copy overwrite="true" file="${dir.public}/include/template_config.js" 
+		tofile="${dir.public}/include/config.js">
+            <filterchain>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="db_server" value="${db.server}" />
+                    <token key="db_user" value="${db.user}" />
+                    <token key="db_pass" value="${db.pass}" />
+                    <token key="db_name" value="${db.name}" />
+                    <token key="site_basedir" value="${site.basedir}" />
+                	<token key="site_prefix" value="${site.prefix}" />
+                	<token key="image_dir" value="${image.dir}" />
+                </replacetokens>
+            </filterchain>
+        </copy> 
     </target>
 
     <!-- bootstrap the relevant database for dbdeploy-->  

@@ -126,87 +126,48 @@ class Session
 	 * of that information in the database and creates the session.
 	 * Effectively logging in the user if all goes well.
 	 */
-	function login($subuser, $subpass, $subremember){
-		global $database, $form;  //The database and form object
+	function login($subuser, $subpass, $subremember) {
+		global $database;
 
-		/* Username error checking */
-		$field = "user";  //Use field name for username
-		if(!$subuser || strlen($subuser = trim($subuser)) == 0){
-			$form->setError($field, "* Username not entered");
-		}
-		else{
-			/* Check if username is not alphanumeric */
-			if(!eregi("^([0-9a-z])*$", $subuser)){
-				$form->setError($field, "* Username not alphanumeric");
-			}
-		}
-
-		/* Password error checking */
-		$field = "pass";  //Use field name for password
-		if(!$subpass){
-			$form->setError($field, "* Password not entered");
-		}
-
-		/* Return if form errors exist */
-		if($form->num_errors > 0){
-			return false;
-		}
-
-		/* Checks that username is in database and password is correct */
+		// checks that username is in database and password is correct */
 		$subuser = stripslashes($subuser);
+		$subpass = stripslashes($subpass);
 		$result = $database->confirmUserPass($subuser, md5($subpass));
 
-		/* Check error codes */
-		if($result == 1){
-			$field = "user";
-			$form->setError($field, "* Username not found");
-		}
-		else if($result == 2){
-			$field = "pass";
-			$form->setError($field, "* Invalid password");
+		// check error codes
+		if ($result == 1) {
+			return "INVALID_USER";
+		} else if ($result == 2){
+			return "INVALID_PASSWORD";
 		}
 
 		// check if user has been activated
 		if ($database->confirmUserActive($subuser) == 0) {
-			$field = "user";
-			$form->setError($field, "Username has not been activated.");
-		}
+			return "INACTIVE_USER";
+		}		
 
-		/* Return if form errors exist */
-		if($form->num_errors > 0){
-			return false;
-		}
-
-		/* Username and password correct, register session variables */
+		// username and password correct, register session variables 
 		$this->userinfo  = $database->getUserInfo($subuser);
 		$this->username  = $_SESSION['username'] = $this->userinfo['username'];
 		$this->userid    = $_SESSION['userid']   = $this->generateRandID();
 		$this->userlevel = $this->userinfo['userlevel'];
 
-		/* Insert userid into database and update active users table */
+		// insert userid into database and update active users table
 		$database->updateUserField($this->username, "userid", $this->userid);
 		$database->addActiveUser($this->username, $this->time);
 		#$database->removeActiveGuest($_SERVER['REMOTE_ADDR']);
 
-		/* Reflect fact that user has logged in */
+		// reflect fact that user has logged in
 		$this->logged_in = true;
 
-		/**
-		 * This is the cool part: the user has requested that we remember that
-		 * he's logged in, so we set two cookies. One to hold his username,
-		 * and one to hold his random value userid. It expires by the time
-		 * specified in constants.php. Now, next time he comes to our site, we will
-		 * log him in automatically, but only if he didn't log out before he left.
-		 */
-		if($subremember){
+		// setup cookies to remember login
+		if ($subremember) {
 			setcookie("cookname", $this->username, time()+COOKIE_EXPIRE, COOKIE_PATH);
 			setcookie("cookid",   $this->userid,   time()+COOKIE_EXPIRE, COOKIE_PATH);
 		}
-
-		//echo "session: $this->userinfo $this->username $this->userid $this->userlevel\n";
-		//echo "session: $this->logged_in\n";
-		/* Login completed sucessfuly */
-		return true;
+	
+		// login completed sucessfuly
+		return "OK";
 	}
 
 	/**
@@ -551,6 +512,8 @@ class Session
 		}
 	} // submitBook
 
+	
+	/***************** CAN BE REMOVED **/
 	/**
 	 * Submit a new comment on an article, checking the parameters supplied.
 	 *
@@ -778,9 +741,39 @@ class Session
 	 * @param string $subnewlast
 	 * @return true if user is succesfully updated else false
 	 */
-	function editAccount($subcurpass, $subnewpass, $subnewfirst, $subnewlast, $subemail){
+	function editAccount($suboldusername, $subnewusername, $subcurpass, 
+		$subnewpass, $subnewfirst, $subnewlast, $subemail){
 		global $database, $form;
 
+		$suboldusername = stripslashes($suboldusername);
+		
+		// new username entered as admin user
+		if ($this->isAdmin()) {
+			if ($subnewusername) {
+				// username error checking
+				$field = "username";
+				// spruce up username, and check validity
+				$subnewusername = stripslashes($subnewusername);
+				if (strlen($subnewusername) < 5) {
+					$form->setError($field, "Username is required to be 5 or more characters.");
+				} else if (strlen($subnewusername) > 30) {
+					$form->setError($field, "Username is required to be 30 characters or less.");
+				} else if (!eregi("^([0-9a-z])+$", $subnewusername)) {
+					$form->setError($field, "Username should contain alpha numeric characters only.");
+				} else if (strcasecmp($subnewusername, GUEST_NAME) == 0) {
+					$form->setError($field, "The Username is reserved.");
+				} else if ($subnewusername != $suboldusername) {
+					if ($database->usernameTaken($subnewusername)) {
+						$form->setError($field, "The Username is already in use.");
+					}
+				} else if ($database->usernameBanned($subnewusername)) {
+					$form->setError($field, "The Username contains a banned word.");
+				}
+			} else {
+				$subusername = $this->username;
+			}
+		}
+		
 		// new password entered
 		if ($subnewpass) {
 			// current Password error checking
@@ -795,7 +788,7 @@ class Session
 					$form->setError($field, "The Current Password is invalid.");
 				}
 				// password entered is incorrect
-				if ($database->confirmUserPass($this->username,md5($subcurpass)) != 0) {
+				if ($database->confirmUserPass($subusername,md5($subcurpass)) != 0) {
 					$form->setError($field, "The Current Password is incorrect.");
 				}
 			}
@@ -833,28 +826,34 @@ class Session
 		}
 
 		// errors exist, have user correct them */
-		if($form->num_errors > 0){
+		if ($form->num_errors > 0){
 			return false;  // errors with form
 		}
-
+		
+		if ($this->isAdmin()) {
+			if ($subnewusername != $suboldusername) {
+				$database->updateUserField($suboldusername, "username", $subnewusername);
+			}
+		}
+		
 		// update password since there were no errors
 		if ($subcurpass && $subnewpass) {
-			$database->updateUserField($this->username, "password", md5($subnewpass));
+			$database->updateUserField($subusername, "password", md5($subnewpass));
 		}
 
 		// change Email
 		if ($subemail) {
-			$database->updateUserField($this->username, "email", $subemail);
+			$database->updateUserField($subusername, "email", $subemail);
 		}
 
 		// change firstname
 		if ($subnewfirst) {
-			$database->updateUserField($this->username, "firstname", $subnewfirst);
+			$database->updateUserField($subusername, "firstname", $subnewfirst);
 		}
 
 		// change lastname
 		if ($subnewlast) {
-			$database->updateUserField($this->username, "lastname", $subnewlast);
+			$database->updateUserField($subusername, "lastname", $subnewlast);
 		}
 
 		// success!

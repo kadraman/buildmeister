@@ -12,6 +12,7 @@ include_once("constants.php");
 
 class MySQLDB {
    var $connection;         // the MySQL database connection
+   var $conn;				// the MySQL database connection
    var $num_active_users;   // number of active users viewing site
    var $num_active_guests;  // number of active guests viewing site
    var $num_members;        // number of signed-up users
@@ -19,10 +20,16 @@ class MySQLDB {
    /**
 	* Class constructor
 	*/
-   function MySQLDB() {
+   function __construct() {
       // connect to database
       $this->connection = mysql_connect(DB_SERVER, DB_USER, DB_PASS) or die(mysql_error());
       mysql_select_db(DB_NAME, $this->connection) or die(mysql_error());
+      
+		$this->conn = new mysqli(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
+   		if (mysqli_connect_errno()) {
+    		printf("Connect failed: %s\n", mysqli_connect_error());
+    		exit();
+		}
 
       // only query database to find out number of members
       // when getNumMembers() is called for the first time,
@@ -35,7 +42,18 @@ class MySQLDB {
          // calculate number of guests at site */
          $this->calcNumActiveGuests();
       }
-   } // MySQLDB
+   } // __construct
+   
+   /**
+    * Class destructor
+    */
+   function __destruct() {
+       $this->conn->close();
+   } // __destruct
+   
+   function getConnection() {
+   		return $this->conn;
+   }
 
    /**
     * Checks whether or not the given username is in the database,
@@ -206,6 +224,24 @@ class MySQLDB {
       $result = mysql_query($q, $this->connection);
       return (mysql_numrows($result) > 0);
    } // usernameBanned
+   
+   /**
+    * Checks whether a user exists
+    *
+    * @param string $username
+    * @return true on success, false otherwise.
+    */
+    function userExists($username) {
+   		$retval = true;
+      	# select user
+      	$q = "SELECT active FROM " . TBL_USERS . " WHERE username = '$username'";
+     	$result = mysql_query($q, $this->connection);
+      	# error occurred, user does not exist
+      	if (!$result || (mysql_numrows($result) < 1)) {
+        	$retval = false;
+      	}      	
+      	return $retval;
+    } // userExists   
 
    /**
     * Inserts the given user into the database.
@@ -232,6 +268,22 @@ class MySQLDB {
       return mysql_query($q, $this->connection);
    } // addNewUser
 
+   /**
+    * Delete a user from the database.
+    *
+    * @param integer $username
+    * @return true on success, false otherwise.
+    */
+    function deleteUser($username) {
+      $retval = true;
+      # delete user
+      $q = "DELETE FROM " . TBL_USERS . " WHERE username = '$username'";
+      if (!mysql_query($q, $this->connection)) {
+          $retval = false;
+      }
+      return $retval;
+    } // deleteUser
+     
    /**
     * Adds a new article into the database.
     * By default the article is inactive.
@@ -284,6 +336,25 @@ class MySQLDB {
       	return $retval;
     } // articleExists
     
+   /**
+    * Checks whether an article has been published
+    *
+    * @param integer $artid
+    * @return true on success, false otherwise.
+    */
+    function articlePublished($artid) {
+   		$retval = true;
+      	# select article
+      	$q = "SELECT id FROM " . TBL_ARTICLES . " WHERE id = '$artid' AND state = "
+      		. PUBLISHED_STATE;
+     	$result = mysql_query($q, $this->connection);
+      	# error occurred, article does not exist
+      	if (!$result || (mysql_numrows($result) < 1)) {
+        	$retval = false;
+      	}      	
+      	return $retval;
+    } // articlePublished  
+    
     /**
     * Updates an article in the database.
     * By default the article remains active.
@@ -305,7 +376,7 @@ class MySQLDB {
       //$mysqldate = date( 'Y-m-d H:i:s', strtotime($date));     
       // TODO: turn state into number 
       $q = "UPDATE " . TBL_ARTICLES . " SET date_posted = STR_TO_DATE('$date','%d-%m-%Y'), " .
-		"title = '$title', summary = '$summary', content = '$text', " .
+		"title = '$title', summary = '$summary', content = '$text', state = '$state', " .
         "posted_by = '$author' WHERE id = '$artid'";
       if (!mysql_query($q, $this->connection)) {
           $retval = false;
@@ -693,6 +764,14 @@ class MySQLDB {
    function query($query){
       return mysql_query($query, $this->connection);
    }
+      
+   function getArticles($state) {
+   		$sql = "SELECT id, title, posted_by, DATE_FORMAT(date_posted, \"%M %D, %Y\")" .
+    		" as newdate, summary from " . TBL_ARTICLES . " where state = "
+			. $state . " ORDER BY date_posted DESC;";
+		return $con->query($sql);		
+   }
+   
 };
 
 // create database connection

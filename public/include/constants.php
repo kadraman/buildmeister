@@ -33,7 +33,7 @@ define("TBL_GLOSSCOM", "glossary_comm");
 
 // special names and level constants
 define("SITE_BASEDIR", "http://127.0.0.1/buildmeister.com/public");
-define("SITE_PREFIX", "/buildmeister.com/public/");
+define("SITE_PREFIX", "/buildmeister.com/public");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");
@@ -41,6 +41,7 @@ define("ADMIN_LEVEL", 9);
 define("EDITOR_LEVEL", 5);
 define("USER_LEVEL",  1);
 define("GUEST_LEVEL", 0);
+define("PUBLISHED_STATE", 3); // state at which article is visible to all users
 
 // page row limit for tables
 define("PAGE_LIMIT", 40);
@@ -66,19 +67,19 @@ define("ALL_LOWERCASE", false);
 
 // navigation menu
 $navmenu_main = array( array( 'Title' => "Home",
-                              'Link'  => "/buildmeister.com/public//index.php"
+                              'Link'  => "/buildmeister.com/public/index.php"
                             ),
                        array( 'Title' => "Articles",
-                              'Link'  => "/buildmeister.com/public//articles.php"
+                              'Link'  => "/buildmeister.com/public/pages/articles/"
                             ),
                        array( 'Title' => "Books",
-                              'Link'  => "/buildmeister.com/public//books.php",
+                              'Link'  => "/buildmeister.com/public/books.php",
                            ),
                        array( 'Title' => "Glossary",
-                              'Link'  => "/buildmeister.com/public//glossary.php",
+                              'Link'  => "/buildmeister.com/public/glossary.php",
                             ),
                        array( 'Title' => "Links",
-                              'Link'  => "/buildmeister.com/public//links.php",
+                              'Link'  => "/buildmeister.com/public/links.php",
                        )
                 );
 ?>
