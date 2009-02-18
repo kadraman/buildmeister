@@ -1,7 +1,4 @@
 <?php
-/**
- * users.php
- */
 
 include_once("common.inc");
 include_once("header.php");

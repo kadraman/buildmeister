@@ -906,14 +906,23 @@ class Session
 	 * @param string $referrer
 	 */
 	function displayDialog($title, $text, $referrer) {
-		echo "<div align=\"center\">";
-		echo "<form action=\"$referrer\">\n";
-		echo "<fieldset style=\"width:400px\">\n";
-		echo "<legend>$title</legend>";
-		echo "<p style='text-align:center'>$text</p>";
-		echo "<input type=\"submit\" value=\"OK\">\n";
-		echo "</fieldset>\n";
-		echo "</form></div>\n";
+$dialog =<<<EOD
+<form id="dialogForm" action="$referrer" method="post">
+    <fieldset style="width:350px; margin: 0px auto">   	
+
+		<h2>$title</h2>
+		
+		<p>$text</p>
+ 									
+		<!-- buttons and ajax processing -->
+		<div>					
+			<input type="submit" value="OK" id="submit"/>
+		</div>
+		
+	</fieldset>
+</form>		
+EOD;
+		echo $dialog;
 	}
 };
 

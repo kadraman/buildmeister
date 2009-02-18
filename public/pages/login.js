@@ -1,4 +1,7 @@
 window.addEvent('domready', function() {
+
+	// label kludge for formatting
+	var kludge = '<label for="kludge"><!-- empty --></label>';
 	
 	$('loginForm').addEvent('submit', function(e) {
 		// prevents the default submit event from loading a new page
@@ -6,13 +9,13 @@ window.addEvent('domready', function() {
 		
 		// validate fields	
 		if ($('user').get('value') == "") {
-			$('response').set('html', 
-					"<p class='invalid'>A <b>username</b> is required.</p>");
+			$('response').set('html', kludge 
+					+ "<p class='error'>A username is required</p>");
 			// set focus to username
 			$("user").focus();
 		} else if ($('pass').get('value') == "") {
-			$('response').set('html',  
-					"<p class='invalid'>A <b>password</b> is required.</p>");
+			$('response').set('html', kludge 
+					+ "<p class='error'>A password is required</p>");
 			// set focus to password
 			$("pass").focus();
 		} else {
@@ -41,8 +44,8 @@ window.addEvent('domready', function() {
 						setTimeout('go_to_home_page()', 3000);
 						break;
 					case "INVALID_USER":
-						$('response').set('html', 
-							"<p class='invalid'>The <b>username</b> specified does not exist.</p>");
+						$('response').set('html', kludge 
+								+ "<p class='error'>The user does not exist</p>");
 			  
 						// enable the submit button
 						$('submit').set('disabled', false);
@@ -50,8 +53,8 @@ window.addEvent('domready', function() {
 						$("user").focus();
 						break;
 					case "INACTIVE_USER":
-						$('response').set('html', 
-							"<p class='invalid'>The <b>username</b> has not yet been activated.</p>");
+						$('response').set('html', kludge 
+								+ "<p class='error'>The user has not yet been activated</p>");
 			  
 						// enable the submit button
 						$('submit').set('disabled', false);
@@ -59,8 +62,8 @@ window.addEvent('domready', function() {
 						$("user").focus();
 						break;							
 					case "INVALID_PASSWORD":
-						$('response').set('html', 
-							"<p class='invalid'>The <b>password</b> is incorrect.</p>");
+						$('response').set('html', kludge 
+								+ "<p class='error'>The password is incorrect</p>");
 					  
 						// enable the submit button
 						$('submit').set('disabled', false);
@@ -68,8 +71,8 @@ window.addEvent('domready', function() {
 						$("pass").focus();
 						break;
 					default:
-						$('response').set('html', 
-							"<p class='invalid'>Error logging in</p>");
+						$('response').set('html', kludge 
+								+ "<p class='error'>Error logging in</p>");
 					  
 						// enable the submit button
 						$('submit').set('disabled', false);

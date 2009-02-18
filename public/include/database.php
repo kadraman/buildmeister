@@ -355,6 +355,25 @@ class MySQLDB {
       	return $retval;
     } // articlePublished  
     
+   /**
+    * Get the title of an article
+    *
+    * @param integer $artid
+    * @return article title else NULL
+    */
+    function getArticleTitle($artid) {
+    	$retval = NULL;
+      	// select article
+      	$sql = "SELECT title FROM " . TBL_ARTICLES . " WHERE id = '$artid'";
+      	if ($result = mysqli_query($this->conn, $sql)) {
+      		$row = mysqli_fetch_row($result);
+      		$retval = $row['0'];
+      		mysqli_free_result($result);
+      	}
+     	return $retval;
+    } // getArticleTitle      
+
+    
     /**
     * Updates an article in the database.
     * By default the article remains active.
@@ -381,23 +400,26 @@ class MySQLDB {
       if (!mysql_query($q, $this->connection)) {
           $retval = false;
       } else {
-          # update categories
-          # delete existing refernces to category
-          $q = "DELETE FROM " . TBL_ARTICLE_CATEGORIES . " WHERE article_id = '$artid'";
-          if (!mysql_query($q, $this->connection)) {
-              $retval = false;
-              break;
-          } else {
-              # add again
-              foreach ($category as $catid) {
-                  $q = "INSERT INTO " . TBL_ARTICLE_CATEGORIES . " (article_id, cat_id)"
-                      . " VALUES ('$artid', '$catid')";
-                  if (!mysql_query($q, $this->connection)) { 
-                      $retval = false; 
-                      break;
-                  }
-              }
-          }
+         	# update categories
+          	# delete existing refernces to category
+          	$q = "DELETE FROM " . TBL_ARTICLE_CATEGORIES . " WHERE article_id = '$artid'";
+          	if (!mysql_query($q, $this->connection)) {
+            	  $retval = false;
+              	break;
+          	} else {
+            	  # add again
+          		if ($category) {
+	              	foreach ($category as $catid) {
+    	            	$q = "INSERT INTO " . TBL_ARTICLE_CATEGORIES . " (article_id, cat_id)"
+        	              . " VALUES ('$artid', '$catid')";
+            	      	if (!mysql_query($q, $this->connection)) { 
+                	    	  $retval = false; 
+                    	  	break;
+                  		}
+              		}
+          		}
+          	}
+      	
       }
       return $retval;
     } // updateArticle

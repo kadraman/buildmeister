@@ -6,8 +6,6 @@ include_once("session.php");
 echo "<div id='article'>\n";
 echo "<div id='toptitle'>\n";
 
-sleep(4);
-
 if (!isset($_POST['searchKeywords']) || ($_POST['searchKeywords'] == "")
 	|| ($_POST['searchKeywords'] == "Enter keyword(s)")) {
 	// no keywords have been specified

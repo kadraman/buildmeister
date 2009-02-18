@@ -39,13 +39,15 @@ $sql = "SELECT a.id, DATE_FORMAT(a.date_posted, \"%M %D, %Y\") " .
 		"as newdate , a.posted_by, a.title, a.summary FROM " .
 		TBL_ARTICLES . " a, " . TBL_CATEGORIES . " c, " .
 		TBL_ARTICLE_CATEGORIES . " ac WHERE ac.cat_id = " . $catid . 
-		" AND c.id = ac.cat_id AND a.id = ac.article_id AND a.state = 1;";
+		" AND c.id = ac.cat_id AND a.id = ac.article_id AND a.state = " .
+		PUBLISHED_STATE . " ORDER BY a.date_posted DESC;";
 $result = mysql_query($sql);
 $numrows = mysql_num_rows($result);
 
 if ($numrows != 0) {
     while ($row = mysql_fetch_assoc($result)) {
- 		echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
+ 		echo "<div id='splitlist'><strong><a href='"
+ 			. SITE_PREFIX . "/pages/articles/view.php?id=" . $row['id'] . "'>"
  		    . $row['title'] . "</a></strong><br/>"
  		    . "<small>Posted by <a href='userinfo.php?user=" . $row['posted_by'] 
  		    . "'>" . $row['posted_by'] . "</a> on "

@@ -62,9 +62,9 @@ form div label {
 	font: 100% arial, "lucida console", sans-serif;	                          
 }
 
-form input.txt, textarea.txt {
+form input.txt, textarea.txt, select.txt {
 	font-size: 8pt;
-	color: #228;
+	color: #000;
 	padding: 0.2em;
 	background-color: #FFF;
 	border: 1px solid #CCC;	
@@ -82,7 +82,7 @@ form img.txt {
 	border: solid 1px #CCC;                         
 }
 
-form input.txt:hover, textarea.txt:hover {
+form input.txt:hover, textarea.txt:hover, , select.txt {
 	border: 1px solid #888;                          
 }
 
@@ -345,8 +345,35 @@ select.formSelect:focus {
   border-bottom: 1px dashed #B2B2B2; }  
 #splitlist {text-align: justify; 
   padding: 0.5em; margin: 0 2em 0em 1.5em;}  
-#comment {text-align: left; border-top: 1px dashed #B2B2B2;
-  padding: 0.5em; margin: 0 2em 0em 1.5em;}  
+
+#comment .odd {
+	border: dotted 1px #E1E1E1;  
+  	padding-left: 10px;       
+  	padding-right: 10px;
+  	padding-top: 0;
+  	padding-bottom: 0;
+  	margin-top: 1.4em;
+  	background-color: #F7F7F7;
+}
+#comment .even {
+	border: dotted 1px #E1E1E1;  
+  	padding-left: 10px;        
+  	padding-right: 10px;
+  	padding-top: 0;
+  	padding-bottom: 0;
+  	margin-top: 1.4em;
+  	background-color: #F7F7F7;
+}
+#comment .header {
+	font-size: 1.3em;
+}
+#comment .footer {
+	border-top: dotted 1px #E1E1E1;
+	padding-top: 4px;
+	font-size: 0.8em;
+	color: #67A6E2;
+}
+
 #boxedtitle {margin-bottom: 0.5em; font: 2em; letter-spacing: 2px;
   padding: 0.5em; color: #FFF; background-color: #7A96AB;}
 #dashed-spacer { margin-top: 1em; border-bottom: 1px dashed #B2B2B2;}
@@ -354,6 +381,7 @@ select.formSelect:focus {
 #alphabet a { color:#228; text-decoration:underline; }
 #alphabet a.visited { color:#228; text-decoration:underline; }
 td.glossitem { width:50%; padding: 1.0em; text-align:justify }
+
 
 /*
  * footer - for additional site links 

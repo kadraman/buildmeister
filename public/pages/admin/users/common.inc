@@ -6,8 +6,4 @@ if (!defined("PATH_SEPARATOR")) {
 	else define("PATH_SEPARATOR", ":");
 }
 ini_set("include_path", "." . PATH_SEPARATOR . "../../../include");
-
-// home page is selected from navigation menu
-session_unregister("SESS_NAVITEM");
-//$_SESSION['SESS_NAVITEM'] = 0;
 ?>

@@ -21,7 +21,7 @@ if ($session->logged_in) {
 
 		<!-- ajax login response -->
 		<div id="response">
-			<p>All <b>Bold</b> fields are required.</p>
+			<p>All fields in <b>bold</b> fields are required.</p>
 		</div>
 		
 		<!-- username -->

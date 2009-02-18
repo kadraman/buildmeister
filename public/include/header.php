@@ -1,11 +1,21 @@
 <?php
-    include("session.php");
+
+include_once("session.php");
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-	<title><?php echo SITE_NAME; ?></title>
+	<title>
+<?php
+if (isset($html_head_title)) {
+	echo SITE_NAME . ": " . $html_head_title; 
+} else {
+	echo SITE_NAME;
+}
+?>	
+	</title>
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/include/config.js"></script>
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/mootools-1.2.1-core.js"></script>
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/mootools-1.2-more.js"></script>

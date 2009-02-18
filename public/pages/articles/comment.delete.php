@@ -1,10 +1,7 @@
 <?php
 
-// articles page is selected
-session_register("SESS_NAVITEM");
-$_SESSION['SESS_NAVITEM'] = 1;
-
-include_once("include/header.php");
+include_once("common.inc");
+include_once("header.php");
 
 if (!$session->isAdmin()) {
 	// insufficient permission to delete comments
@@ -21,7 +18,7 @@ if (!$session->isAdmin()) {
 		// invalid comment specified
 		$session->displayDialog("Comment Does Not Exist",
 	    	"The specified comment does not exist, please select a comment to be deleted.",
-	        SITE_BASEDIR . "/viewarticle.php?id=" . clean_data($_GET['aid']));		        
+	        SITE_PREFIX . "/pages/articles/view.php?id=" . clean_data($_GET['aid']));		        
     } else {
     	$artid = clean_data($_GET['aid']);
         // delete the article comment
@@ -30,16 +27,16 @@ if (!$session->isAdmin()) {
 	    	// delete succeeded
 	    	$session->displayDialog("Comment Deleted",
 	    	"The specified comment has been succesfully deleted.",
-	        SITE_BASEDIR . "/viewarticle.php?id=$artid"); 
+	        SITE_PREFIX . "/pages/articles/view.php?id=$artid"); 
 	    } else {
 	    	// delete failed
 	    	$session->displayDialog("Error Deleting Comment",
 	    	"There was an error deleting the comment.",
-	        SITE_BASEDIR . "/viewarticle.php?id=$artid"); 
+	        SITE_PREFIX . "/pages/articles/view.php?id=$artid"); 
 	    }
     }    
 }
     
-include_once("include/footer.php");
+include_once("footer.php");
 
 ?>
