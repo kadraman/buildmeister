@@ -33,9 +33,11 @@ if (!isset($_POST['searchKeywords']) || ($_POST['searchKeywords'] == "")
 	
 	if ($numrows > 0) {
     	while ($row = mysql_fetch_assoc($result)) {
-        	echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] . "'>"
+        	echo "<div id='splitlist'><strong><a href='"
+        		. SITE_PREFIX . "/pages/articles/view.php?id=" . $row['id'] . "'>"
  		    	. $row['title'] . "</a></strong><br/>"
- 		    	. "<small>Posted by <a href='userinfo.php?user=" . $row['posted_by'] 
+ 		    	. "<small>Posted by <a href='" . SITE_PREFIX 
+ 		    	. "/pages/users/view.php?user=" . $row['posted_by'] 
  		    	. "'>" . $row['posted_by'] . "</a> on "
  		    	. $row['newdate'] . "</small><br/>"
 		    	. $row['summary'] . "</div>";

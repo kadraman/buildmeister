@@ -28,7 +28,8 @@ include_once("header.php");
 		while ($row = mysqli_fetch_assoc($result)) {
 			echo "<div id='splitlist'><strong><a href='view.php?id=" . $row['id'] . "'>"
  		    	. $row['title'] . "</a></strong><br/>"
- 		    	. "<small>Posted by <a href='../../userinfo.php?user=" . $row['posted_by'] 
+ 		    	. "<small>Posted by <a href='" . SITE_PREFIX 
+ 		    	. "/pages/users/view.php?user=" . $row['posted_by'] 
  		    	. "'>" . $row['posted_by'] . "</a> on "
  		    	. $row['newdate'] . "</small><br/>"
 		    	. $row['summary'] . "</div>";

@@ -231,6 +231,12 @@ select.formSelect:focus {
 	margin:0px;
 	padding:0px;
 }
+/* success message */
+.success {
+	color:#228822;
+	margin:0px;
+	padding:0px;
+}
 
 #formContainer: {
 	text-align: center;
@@ -292,6 +298,7 @@ select.formSelect:focus {
 	position: relative;
 	float: left;
 	width: 198px;
+	margin-top: 20px;
 }
 /*#sideseparator{
 	border-left:1px solid #E6EDF2;
@@ -429,79 +436,6 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
 	margin: 0px;
 	padding: 16px 0px 0px 0px;
 }
-
-/* 
- *
- * navigation bar - for main links
- *
- */
-#navigation {
-	position: relative;
-	float: left;
-	padding: 10px 10px 15px 10px;
-	width: 180px;
-}
-#navigation ul {
-	background: #C8D7E3 
-	    url("/buildmeister.com/public/images/template-leftnav.gif")
-		no-repeat 100% 100%;
-	line-height: 1.25em;
-	list-style-type: none;
-	margin: 0px;
-	padding: 0px 0px 21px;
-}
-#navigation li a.subsection {
-	background:#FFF 
-	    url("/buildmeister.com/public/images/template-right-arrow.gif")
-		no-repeat 6px 0.33em;
-	border-top: none;
-	border-bottom: 1px solid #FFF;
-	border-left: 1px solid #E6EDF2;
-	border-right: 1px solid #E6EDF2;
-	display: block;
-	margin: 0px;
-	padding: 3px 4px 3px 20px;
-}
-#navigation li a.subsection:hover {
-	background: #98B1C4 
-	    url("/buildmeister.com/public/images/template-right-arrow.gif")
-		no-repeat 6px 0.33em;
-	border-top: none;
-	border-bottom: 1px solid #FFF;
-	border-left: 1px solid #E6EDF2;
-	border-right: 1px solid #E6EDF2;
-	display: block;
-	margin: 0px;
-	padding: 3px 4px 3px 20px;
-}
-#navigation li a {
-	background: #7A96AB
-		url("/buildmeister.com/public/images/template-box.gif")
-		repeat-x 0px 50%;
-	border-top: 1px solid #E6EDF2;
-	display: block;
-	margin: 0px;
-	padding: 4px 10px;
-}
-#navigation a {
-	color:#228;
-	text-decoration:none;
-}
-#navigation li a.is-active {
-	padding-top: 5px;
-	padding-bottom: 3px;
-	background: #FFF
-		url("/buildmeister.com/public/images/template-leftnav-selected.gif")
-		repeat-x 0% 0%;
-	border-top: 1px solid #E6EDF2;
-}
-#navigation li a.is-active:hover {
-	background: #98B1C4;
-	border-top: 1px solid #E6EDF2;
-}
-#navigation li a:hover {
-	background: #98B1C4;
-}	
 
 /* 
  * sidebar container for menu items, information etc.

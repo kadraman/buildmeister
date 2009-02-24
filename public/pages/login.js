@@ -36,7 +36,7 @@ window.addEvent('domready', function() {
 						// enable the submit button
 						$('submit').set('disabled', false);
 				
-						$('status').set('html', '<div id="logged_in"><p>You are now logged in! <br />' +
+						$('status').set('html', '<p><b>You are now logged in!</b><br />' +
 							'<img align="absmiddle" src="' + config['image.dir'] + '/loader-bar.gif">' +
 							'<br>Please wait while we redirect you to your home page...</p></div>');
 

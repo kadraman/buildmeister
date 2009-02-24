@@ -84,12 +84,12 @@ include_once("functions.php");
 			$email  = mysql_result($result, $i, "email");
 			$time   = date("M d, Y", mysql_result($result, $i, "timestamp"));
 			$active = ((mysql_result($result, $i, "active") == 1) ? "Yes" : "No");
-			echo "<td><a href='edit.php?username=" . $uname
+			echo "<td><a href='" . SITE_PREFIX . "/pages/users/view.php?user=" . $uname
 				. "'><img src='" . SITE_BASEDIR . "/images/icons/16x16/edit.png'></img></a>";
-			echo "<td><a href='delete.php?username=" . $uname 
+			echo "<td><a href='delete.php?user=" . $uname 
 				. "' onclick=\"return confirm('Are you sure you want to delete this user?')\""
 				. "'><img src='" . SITE_BASEDIR . "/images/icons/16x16/delete.png'></img></a>";
-			echo "<td><a href='edit.php?username=" .
+			echo "<td><a href='" . SITE_PREFIX . "/pages/users/view.php?user=" .
 				$uname . "'>$uname</a></td>\n";
 			echo "<td class='centerAlign'>$ulevel</td>\n";
 			echo "<td>$email</td>\n";

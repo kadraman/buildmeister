@@ -606,11 +606,11 @@ class MySQLDB {
     * @param string $value
     * @return true on success, false otherwise.
     */
-   function updateUserField($username, $field, $value) {
-      $q = "UPDATE " . TBL_USERS . " SET " . $field
-      . " = '$value' WHERE username = '$username'";
-      return mysql_query($q, $this->connection);
-   } // updateUserField
+	function updateUserField($username, $field, $value) {
+      	$sql = "UPDATE " . TBL_USERS . " SET " . $field
+      		. " = '$value' WHERE username = '$username'";
+      	return mysqli_query($this->conn, $sql);
+   	} // updateUserField
 
    /**
     * Gets all the information for a specific user.

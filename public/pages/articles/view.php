@@ -56,7 +56,8 @@ if (!isset($_GET['id'])) {
     	// show the article if unpublished and admin
     	if ($row['state'] == PUBLISHED_STATE || $session->isAdmin()) {
    			// display article
-   			echo "<p class='header'>Posted by <a href='../../userinfo.php?user=" . $row['posted_by'] 
+   			echo "<p class='header'>Posted by <a href='"
+   				. SITE_PREFIX . "/pages/users/view.php?user=" . $row['posted_by'] 
     			. "'>" . $row['posted_by'] . "</a> on " . $row['newdate'];
 
     		// display edit and delete links

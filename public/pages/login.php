@@ -13,11 +13,11 @@ if ($session->logged_in) {
 
 <h1>Log in</h1>
 
-<!-- named div so content can be replaced on succesful login -->
-<div id="status">
+<!-- named div so content can be replaced on successfull login -->
+<div id="status" style="width:350px; margin: 0px auto">
 
 <form id="loginForm" action="login.submit.php" method="post">
-    <fieldset style="width:350px; margin: 0px auto">   	
+    <fieldset>   	
 
 		<!-- ajax login response -->
 		<div id="response">

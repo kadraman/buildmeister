@@ -4,7 +4,7 @@ var FilterTable = new Class({
 		this.script = loadScript;		
 		this.attach();
 	},
-	attach:function() {
+	attach: function() {
 		var busy = false;
 		var req = new Request.HTML({
 			url: this.script, 
