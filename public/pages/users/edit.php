@@ -6,26 +6,31 @@ include_once("header.php");
 // do we have a user?
 if (!isset($_POST['user'])) {
 	$session->displayDialog("No Username Specified",
-	 	"No username has been specified, please select a user on the "
-	 	. "<b>users</b> page.",
-	 	SITE_BASEDIR . "/pages/admin/users/");
+	 	"No username has been specified.",
+	 	SITE_BASEDIR . "/index.php");
 // does the user exist	 	
 } else if (!$database->usernameTaken(clean_data($_POST['user']))) {
 	$session->displayDialog("Username Does Not Exist",
-	   	"The specified username does not exist, please select a user on the "
-	   	. "<b>users</b> page.",
-	    SITE_BASEDIR . "/pages/admin/users/");
+	   	"The specified username does not exist.",
+	    SITE_BASEDIR . "/index.php");
 // do we have permission to edit this user?	    
-} else if (!$session->isAdmin() && (strcmp($session->username, clean_data($_POST['user']) != 0))) {
-	$session->displayDialog("Insufficient Permission",
-   		"Sorry you do not have permission to edit this user.",
-	SITE_BASEDIR . "/index.php");
-} else {
-		
+} else if (strcmp($session->username, clean_data($_POST['user'])) != 0) {
+	if (!$session->isAdmin()) {
+		$session->displayDialog("Insufficient Permission",
+   			"Sorry you do not have permission to edit this user.",
+		SITE_BASEDIR . "/index.php");
+	}
+} else {	
 
 	// retrieve the username of the user to display
 	$username = clean_data($_POST['user']);
 	$newusername = "";
+	
+	if ($session->isAdmin()) {
+		echo "<h1>" . $current_user . "'s account</h1>";
+	} else {
+		echo "<h1>My account</h1>";
+	}
 
 	// fetch username data
 	$sql = "SELECT * from " . TBL_USERS . " where username = '" . $username. "'";
@@ -47,13 +52,13 @@ if (!isset($_POST['user'])) {
 		
 		<!-- ajax login response -->
 		<div id="response">
-			<p>All fields in <b>bold</b> are required.</p>
+			All fields in <b>bold</b> are required.
 		</div>
 		
 		<!-- users current username (non-editable) -->
 		<div>
-			<label for="username" accesskey="c">Username:</label>
-			<input type="text" id="username" name="username" class="txt" disabled
+			<label for="username" accesskey="u">Username:</label>
+			<input type="text" id="username" name="username" class="disabled" disabled
 				value="<?php echo $username; ?>">
 		</div>			
 				

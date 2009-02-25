@@ -3,12 +3,6 @@
 include_once("common.inc");
 include_once("header.php");
 
-// are you already logged in
-if ($session->logged_in) { 
-	$session->displayDialog("Already logged in",
-        "The user <b>$session->username</b> is already logged in.",
-        SITE_BASEDIR . "/userinfo.php");
-} else {
 ?>
 
 <h1>Log in</h1>
@@ -21,7 +15,7 @@ if ($session->logged_in) {
 
 		<!-- ajax login response -->
 		<div id="response">
-			<p>All fields in <b>bold</b> fields are required.</p>
+			All fields in <b>bold</b> are required.
 		</div>
 		
 		<!-- username -->
@@ -62,6 +56,6 @@ if ($session->logged_in) {
 </div>
 
 <?php
-}
+
 include_once("footer.php");
 ?>

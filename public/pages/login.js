@@ -1,22 +1,33 @@
 window.addEvent('domready', function() {
 
-	// label kludge for formatting
-	var kludge = '<label for="kludge"><!-- empty --></label>';
-	
 	$('loginForm').addEvent('submit', function(e) {
 		// prevents the default submit event from loading a new page
 		new Event(e).stop();
 		
+		// where we will place the response
+		var responseDiv = $('loginForm').getElement('#response');
+		
+		// remove error style from fields
+		this.getElements('.error').each(function(input) {
+			if (input.hasClass('error')) { 
+				input.removeClass('error').morph({ 'border-color': '#ccc', 'background-color': '#fff' }); 
+			}
+		});
+		
 		// validate fields	
 		if ($('user').get('value') == "") {
-			$('response').set('html', kludge 
-					+ "<p class='error'>A username is required</p>");
-			// set focus to username
+			responseDiv.set('html', 
+				"<span class='error'>A <b>username</b> is required.</span>");
+			responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
+			responseDiv.morph({ 'opacity': '1' });
+			$("user").addClass('error').morph({ 'border-color': '#f00', 'background-color': '#ffebe8' });
 			$("user").focus();
 		} else if ($('pass').get('value') == "") {
-			$('response').set('html', kludge 
-					+ "<p class='error'>A password is required</p>");
-			// set focus to password
+			responseDiv.set('html', 
+				"<span class='error'>A <b>password</b> is required.</span>");
+			responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
+			responseDiv.morph({ 'opacity': '1' });
+			$("pass").addClass('error').morph({ 'border-color': '#f00', 'background-color': '#ffebe8' });
 			$("pass").focus();
 		} else {
 		
@@ -30,54 +41,36 @@ window.addEvent('domready', function() {
 			this.set('send', { onComplete: function(response) {
 				$('waiting').setStyle('visibility', 'hidden');
 
+				// decode the JSON response
+				var status = JSON.decode(response);
+				
 				// act on the response
-				switch (response) {
-					case "OK":
-						// enable the submit button
-						$('submit').set('disabled', false);
+				if (status.code) {
+					// successful login
+					
+					// enable the submit button
+					$('submit').set('disabled', false);
 				
-						$('status').set('html', '<p><b>You are now logged in!</b><br />' +
-							'<img align="absmiddle" src="' + config['image.dir'] + '/loader-bar.gif">' +
-							'<br>Please wait while we redirect you to your home page...</p></div>');
+					$('status').set('html', "<span class='success'><b>You are now logged in!</b><br />" +
+						"<img align='absmiddle' src='" + config['image.dir'] + "/loader-bar.gif'>" +
+						"'<br>Please wait while we redirect you to your home page...</span></div>");
 
-						// go to home page
-						setTimeout('go_to_home_page()', 3000);
-						break;
-					case "INVALID_USER":
-						$('response').set('html', kludge 
-								+ "<p class='error'>The user does not exist</p>");
-			  
-						// enable the submit button
-						$('submit').set('disabled', false);
-				
-						$("user").focus();
-						break;
-					case "INACTIVE_USER":
-						$('response').set('html', kludge 
-								+ "<p class='error'>The user has not yet been activated</p>");
-			  
-						// enable the submit button
-						$('submit').set('disabled', false);
-				
-						$("user").focus();
-						break;							
-					case "INVALID_PASSWORD":
-						$('response').set('html', kludge 
-								+ "<p class='error'>The password is incorrect</p>");
-					  
-						// enable the submit button
-						$('submit').set('disabled', false);
-			
-						$("pass").focus();
-						break;
-					default:
-						$('response').set('html', kludge 
-								+ "<p class='error'>Error logging in</p>");
-					  
-						// enable the submit button
-						$('submit').set('disabled', false);
-			
-						$("user").focus();
+					// go to home page
+					setTimeout('go_to_home_page()', 3000);
+				} else {
+					// failed login
+					
+					// enable the submit button
+					$('submit').set('disabled', false);
+					
+					responseDiv.set('html',
+						"<span class='error'>" + status.message + "</p>");
+					responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
+					responseDiv.morph({ 'opacity': '1' });
+					if ($(status.field)) {
+						$(status.field).addClass('error').morph({ 'border-color': '#f00', 'background-color': '#ffebe8' });
+						$(status.field).focus();
+					}
 				}
 			}});
 
@@ -92,5 +85,5 @@ window.addEvent('domready', function() {
 
 // navigate to users home page
 function go_to_home_page() {
-	window.location = 'admin/users/index.php'; 
+	window.location = 'users/view.php'; 
 }
