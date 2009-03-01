@@ -4,9 +4,9 @@
     	<!-- footer begin -->
     	<div id="footer">
         	<ul>
-            	<li class="first"><a href="about.php">About</a></li>
-            	<li><a href="contact.php">Contact</a></li>
-            	<li><a href="terms.php">Terms of Use</a></li>
+            	<li class="first"><a href="<?php echo SITE_PREFIX; ?>/pages/about.php">About</a></li>
+            	<li><a href="<?php echo SITE_PREFIX; ?>/pages/contact.php">Contact</a></li>
+            	<li><a href="<?php echo SITE_PREFIX; ?>/pages/terms.php">Terms of Use</a></li>
        		</ul>
     	</div>
     	<!-- footer end -->

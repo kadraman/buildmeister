@@ -21,20 +21,24 @@ window.addEvent('domready', function() {
 		}
 	});
 	
-	$('searchKeywords').addEvents({
-		'focus': function(){ if (this.value == 'Enter keyword(s)' ) this.value = ''; }, 
-		'blur': function(){  if (!this.value) this.value = 'Enter keyword(s)';  },
+	//$('searchKeywords').addEvents({
+	//	'focus': function(){ if (this.value == 'Enter keyword(s)' ) this.value = ''; }, 
+	//	'blur': function(){  if (!this.value) this.value = 'Enter keyword(s)';  },
+	//});
+	
+	new LabelledInput({
+        inputs: $$('input.labelled')
 	});
-		
+
 	$('searchForm').addEvent('submit', function(e) {
 		// prevents the default submit event from loading a new page
 		new Event(e).stop();
 		
 		// validate fields	
-		if ($('searchKeywords').get('value') == "") {
-			$('searchKeywords').set('value', 'Enter keyword(s)');
+		if ($('keywords').get('value') == "" || $('keywords').get('value') == "keywords") {
+			$('keywords').set('value', 'keywords');
 			// set focus to search keywords
-			$("searchKeywords").focus();
+			$("keywords").focus();
 		} else {					
 			var currentKeywords;
 			//var currentTextColor = $('searchKeywords').getStyle('color');
@@ -45,8 +49,8 @@ window.addEvent('domready', function() {
 			// set the options of the form's Request handler.
 			this.set('send', {
 				onRequest: function()  { 
-					currentKeywords = $('searchKeywords').get('value');
-					$('searchKeywords').set('value', "Searching...");					
+					currentKeywords = $('keywords').get('value');
+					$('keywords').set('value', "Searching...");					
 					//$('searchKeywords').flash(currentTextColor, '#FFF', 5, 'color', 500); 
 				},
 				onComplete: function(response) {											
@@ -56,7 +60,7 @@ window.addEvent('domready', function() {
 					// reset search keywords
 					//$('searchKeywords').fx.cancel();
 					//$('searchKeywords').set('color', '#000');
-					$('searchKeywords').set('value', currentKeywords);
+					$('keywords').set('value', currentKeywords);
 
 					// enable the submit button
 					$('submit').set('disabled', false);

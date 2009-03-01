@@ -27,23 +27,26 @@ if (!isset($_POST['user'])) {
 	$newusername = "";
 	
 	if ($session->isAdmin()) {
-		echo "<h1>" . $current_user . "'s account</h1>";
+		echo "<h1>" . $username . "'s account</h1>";
 	} else {
 		echo "<h1>My account</h1>";
 	}
 
 	// fetch username data
 	$sql = "SELECT * from " . TBL_USERS . " where username = '" . $username. "'";
-	$result = mysql_query($sql);
-	$numrows = mysql_num_rows($result);
+	$result = mysqli_query($database->conn, $sql);
+	$numrows = mysqli_num_rows($result);
 
 	if ($numrows != 0) {
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = mysqli_fetch_assoc($result)) {
 			$firstname = $row['firstname'];
 			$lastname  = $row['lastname'];
 			$email     = $row['email'];
+			$website   = $row['website'];
 		}
 	}
+	
+	mysqli_free_result($result);
 
 ?>
 
@@ -87,7 +90,14 @@ if (!isset($_POST['user'])) {
 			<input type="text" id="lastname" name="lastname" class="txt"
 				value="<?php echo $lastname; ?>">
 		</div>		
-			
+
+		<!-- users website -->
+		<div>
+			<label for="website" accesskey="e">Website:</label>
+			<input type="text" id="website" name="website" size="50" class="txt"
+				style="width:250px" value="<?php echo $website; ?>">
+		</div>	
+					
 		<!-- users email address -->
 		<div>
 			<label for="email" class="required" accesskey="e">Email:</label>

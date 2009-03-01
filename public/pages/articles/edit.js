@@ -39,7 +39,7 @@ window.addEvent('domready', function() {
 						case "OK":			
 							$('response').set('html', 
 								'<p><b>Article successfully saved, reloading article view...</b></p>' +
-								'<br><img align="left" src="' + config['image.dir'] + '/loader-bar.gif">');
+								'<br><img align="left" src="' + CONFIG.image_dir + '/loader-bar.gif">');
 							// go to article
 							setTimeout('go_to_article()', 3000);
 							break;	

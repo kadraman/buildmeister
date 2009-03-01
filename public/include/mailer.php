@@ -1,76 +1,146 @@
 <?php 
-/**
- * Mailer.php
+
+/*
+ * Copyright 2007-2009 Kevin A. Lee
  *
- * The Mailer class is meant to simplify the task of sending
- * emails to users. Note: this email system will not work
- * if your server is not setup to send mail.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * If you are running Windows and want a mail server, check
- * out this website to see a list of freeware programs:
- * <http://www.snapfiles.com/freeware/server/fwmailserver.html>
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Written by: Jpmaster77 a.k.a. The Grandmaster of C++ (GMC)
- * Last Updated: August 19, 2004
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 
+require("XPertMailer/MAIL.php");
+include_once("constants.php");
+
+error_reporting(E_ALL); // report all errors
+
+/**
+ * Support class for sendind formatted emails .
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
+ */
 class Mailer {
+	
+	var $error_message;		// a description of the error for any failures
+		
    /**
-    * sendWelcome - Sends a welcome message to the newly
-    * registered user, also supplying the username and
-    * password.
+    * Sends a welcome message to a newly registered user, 
+    * supplying the username and password.
+    * 
+    * @param string $user - the user's username
+    * @param string $email - the user's email
+    * @param string $pass - the user's password
+    * @param string $verifystring - a verification string to be used
+    * @return true if email sent successfully, else false (the class variable 
+    * $error_message will be set with the error code and text)
+    *  
     */
-   function sendVerification($user, $email, $pass, $verifystring){
+   function sendVerification($user, $email, $pass, $verifystring) {
       $from = "From: ". EMAIL_FROM_NAME . " <" . EMAIL_FROM_ADDR . ">";
       $subject = "\"" . SITE_NAME . "\" Registration";
       $body = "Hello " . $user . ",\n\n"
              . "Please click on the following link to verify your new account:\n\n"
-             . SITE_BASEDIR . "/verify.php" . "?email=" . $email . "&verify=" . $verifystring
+             . SITE_BASEDIR . "/pages/users/verify.php" . "?email=" . $email . "&verify=" . $verifystring
              . "\n\nThe Buildmeister\n";
              
-      return mail($email,$subject,$body,$from);
-   }
+      return mail($email, $subject, $body, $from);
+   } // sendVerification
    
    /**
-    * Send a notification message to all interested users
+    * Send a notification message to all interested users.
     *
-    * @param string $message
-    * @return unknown
+    * @param string $message - message to be setn
+    * @return true if email sent successfully, else false (the class variable 
+    * $error_message will be set with the error code and text)
     */
    function sendNotification($message) {
-      $from = "From: ". EMAIL_FROM_NAME . " <" . EMAIL_FROM_ADDR . ">";
-      $subject = "\"" . SITE_NAME . "\" New Submission";
-      $body = "A new submissions has been made to The Buildmeister:\n\n" . $message
-             . "\n\nThe Buildmeister\n";
+   		// TODO: get users who wish to be notified            
+      	$email = "kevin.lee@buildmeister.com";
+      	$user  = "kevin";
+      	
+        global $_RESULT;
+   	   		
+		$m = new MAIL;
 
-      // just me for now             
-      return mail("kevin.lee@buildmeister.com",$subject,$body,$from);
+		// try and connect to mail server
+		if (!($c = $m->Connect(SMTP_SERVER, 25, SMTP_USERNAME, SMTP_PASSWORD))) {
+			$this->error_message = $_RESULT;
+			return false;
+		} else {
+			// format the message
+			$f = $m->From(EMAIL_FROM_ADDR, EMAIL_FROM_NAME);
+			$t = $m->AddTo($email, $user);
+			$s = $m->Subject('[' . SITE_NAME . '] notification');
+			$m->Html($message);
+						
+			// send mail
+			if (!$m->Send($c)) {
+				$this->error_message = $_RESULT;
+				return false;
+			}
+			return true;
+		}    	
    } // sendNotification
    
    /**
-    * sendNewPass - Sends the newly generated password
-    * to the user's email address that was specified at
-    * sign-up.
+    * Sends the newly generated password to the user's email address 
+    * that was specified at registration.
+    * 
+    * @param string $user - the user's username
+    * @param string $email - the user's email
+    * @param string $pass - the user's new password
+    * @return true if email sent successfully, else false (the class variable 
+    * $error_message will be set with the error code and text)   
+    * 
     */
-   function sendNewPass($user, $email, $pass){
-      $from = "From: ".EMAIL_FROM_NAME." <".EMAIL_FROM_ADDR.">";
-      $subject = "The Buildmeister - Your new password";
-      $body = $user.",\n\n"
-             ."We've generated a new password for you at your "
-             ."request, you can use this new password with your "
-             ."username to log in to " . $SITE_NAME . "\n\n"
-             ."Username: ".$user."\n"
-             ."New Password: ".$pass."\n\n"
-             ."It is recommended that you change your password "
-             ."to something that is easier to remember, which "
-             ."can be done by going to the My Account page "
-             ."after signing in.\n\n";
-             
-      return mail($email,$subject,$body,$from);
-   }
+   function sendNewPass($user, $email, $pass) {
+   		global $_RESULT;
+   	   		
+		$m = new MAIL;
+
+		// try and connect to mail server
+		if (!($c = $m->Connect(SMTP_SERVER, 25, SMTP_USERNAME, SMTP_PASSWORD))) {
+			$this->error_message = $_RESULT;
+			return false;
+		} else {
+			// format the message
+			$f = $m->From(EMAIL_FROM_ADDR, EMAIL_FROM_NAME);
+			$t = $m->AddTo($email, $user);
+			$s = $m->Subject("[" . SITE_NAME . "] your new password");
+			// TODO: HTML message support
+			$m->Text($user . ",\n\n"
+				. "At your request, we've generated a new password for you."
+             	. "You can now use the following username and password "
+             	. "to log in to " . SITE_NAME . ":\n\n"
+             	. "\tUsername: " . $user . "\n"
+             	. "\tPassword: " . $pass . "\n\n"
+             	. "It is recommended that you change your password "
+             	. "to something easier to remember. You can "
+             	. "do this from your account page immediately after "
+             	. "logging in.\n\n"
+			);
+						
+			// send mail
+			if (!$m->Send($c)) {
+				$this->error_message = $_RESULT;
+				return false;
+			}
+			return true;
+		}    	   	
+   } // sendNewPass
+   
 };
 
-/* Initialize mailer object */
+// initialize mailer object
 $mailer = new Mailer;
  
 ?>

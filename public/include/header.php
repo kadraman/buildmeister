@@ -24,6 +24,7 @@ if (isset($html_head_title)) {
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/global.js"></script>
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/FilterTable.js"></script>
 	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/FormValidator.js"></script>
+	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/LabelledInput.js"></script>
 <?php
 	// include supporting javascript file for page (if present)
     $jsfile = basename($_SERVER['PHP_SELF'], ".php") . ".js";
@@ -87,18 +88,18 @@ if (isset($html_head_title)) {
 		 		
 			<!-- search begin -->
 			<div id="searchBox" class="sideBox">
-				<div class="sideBoxTitle">Search</div>
-				<form id="searchForm" action="<?php echo SITE_PREFIX; ?>/pages/search.submit.php" method="post">					
+				<div class="sideBoxTitle">Search</div>				
 					<div id="searchFields" class="sideBoxContent">
-						<input id="searchKeywords" class="txt" 
-							style="width:125px" type="text" maxlength="80" 
-							name="searchKeywords" value="Enter keyword(s)"/>
-						<input type="submit" value="Search" id="submit" class="btn"/>
-						&nbsp;
-						<!-- TODO: advanced search -->
-						<!-- a id="advancedSearch" href="">Advanced</a-->								
+						<form id="searchForm" action="<?php echo SITE_PREFIX; ?>/pages/search.submit.php" method="post">
+							<input id="keywords" class="labelled"
+								type="text" maxlength="80" 
+								name="keywords" value="keywords"/>
+							<input type="submit" value="Search" id="submit"/>
+							&nbsp;
+							<!-- TODO: advanced search -->
+							<!-- a id="advancedSearch" href="">Advanced</a-->
+						</form>								
 					</div>
-				</form>
 			</div>
 			<!-- search end -->
 		
@@ -118,7 +119,7 @@ if (isset($html_head_title)) {
 ?>
 					<ul class="sideBoxList">
 						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/login.php">Login</a></li>
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/forgotpass.php">Forgotten password?</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/users/forgotpass.php">Forgotten password?</a></li>
 						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/register.php">Register now?</a></li>
 					</ul>
 <?php
@@ -159,7 +160,8 @@ if (isset($html_head_title)) {
 			<!-- logos begin -->
 			<div align="center">			
 				<!-- TODO: include logos -->
-				<b>Icons by <a href="http://dryicons.com">DryIcons</a></b>
+				<b>Best viewed on:</b><br/>
+				<a href="http://www.mozilla.com/firefox?from=sfx&uid=256449&t=305"><img border="0" alt="Spreadfirefox Affiliate Button" src="http://sfx-images.mozilla.org/affiliates/Buttons/firefox3/110x32_best-yet.png" /></a>
 			</div>
 			<!-- logos end -->
 		

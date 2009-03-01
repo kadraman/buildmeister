@@ -6,14 +6,14 @@ include_once("session.php");
 echo "<div id='article'>\n";
 echo "<div id='toptitle'>\n";
 
-if (!isset($_POST['searchKeywords']) || ($_POST['searchKeywords'] == "")
-	|| ($_POST['searchKeywords'] == "Enter keyword(s)")) {
+if (!isset($_POST['keywords']) || ($_POST['keywords'] == "")
+	|| ($_POST['keywords'] == "keywords")) {
 	// no keywords have been specified
 	echo "<h2>No keywords have been specified...</h2>\n";
 	echo "</div>\n"; 
 } else {
 	# retrieve the keywords
-	$keywordArray = explode(" ", clean_data($_POST['searchKeywords']));
+	$keywordArray = explode(" ", clean_data($_POST['keywords']));
 
 	# search for the entries
 	$search_sql = "SELECT id, DATE_FORMAT(date_posted, \"%M %D, %Y\") " .
@@ -28,7 +28,7 @@ if (!isset($_POST['searchKeywords']) || ($_POST['searchKeywords'] == "")
 	$numrows = mysql_num_rows($result);
 	
 	echo "<h2>Found " . $numrows . " matching article(s) with keyword(s): " . 
-		"<u>" . $_POST['searchKeywords'] . "</u></h2>\n";
+		"<u>" . $_POST['keywords'] . "</u></h2>\n";
 	echo "</div>\n";
 	
 	if ($numrows > 0) {

@@ -2,7 +2,7 @@ var FormValidator = new Class({
 	Implements: [Options, Events],
 	options: {			
 	redirect: false,
-	redirectURL: "",
+	redirectURL: ""
 },		
 initialize: function(form, successText, options) {
 	this.setOptions(options);
@@ -56,7 +56,7 @@ attach: function() {
 							if (responseDiv) {
 								responseDiv.set('html',
 										"<span class='success'><b>" + this.successText + "</b></span>" +
-										"<br><img align='left' src='" + config['image.dir'] + "/loader-bar.gif'>");
+										"<br><img align='left' src='" + CONFIG.image_dir + "/loader-bar.gif'>");
 								responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
 								responseDiv.morph({ 'opacity': '1' });
 							} else {

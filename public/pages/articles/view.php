@@ -46,6 +46,8 @@ if (!isset($_GET['id'])) {
 
 		echo "<h1 id='title'>" . $row['title'] . "</h1>\n";
 		
+		echo "<div id='comment'><div class='odd'>\n";
+		
    		// has the article been published?
     	if ($row['state'] != PUBLISHED_STATE) {
     		// NO, just display message 
@@ -71,9 +73,7 @@ if (!isset($_GET['id'])) {
        		echo "</small></p>\n";
 	       	echo "<p>";
 			echo "Filed under:&nbsp;\n";
-
-			// TODO: display number of comments and link to them
-					
+  					
 			// get categories for entry
 			$cat_sql = "select a.cat_id, c.name from " . TBL_ARTICLE_CATEGORIES . " a, " 
 				. TBL_CATEGORIES . " c where a.article_id = " . $row['id'] . " AND a.cat_id = c.id;";
@@ -89,9 +89,23 @@ if (!isset($_GET['id'])) {
 				// free result set
     			mysqli_free_result($cat_result);
 			} 
-				
-			echo "</p>";
-        	      
+								
+    		// fetch number of comments
+   			$comment_sql = "SELECT COUNT(id) from " . TBL_ARTCOM . " where state = 1 AND art_id = ". $currentid;
+   			if ($comment_result = mysqli_query($database->getConnection(), $comment_sql)) {
+   				if (mysqli_num_rows($comment_result) == 0) {
+   					echo "&nbsp;|&nbsp;There are <a href='#comments'>no comments</a> on this article.</p>"; 
+   				} else {
+   					$comment_row = mysqli_fetch_row($comment_result);
+   					echo " | There are <a href='#comments'>" 
+   						. $comment_row[0] . " comments</a> on this article.</p>";
+   				}
+   			}
+   			// free result set
+    		mysqli_free_result($comment_result);
+
+    		echo "</div></div>\n";
+    		
 			echo htmlspecialchars_decode($row['content']);  															
     	}
     	
@@ -103,12 +117,14 @@ if (!isset($_GET['id'])) {
 
 	// display comments and comment form
 	if ($show_comments) {
+		echo "<a id='comments' href=''></a>";
+		
 		echo "<div id='comment'>\n";
 	   	echo "<h3 class='sub'>Comments</h3>\n";
 
 	   	// fetch comments
    		$comment_sql = "SELECT id, posted_by, comment, DATE_FORMAT(date_posted, \"%M %D, %Y\") " .
-       		"as newdate from " . TBL_ARTCOM . " where state = 1 AND art_id = ". $currentid . 
+       		"as newdate, website from " . TBL_ARTCOM . " where state = 1 AND art_id = ". $currentid . 
        		" ORDER BY date_posted DESC;";
    		if ($result = mysqli_query($database->getConnection(), $comment_sql)) {
    			if (mysqli_num_rows($result) == 0) {
@@ -121,7 +137,12 @@ if (!isset($_GET['id'])) {
     	 	      	} else {
         		   		echo "<div class='odd'>";
           	 		}
-          		  	echo "<p class='header'>Posted by <b>" . $comment_row['posted_by'] . "</b>";
+          	 		if ($comment_row['website'] != "") {
+          		  		echo "<p class='header'>Posted by <a href='http://" . $comment_row['website']
+          		  			. "'>" . $comment_row['posted_by'] . "</a>";
+          	 		} else {
+          	 			echo "<p class='header'>Posted by <b>". $comment_row['posted_by'] . "</b>";
+          	 		}
  		    		
 					// display edit and delete links 		    		
             		if ($session->isAdmin()) {
@@ -152,7 +173,7 @@ if (!isset($_GET['id'])) {
 		
 		<!-- ajax submit response -->
 		<div id="response">
-			<p>All fields in <b>bold</b> fields are required.</p>
+			All fields in <b>bold</b> are required.
 		</div>
 		
 		<!-- name -->
@@ -170,11 +191,11 @@ if (!isset($_GET['id'])) {
        	
        	<!-- email -->
 		<div>
-			<label class="required" accesskey="E" for="email">Email:</label>
-			<input type="text" name="email" maxlength="50" id="email" class="txt"
+			<label accesskey="w" for="website">Website:</label>
+			<input type="text" name="website" maxlength="50" id="website" class="txt"
 <?php
 		if ($session->logged_in) {
-			echo "value='" . $session->userinfo['email'] . "'";
+			echo "value='" . $session->userinfo['website'] . "'";
 		} 
 ?> 			
 			>
@@ -205,12 +226,13 @@ $oFCKeditor->Create();
 		<div>
 			<label for="kludge"><!-- empty --></label>
 			<img class="txt" id="catchpa" 
-				src="../../include/securimage/securimage_show.php" alt="CAPTCHA Image" />				
+				src="../../include/securimage/securimage_show.php" alt="CAPTCHA Image" />
+			<a href="" id="reload" class="txt">Reload Image</a>				
 		</div>
 		<div>
 			<label class="required" accesskey="p" for="captchpaText">Catchpa:</label>					    
 			<input class="txt" type="text" maxlength="4" name="catchpa_text" 
-				id="catchpaText" style="width:50px">
+				id="catchpaText" style="width:50px">			
 		</div>
 						
 		<!-- buttons and ajax processing -->

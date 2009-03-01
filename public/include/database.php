@@ -558,9 +558,9 @@ class MySQLDB {
     * @param string $comment
     * @return true on success, false otherwise.
     */
-   function addNewArticleComment($username, $artid, $comment) {
-      $q = "INSERT INTO " . TBL_ARTCOM . " (date_posted, posted_by, art_id, comment, state)"
-      . " VALUES (now(), '$username', '$artid', '$comment', 1)";
+   function addNewArticleComment($username, $website, $artid, $comment) {
+      $q = "INSERT INTO " . TBL_ARTCOM . " (date_posted, posted_by, website, art_id, comment, state)"
+      . " VALUES (now(), '$username', '$website', '$artid', '$comment', 1)";
       return mysql_query($q, $this->connection);
    } // addNewArticleComment
 
@@ -621,14 +621,15 @@ class MySQLDB {
     * is returned.
     */
    function getUserInfo($username) {
-      $q = "SELECT * FROM " . TBL_USERS . " WHERE username = '$username'";
-      $result = mysql_query($q, $this->connection);
+      $sql = "SELECT * FROM " . TBL_USERS . " WHERE username = '$username'";
+      $result = mysqli_query($this->conn, $sql);
       // error occurred, return given name by default
-      if (!$result || (mysql_numrows($result) < 1)) {
+      if (!$result || (mysqli_num_rows($result) < 1)) {
          return NULL;
       }
       // return result array
-      $dbarray = mysql_fetch_array($result);
+      $dbarray = mysqli_fetch_assoc($result);
+      mysqli_free_result($result);
       return $dbarray;
    } // getUserInfo
 

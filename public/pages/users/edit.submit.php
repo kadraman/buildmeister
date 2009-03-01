@@ -9,6 +9,7 @@ include_once("session.php");
 	$firstname = isset($_POST['firstname']) ? clean_data($_POST['firstname']) : '';
 	$lastname = isset($_POST['lastname']) ? clean_data($_POST['lastname']) : '';
 	$email = isset($_POST['email']) ? clean_data($_POST['email']) : '';
+	$website = isset($_POST['website']) ? clean_data($_POST['website']) : '';
 	$currentpass = isset($_POST['currentpass']) ? clean_data($_POST['currentpass']) : '';
 	$newpass = isset($_POST['newpass']) ? clean_data($_POST['newpass']) : '';
 	
@@ -53,10 +54,10 @@ include_once("session.php");
 			} else if (strlen($newusername) > 30) {
 				$json_result['message'] = "The new <b>username</b> is required to be 30 characters or less.";
 				exit(json_encode($json_result));
-			} else if ($newusername == $user) {
+			} else if (strcmp($newusername, $user) == 0) {
 				$json_result['message'] = "The new <b>username</b> is the same as the current <b>username</b>.";
 				exit(json_encode($json_result));
-			} else if (!eregi("^([0-9a-z])+$", $newusername)) {
+			} else if (!preg_match("/^([0-9a-z])+$/", $newusername)) {
 				$json_result['message'] = "The new <b>username</b> should contain alpha numeric characters only.";
 				exit(json_encode($json_result));
 			} else if (strcasecmp($newusername, GUEST_NAME) == 0) {
@@ -90,27 +91,21 @@ include_once("session.php");
 		if (!$currentpass) {				
 			$json_result['message'] = "The <b>current password</b> needs to be supplied.";
 			exit(json_encode($json_result));
-		} else {
-			// the current password is invalid
-			if (strlen($currentpass) < 4 ||
-				!eregi("^([0-9a-z])+$", $currentpass)) {
-				$json_result['message'] = "The <b>current password</b> is invalid.";
-				exit(json_encode($json_result));
-			}
-			// current password entered is incorrect
-			if ($database->confirmUserPass($subusername, md5($currentpass)) != 0) {
-				$json_result['message'] = "The <b>current password</b> is incorrect.";
-				exit(json_encode($json_result));
-			}
+		} else if ($database->confirmUserPass($subusername, md5($currentpass)) != 0) {
+			$json_result['message'] = "The <b>current password</b> is incorrect.";
+			exit(json_encode($json_result));
 		}
 
 		$json_result['field'] = "newpass";
 		// the new password is too short or not alphanumeric
-		if (strlen($newpass) < 4) {
-			$json_result['message'] = "The <b>new password</b> is required to be 5 or more characters.";
+		if (strlen($newpass) < 8) {
+			$json_result['message'] = "The <b>new password</b> is required to be 8 or more characters.";
 			exit(json_encode($json_result));
-		} else if (!eregi("^([0-9a-z])+$", $newpass)) {
-			$json_result['message'] = "The <b>new password</b> is requires a mix of alpha numeric characters and numbers.";
+		} else if (strcmp($newpass, $currentpass) == 0) {
+			$json_result['message'] = "The <b>new password</b> is the same as the old password.";
+			exit(json_encode($json_result));
+		} else if (!preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $newpass)) {
+			$json_result['message'] = "The <b>new password</b> must contain at least one lower case letter, one upper case letter and one digit.";
 			exit(json_encode($json_result));
 		}
 	}
@@ -119,13 +114,24 @@ include_once("session.php");
 	// email error checking
 	if ($email) {
 		// check if valid email address
-		$regex = "^[_+a-z0-9-]+(\.[_+a-z0-9-]+)*"
-			. "@[a-z0-9-]+(\.[a-z0-9-]{1,})*"
-			. "\.([a-z]{2,}){1}$";
-		if (!eregi($regex, $email)) {
+		$regexp = "/^[^0-9][A-z0-9_]+([.][A-z0-9_]+)*[@][A-z0-9_]+([.][A-z0-9_]+)*[.][A-z]{2,4}$/";
+		if (!preg_match($regexp, $email)) {
 			$json_result['message'] = "The <b>email</b> address is invalid.";
 			$json_result['field'] = "email";
 			exit(json_encode($json_result));;
+		}
+	}
+	
+	// website error checking
+	if ($website) {
+		$regexp = "/\b(?:(?:https?):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i";
+		if (!preg_match($regexp, $website)) {
+			$json_result['message'] = "The <b>website</b> address is invalid.";
+			$json_result['field'] = "website";
+			exit(json_encode($json_result));;
+		} else {
+			// strip http etc
+			$website = preg_replace("/^https?:\/\/(.+)$/i","\\1", $website);
 		}
 	}
 
@@ -147,6 +153,11 @@ include_once("session.php");
 	// update email
 	if ($email) {
 		$database->updateUserField($subusername, "email", $email);
+	}
+	
+	// update website
+	if ($website) {
+		$database->updateUserField($subusername, "website", $website);
 	}
 
 	// update firstname

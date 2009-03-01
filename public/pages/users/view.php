@@ -51,7 +51,7 @@ if (!$database->usernameTaken(clean_data($current_user))) {
         	<input type="text" name="lastname" maxlength="50" id="lastname" class="disabled"
 				disabled value="<?php echo $user_info['lastname']; ?>">
 		</div>
-			
+				
 <?php
     // if admin user or displaying own account show email
 	if ($session->isAdmin() || (strcmp($session->username, $current_user) == 0)) {
@@ -65,7 +65,16 @@ if (!$database->usernameTaken(clean_data($current_user))) {
 		</div>
 <?php
 	}
-	
+?>
+
+		<!-- website -->
+		<div>
+			<label for="email">Website:</label>
+			<input type="text" name="website" maxlength="100" id="website" class="disabled" 
+				style="width:250px" disabled value="<?php echo $user_info['website']; ?>">			
+		</div>
+
+<?php 	
 	// if admin user or logged in and user viewing own account, give link to edit
 	if ($session->isAdmin() || strcmp($session->username, $current_user) == 0) {
 ?>

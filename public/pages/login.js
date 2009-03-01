@@ -52,7 +52,7 @@ window.addEvent('domready', function() {
 					$('submit').set('disabled', false);
 				
 					$('status').set('html', "<span class='success'><b>You are now logged in!</b><br />" +
-						"<img align='absmiddle' src='" + config['image.dir'] + "/loader-bar.gif'>" +
+						"<img align='absmiddle' src='" + CONFIG.image_dir + "/loader-bar.gif'>" +
 						"'<br>Please wait while we redirect you to your home page...</span></div>");
 
 					// go to home page
@@ -64,7 +64,7 @@ window.addEvent('domready', function() {
 					$('submit').set('disabled', false);
 					
 					responseDiv.set('html',
-						"<span class='error'>" + status.message + "</p>");
+						"<span class='error'>" + status.message + "</span>");
 					responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
 					responseDiv.morph({ 'opacity': '1' });
 					if ($(status.field)) {

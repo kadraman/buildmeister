@@ -58,9 +58,12 @@ define("COOKIE_EXPIRE", 60*60*24*100);    // 100 days by default
 define("COOKIE_PATH", "/");               // avaible in whole domain
 
 // email constants
-define("EMAIL_FROM_NAME", "webmaster");
+define("EMAIL_FROM_NAME", "The Buildmeister");
 define("EMAIL_FROM_ADDR", "webmaster@buildmeister.com");
 define("EMAIL_WELCOME", false);
+define("SMTP_SERVER", "smtp.strato.com");
+define("SMTP_USERNAME", "webmaster@buildmeister.com");
+define("SMTP_PASSWORD", "redrock71");
 
 // forces all users to have lowercase usernames
 define("ALL_LOWERCASE", false);
