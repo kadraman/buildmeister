@@ -254,7 +254,8 @@ class MySQLDB {
     * @param int $mailok
     * @return true on success, false otherwise.
     */
-   function addNewUser($username, $password, $firstname, $lastname, $email, $verifystring, $mailok) {
+   function addNewUser($username, $password, $firstname, $lastname, $email, 
+   	$website, $verifystring, $mailok) {
       $time = time();
       /* If admin sign up, give admin user level */
       if(strcasecmp($username, ADMIN_NAME) == 0){
@@ -264,7 +265,7 @@ class MySQLDB {
       }
       $q = "INSERT INTO " . TBL_USERS
       . " VALUES ('$username', '$password', '$firstname', '$lastname',
-      '0', $ulevel, '$email', $time, $mailok, '$verifystring', 0)";
+      '0', $ulevel, '$email', '$website', $time, $mailok, '$verifystring', 0)";
       return mysql_query($q, $this->connection);
    } // addNewUser
 
@@ -690,6 +691,24 @@ class MySQLDB {
       $this->calcNumActiveUsers();
    } // addActiveUser
 
+   /**
+    * Confirms that the user has supplied the correct verification string.
+    *
+    * @param string $email
+    */
+	function confirmVerifyString($email, $verifystring) {
+		$retval = true;
+      	# select user
+      	$q = "SELECT active FROM " . TBL_USERS 
+      		. " WHERE email = '$email' AND verifystring = '$verifystring'";
+     	$result = mysql_query($q, $this->connection);
+      	# error occurred, user does not exist
+      	if (!$result || (mysql_numrows($result) < 1)) {
+        	$retval = false;
+      	}      	
+      	return $retval;
+	} // confirmVerifyString
+   
    /**
     * Activate a previously created user.
     *

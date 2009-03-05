@@ -32,27 +32,45 @@ class Mailer {
 	
 	var $error_message;		// a description of the error for any failures
 		
-   /**
-    * Sends a welcome message to a newly registered user, 
-    * supplying the username and password.
-    * 
-    * @param string $user - the user's username
-    * @param string $email - the user's email
-    * @param string $pass - the user's password
-    * @param string $verifystring - a verification string to be used
-    * @return true if email sent successfully, else false (the class variable 
-    * $error_message will be set with the error code and text)
-    *  
-    */
-   function sendVerification($user, $email, $pass, $verifystring) {
-      $from = "From: ". EMAIL_FROM_NAME . " <" . EMAIL_FROM_ADDR . ">";
-      $subject = "\"" . SITE_NAME . "\" Registration";
-      $body = "Hello " . $user . ",\n\n"
-             . "Please click on the following link to verify your new account:\n\n"
-             . SITE_BASEDIR . "/pages/users/verify.php" . "?email=" . $email . "&verify=" . $verifystring
-             . "\n\nThe Buildmeister\n";
-             
-      return mail($email, $subject, $body, $from);
+	/**
+     * Sends a welcome message to a newly registered user, 
+	 * supplying the username and password.
+	 * 
+	 * @param string $user - the user's username
+	 * @param string $email - the user's email
+	 * @param string $verifyemail - the user's encoded email to be sent
+	 * @param string $verifystring - a verification string to be sent
+	 * @return true if email sent successfully, else false (the class variable 
+     * $error_message will be set with the error code and text)
+     *  
+     */
+	function sendVerification($user, $email, $verifyemail, $verifystring) {
+		global $_RESULT;
+   	   		
+		$m = new MAIL;
+
+		// try and connect to mail server
+		if (!($c = $m->Connect(SMTP_SERVER, 25, SMTP_USERNAME, SMTP_PASSWORD))) {
+			$this->error_message = $_RESULT;
+			return false;
+		} else {
+			// format the message
+			$f = $m->From(EMAIL_FROM_ADDR, EMAIL_FROM_NAME);
+			$t = $m->AddTo($email, $user);
+			$s = $m->Subject('[' . SITE_NAME . '] registration');
+			$m->Html("Hello " . $user . ", <br><br>"
+             . "Please click on the following link to verify your new account at ."
+             . SITE_NAME . ": <br><br>"
+             . SITE_BASEDIR . "/pages/users/verify.php" . "?email=" . $verifyemail 
+             . "&verify=" . $verifystring);
+						
+			// send mail
+			if (!$m->Send($c)) {
+				$this->error_message = $_RESULT;
+				return false;
+			}
+			return true;
+		}    	   	
    } // sendVerification
    
    /**
@@ -90,6 +108,43 @@ class Mailer {
 			return true;
 		}    	
    } // sendNotification
+   
+   /**
+    * Send a contact message to the site owner.
+    *
+    * @param string $message - message to be setn
+    * @return true if email sent successfully, else false (the class variable 
+    * $error_message will be set with the error code and text)
+    */
+   function sendContact($name, $emailFrom, $message) {
+   		// TODO: get admin users who wish to be notified            
+      	$emailTo = "kevin.lee@buildmeister.com";
+      	$user  = "kevin";
+      	
+        global $_RESULT;
+   	   		
+		$m = new MAIL;
+
+		// try and connect to mail server
+		if (!($c = $m->Connect(SMTP_SERVER, 25, SMTP_USERNAME, SMTP_PASSWORD))) {
+			$this->error_message = $_RESULT;
+			return false;
+		} else {
+			// format the message
+			$f = $m->From($emailFrom, $name);
+			$t = $m->AddTo($emailTo, $user);
+			$s = $m->Subject('[' . SITE_NAME . '] contact message');
+			$m->Html("New contact message by " . $name 
+				. " (" . $emailFrom . ")" . ":\n\n" . $message);
+						
+			// send mail
+			if (!$m->Send($c)) {
+				$this->error_message = $_RESULT;
+				return false;
+			}
+			return true;
+		}    	
+   } // sendContact
    
    /**
     * Sends the newly generated password to the user's email address 

@@ -44,7 +44,7 @@ window.addEvent('domready', function() {
 			//var currentTextColor = $('searchKeywords').getStyle('color');
 
 			// disable the submit button while processing...
-			$('submit').set('disabled', true);
+			$('searchSubmit').set('value','Searching...').disabled = true;
 
 			// set the options of the form's Request handler.
 			this.set('send', {
@@ -63,7 +63,7 @@ window.addEvent('domready', function() {
 					$('keywords').set('value', currentKeywords);
 
 					// enable the submit button
-					$('submit').set('disabled', false);
+					$('searchSubmit').set('value','Submit').disabled = false;
 				}
 			});
 

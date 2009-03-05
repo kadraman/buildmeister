@@ -277,6 +277,7 @@ class Session
 		if ($form->num_errors > 0) {
 			return 1;
 		} else {
+			$randomstring = "";
 			// calculate verifystring
 			for ($i = 0; $i < 16; $i++) {
 				$randomstring .= chr(mt_rand(32, 126));

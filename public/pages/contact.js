@@ -1,0 +1,16 @@
+window.addEvent('domready', function() {
+	
+	new FormValidator($('contactForm'), "Your message has been sent, thank you for your feedback..."
+	);
+	
+	$('reload').addEvent('click', function(e) {
+		new Event(e).stop();
+		
+		// reload the catchpa
+		$("catchpa").set('src', CONFIG.site_prefix +
+			'/include/securimage/securimage_show.php?' + Math.random());
+	});
+	
+	
+});
+

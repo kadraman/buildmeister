@@ -2,7 +2,8 @@ var FormValidator = new Class({
 	Implements: [Options, Events],
 	options: {			
 	redirect: false,
-	redirectURL: ""
+	redirectURL: "",
+	enableSubmitOnComplete: false
 },		
 initialize: function(form, successText, options) {
 	this.setOptions(options);
@@ -13,7 +14,8 @@ initialize: function(form, successText, options) {
 attach: function() {
 
 	// does the form exist?
-	if (this.form) {			
+	if (this.form) {
+			  		
 		this.form.addEvent('submit', function(e) {
 			// prevents the default submit event from loading a new page
 			new Event(e).stop();
@@ -27,7 +29,7 @@ attach: function() {
 					input.removeClass('error').morph({ 'border-color': '#ccc', 'background-color': '#fff' }); 
 				}
 			});
-
+			
 			// did we get any errors?
 			if (errors)	{
 				// TODO: handle client side validationn failures
@@ -37,7 +39,7 @@ attach: function() {
 				$('waiting').setStyle('visibility', 'visible');
 
 				// disable the submit button while processing...
-				$('submit').set('disabled', true);
+				$('submit').disabled = true;				
 
 				// set the options of the form's Request handler.
 				this.form.set('send', { onComplete: function(response) {
@@ -75,6 +77,10 @@ attach: function() {
 							} else {
 								alert(this.successText)
 							}
+							// re-enable the submit button
+							if (this.enableSubmitOnComplete) {
+								$('submit').disabled = false;
+							}
 						}
 					} else {
 						if (responseDiv) {
@@ -88,11 +94,10 @@ attach: function() {
 						if ($(status.field)) {
 							$(status.field).addClass('error').morph({ 'border-color': '#f00', 'background-color': '#ffebe8' });
 							$(status.field).focus();
-						}								
+						}	
+						// re-enable submit button
+						$('submit').disabled = false;
 					} // response
-
-					// enable the submit button
-					$('submit').set('disabled', false);
 
 				}.bind(this)});
 

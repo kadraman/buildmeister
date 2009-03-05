@@ -78,6 +78,7 @@ if (isset($html_head_title)) {
 			<!-- navigation menu begin -->
 			<div id="navigation">
 				<ul id="links">
+					<li class="menuTitle">Main Menu</li>
 					<li><a href="<?php echo SITE_PREFIX; ?>/">Home</a></li>
 					<li><a href="<?php echo SITE_PREFIX; ?>/pages/articles/">Articles</a></li>
 					<li><a href="<?php echo SITE_PREFIX; ?>/pages/books/">Books</a></li>
@@ -94,7 +95,7 @@ if (isset($html_head_title)) {
 							<input id="keywords" class="labelled"
 								type="text" maxlength="80" 
 								name="keywords" value="keywords"/>
-							<input type="submit" value="Search" id="submit"/>
+							<input type="submit" value="Search" id="searchSubmit"/>
 							&nbsp;
 							<!-- TODO: advanced search -->
 							<!-- a id="advancedSearch" href="">Advanced</a-->
@@ -112,15 +113,15 @@ if (isset($html_head_title)) {
 ?>
 					<ul class="sideBoxList">
 						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/users/view.php?user=<?php echo $session->username; ?>">My account</a></li>
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/include/process.php">Logout</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/users/logout.php">Logout</a></li>
 					</ul>
 <?php
 				} else {
 ?>
 					<ul class="sideBoxList">
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/login.php">Login</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/users/login.php">Login</a></li>
 						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/users/forgotpass.php">Forgotten password?</a></li>
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/register.php">Register now?</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/users/register.php">Register now?</a></li>
 					</ul>
 <?php
 				}

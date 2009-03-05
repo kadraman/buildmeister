@@ -38,7 +38,7 @@ include_once("session.php");
 	}
 	
 	// do we have an email
-	if (!$lastname) {
+	if (!$email) {
 		$json_result['message'] = "An <b>email</b> is required.";
 		$json_result['field'] = "email";
 		exit(json_encode($json_result));

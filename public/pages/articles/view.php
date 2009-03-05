@@ -82,7 +82,7 @@ if (!isset($_GET['id'])) {
    					echo "Uncategorized"; 
    				} else {
 					while ($cat_row = mysqli_fetch_assoc($cat_result)) {
-	    				echo "<a class=\"labels\" href=\"../../viewcategory.php?catid=" . $cat_row['cat_id'] . "\">" 
+	    				echo "<a class=\"labels\" href=\"../categories/index.php?catid=" . $cat_row['cat_id'] . "\">" 
 	    					. $cat_row['name'] . "</a>&nbsp;\n";
 					}
    				}
@@ -192,7 +192,8 @@ if (!isset($_GET['id'])) {
        	<!-- email -->
 		<div>
 			<label accesskey="w" for="website">Website:</label>
-			<input type="text" name="website" maxlength="50" id="website" class="txt"
+			<input type="text" name="website" maxlength="50" id="website" 
+			 style="width:250px" class="txt"
 <?php
 		if ($session->logged_in) {
 			echo "value='" . $session->userinfo['website'] . "'";
@@ -215,6 +216,7 @@ $oFCKeditor->EditorAreaCSS = SITE_BASEDIR . '/stylesheets/article.css' ;
 $oFCKeditor->ToolbarSet = 'Basic';
 $oFCKeditor->Config['LinkBrowser'] = 'false';
 $oFCKeditor->Config['LinkUpload'] = 'false';
+$oFCKeditor->Value = 'Enter your comment here...';
 $oFCKeditor->Create();
 
 ?>			

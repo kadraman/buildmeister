@@ -55,6 +55,17 @@ form div label {
 	padding: 0.2em;
 }
 
+form div label.right { 
+	font-size: 8pt;
+	float: right; 
+	width: 40%; 
+	padding: 0; 
+	margin: 8px 0 0;
+	text-align: right; 
+	vertical-align: bottom;
+	padding: 0.2em;
+}
+
 #fckeditor {
 	font-size: 8pt;
 	color: #228;
@@ -106,6 +117,13 @@ form input.btn {
 	vertical-align: middle;
 }
 
+form input.checkbox {
+	font-size: 8pt;
+	padding: 0.3em;
+	margin: 5px 5px 0 10px;
+	vertical-align: bottom;
+}
+
 textarea { overflow: auto; }
 
 form p {
@@ -147,7 +165,7 @@ form#searchForm input#keywords {
 	font-size:8pt
 }
 
-form#searchForm input#submit {
+form#searchForm input#searchSubmit {
 	font-size: 8pt;
 	padding: 0.3em;
 	margin-top: 5px;
@@ -403,30 +421,7 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
 	margin: 0px;
 	padding: 0px 0px 21px;
 }
-#navigation li a.subsection {
-	background:#FFF 
-	    url("/buildmeister.com/public/images/template-right-arrow.gif")
-		no-repeat 6px 0.33em;
-	border-top: none;
-	border-bottom: 1px solid #FFF;
-	border-left: 1px solid #E6EDF2;
-	border-right: 1px solid #E6EDF2;
-	display: block;
-	margin: 0px;
-	padding: 3px 4px 3px 20px;
-}
-#navigation li a.subsection:hover {
-	background: #98B1C4 
-	    url("/buildmeister.com/public/images/template-right-arrow.gif")
-		no-repeat 6px 0.33em;
-	border-top: none;
-	border-bottom: 1px solid #FFF;
-	border-left: 1px solid #E6EDF2;
-	border-right: 1px solid #E6EDF2;
-	display: block;
-	margin: 0px;
-	padding: 3px 4px 3px 20px;
-}
+
 #navigation li a {
 	background: #7A96AB
 		url("/buildmeister.com/public/images/template-box.gif")
@@ -440,20 +435,23 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
 	color:#228;
 	text-decoration:none;
 }
-#navigation li a.is-active {
+#navigation li.menuTitle {
+	color:#228;
 	padding-top: 5px;
 	padding-bottom: 3px;
 	background: #FFF
 		url("/buildmeister.com/public/images/template-leftnav-selected.gif")
 		repeat-x 0% 0%;
 	border-top: 1px solid #E6EDF2;
+	display: block;
+	margin: 0px;
+	padding: 4px 10px;
+	font-weight: bold;
 }
-#navigation li a.is-active:hover {
-	background: #98B1C4;
-	border-top: 1px solid #E6EDF2;
-}
+
 #navigation li a:hover {
 	background: #98B1C4;
+	text-decoration: underline;
 }	
 /* 
  * sidebar container for menu items, information etc.

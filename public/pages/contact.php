@@ -33,7 +33,8 @@ include_once("header.php");
        	<!-- email -->
 		<div>
 			<label class="required" accesskey="E" for="email">Email:</label>
-			<input type="text" name="email" maxlength="50" id="email" class="txt"
+			<input type="text" name="email" maxlength="50" id="email" 
+				style="width:250px" class="txt"
 <?php
 		if ($session->logged_in) {
 			echo "value='" . $session->userinfo['email'] . "'";
@@ -44,7 +45,7 @@ include_once("header.php");
 		
 		<!-- message -->
 		<div>
-			<label class="required" accesskey="M" for="comment">Message:</label>
+			<label class="required" accesskey="M" for="message">Message:</label>
 			<span id="fckeditor">
 <?php
 
@@ -56,6 +57,7 @@ $oFCKeditor->EditorAreaCSS = SITE_BASEDIR . '/stylesheets/article.css' ;
 $oFCKeditor->ToolbarSet = 'Basic';
 $oFCKeditor->Config['LinkBrowser'] = 'false';
 $oFCKeditor->Config['LinkUpload'] = 'false';
+$oFCKeditor->Value = 'Enter your message here...';
 $oFCKeditor->Create();
 
 ?>			

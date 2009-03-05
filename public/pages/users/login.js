@@ -85,5 +85,5 @@ window.addEvent('domready', function() {
 
 // navigate to users home page
 function go_to_home_page() {
-	window.location = 'users/view.php'; 
+	window.location = 'view.php'; 
 }
