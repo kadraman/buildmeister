@@ -5,7 +5,9 @@ include_once("header.php");
 
 ?>
 
-<h1>Log in</h1>
+<div id="toptitle">
+	<h2>Log in</h2>
+</div>
 
 <!-- named div so content can be replaced on successfull login -->
 <div id="status" style="width:400px; margin: 0px auto">

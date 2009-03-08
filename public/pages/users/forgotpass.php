@@ -4,7 +4,9 @@ include_once("common.inc");
 include_once("header.php");
 
 ?>
-<h1>Forgotten password</h1>
+<div id="toptitle">
+	<h2>Forgotten password</h2>
+</div>
 
 <form id="forgotPassForm" action="forgotpass.submit.php" method="post">
 	<fieldset style="width:400px; margin: 0px auto">

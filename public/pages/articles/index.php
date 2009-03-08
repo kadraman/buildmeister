@@ -13,8 +13,8 @@ include_once("header.php");
 
 	<div id="introductory">
 		<p>This page lists all of the articles that are contained on this site. We are always
-		looking for new artilces, if you have an idea for an article or have written some content 
-		yourself that you would like to shared, then please <a href="../../contact.php">contact us</a> 
+		looking for new articles, if you have an idea for an article or have written some content 
+		yourself that you would like to shared, then please <a href="../contact.php">contact us</a> 
 		for more information.</p>
 	</div>
 

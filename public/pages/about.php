@@ -8,10 +8,10 @@ include_once("header.php");
 <div id="article">
 
 	<div id="toptitle">
-		<h1>About</h1>
+		<h2>About</h2>
 	</div>
 	
-	<h2>History of The Buildmeister</h2>
+	<h3>History of The Buildmeister</h3>
 	<blockquote>
 		<p>
 		"I had been working with the software build and release processes for

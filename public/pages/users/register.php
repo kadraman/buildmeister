@@ -12,7 +12,9 @@ if ($session->logged_in) {
     // fill out the registration form
 ?>
 
-<h1>Register</h1>
+<div id="toptitle">
+	<h2>Register</h2>
+</div>
 
 <form id="registrationForm" action="register.submit.php" method="post">
 	<fieldset style="width:650px; margin: 0px auto">

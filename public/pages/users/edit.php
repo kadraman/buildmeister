@@ -26,11 +26,13 @@ if (!isset($_POST['user'])) {
 	$username = clean_data($_POST['user']);
 	$newusername = "";
 	
+	echo "<div id='toptitle'>\n";
 	if ($session->isAdmin()) {
-		echo "<h1>" . $username . "'s account</h1>";
+		echo "<h2>" . $username . "'s account</h2>\n";
 	} else {
-		echo "<h1>My account</h1>";
+		echo "<h2>My account</h2>\n";
 	}
+	echo "</div>\n";
 
 	// fetch username data
 	$sql = "SELECT * from " . TBL_USERS . " where username = '" . $username. "'";

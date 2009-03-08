@@ -7,7 +7,9 @@ include_once("header.php");
 
 ?>
 
-<h1>Contact us</h1>  
+<div id="toptitle">
+	<h2>Contact us</h2>
+</div>
 
 <form id="contactForm" action="contact.submit.php" method="post">
 	<fieldset style="width:650px; margin: 0px auto">

@@ -8,10 +8,10 @@ include_once("header.php");
 <div id="article">
 
 	<div id="toptitle">
-		<h1>Terms of Use</h1>
+		<h2>Terms of Use</h2>
 	</div>
 
-	<h2>Copyright</h2>
+	<h3>Copyright</h3>
 	<p><b>The Buildmeister</b> grants free access to our content in the same
 	sense as free software is licensed freely. This principle is known as <a
 	href="http://en.wikipedia.org/wiki/Copyleft">copyleft</a>. That is to
@@ -30,7 +30,7 @@ include_once("header.php");
 	href="http://en.wikipedia.org/wiki/GNU_Free_Documentation_License">GNU
 	Free Documentation License</a> (GFDL).</p>
 
-	<h2>Disclaimer</h2>
+	<h3>Disclaimer</h3>
 	<p>While the administrators and moderators of <b>The Buildmeister</b>
 	will attempt to remove or edit any generally objectionable material as
 	quickly as possible, it is impossible to review every message. Therefore
