@@ -77,7 +77,7 @@ include_once("header.php");
 	if ($result = mysqli_query($database->getConnection(), $sql)) {
 		if (mysqli_num_rows($result) != 0) {
 			while ($row = mysqli_fetch_assoc($result)) {
-				echo "<div id='splitlist'><strong><a href='viewarticle.php?id=" . $row['id'] .
+				echo "<div id='splitlist'><strong><a href='articles/view.php?id=" . $row['id'] .
             		"'>" . $row['title'] . "</a></strong><br/>" . $row['summary'] . "</div>\n";
 			}
 		}

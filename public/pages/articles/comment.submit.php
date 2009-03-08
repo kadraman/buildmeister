@@ -40,10 +40,10 @@ include_once("session.php");
 	}
 	
 	// do we have a comment
-	if ((strcmp($comment,"Enter your comment here...") == 0) || (strcmp($comment,"") == 0)) {
-		$json_result['message'] = "A <b>comment</b> is required.";
-		exit(json_encode($json_result));
-	}
+	//if ((strcmp($comment,"Enter your comment here...") == 0) || (strcmp($comment,"") == 0)) {
+	//	$json_result['message'] = "A <b>comment</b> is required.";
+	//	exit(json_encode($json_result));
+	//}
 	
 	// do we have a catchpa
 	if (!$catchpa_text) {

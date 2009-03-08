@@ -6,7 +6,7 @@ window.addEvent('domready', function() {
 		{
 			redirect: true,
 			redirectURL: CONFIG.site_prefix + "/pages/articles/view.php?id=" +
-				articleId + "#comments"
+				articleId 
 		}
 	);
 	

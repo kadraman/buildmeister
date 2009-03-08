@@ -15,7 +15,7 @@ include_once("header.php");
 		<p>This page contains a list of recommended books that discuss the build
 		process and the tools that can be used to implement it. Please note, that 
 		this is simply a list of books that members of this web site have 
-		read and enjoyed, together with some personal comments about them. </p>
+		read and enjoyed. </p>
 		<p>If you believe that there is a book that has been missed and should
  		be included then please <a href="../contact.php">contact us</a>.</p>
 	</div>
