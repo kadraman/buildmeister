@@ -61,25 +61,11 @@ define("COOKIE_PATH", "/");               // avaible in whole domain
 define("EMAIL_FROM_NAME", "webmaster");
 define("EMAIL_FROM_ADDR", "webmaster@buildmeister.com");
 define("EMAIL_WELCOME", false);
+define("SMTP_SERVER", "smtp.strato.com");
+define("SMTP_USERNAME", "webmaster@buildmeister.com");
+define("SMTP_PASSWORD", "@db_pass@");
 
 // forces all users to have lowercase usernames
 define("ALL_LOWERCASE", false);
 
-// navigation menu
-$navmenu_main = array( array( 'Title' => "Home",
-                              'Link'  => "@site_prefix@/index.php"
-                            ),
-                       array( 'Title' => "Articles",
-                              'Link'  => "@site_prefix@/pages/articles/"
-                            ),
-                       array( 'Title' => "Books",
-                              'Link'  => "@site_prefix@/books.php",
-                           ),
-                       array( 'Title' => "Glossary",
-                              'Link'  => "@site_prefix@/glossary.php",
-                            ),
-                       array( 'Title' => "Links",
-                              'Link'  => "@site_prefix@/links.php",
-                       )
-                );
 ?>
