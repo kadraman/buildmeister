@@ -3,11 +3,11 @@
 include_once("common.inc");
 include_once("session.php");
 
-	$name = isset($_POST['name']) ? clean_data($_POST['name']) : '';
-	$website = isset($_POST['website']) ? clean_data($_POST['website']) : '';
-	$comment = isset($_POST['commentText']) ? clean_data($_POST['commentText']) : '';
-	$article_id	= isset($_POST['article_id']) ? clean_data($_POST['article_id']) : '';
-	$catchpa_text = isset($_POST['catchpa_text']) ? clean_data($_POST['catchpa_text']) : '';
+	$name = isset($_POST['name']) ? $database->clean_data($_POST['name']) : '';
+	$website = isset($_POST['website']) ? $database->clean_data($_POST['website']) : '';
+	$comment = isset($_POST['commentText']) ? $database->clean_data($_POST['commentText']) : '';
+	$article_id	= isset($_POST['article_id']) ? $database->clean_data($_POST['article_id']) : '';
+	$catchpa_text = isset($_POST['catchpa_text']) ? $database->clean_data($_POST['catchpa_text']) : '';
 
 	// array for JSON result
 	$json_result = array();

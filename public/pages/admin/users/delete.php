@@ -1,7 +1,7 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 
 if (!$session->isAdmin()) {
 	// insufficient permission to delete user
@@ -9,13 +9,13 @@ if (!$session->isAdmin()) {
       	"Only administrators are allowed to delete users.",
         $session->referrer);
 } else {
-	if (!isset($_GET['username'])) {
+	if (!isset($_GET['user'])) {
 		// no username specified
 	    $session->displayDialog("No Username Specified",
 	    	"No username has been specified, please select a user on the "
 	        . "<b>users</b> page.",
 	        SITE_BASEDIR . "/pages/admin/users/");       
-	} else if (!$database->userExists($_GET['username'])) {
+	} else if (!$database->userExists($_GET['user'])) {
 		// invalid username specified
 		$session->displayDialog("Username Does Not Exist",
 	    	"The specified username does not exist, please select a user on the "
@@ -23,7 +23,7 @@ if (!$session->isAdmin()) {
 	        SITE_BASEDIR . "/pages/admin/users/");		        
     } else {
         // delete the user
-	    if ($database->deleteUser(clean_data($_GET['username']))) {
+	    if ($database->deleteUser($database->clean_data($_GET['user']))) {
 	    	// delete succeeded
 	    	$session->displayDialog("User Deleted",
 	    	"The specified user has been succesfully deleted.",
@@ -37,6 +37,6 @@ if (!$session->isAdmin()) {
     }    
 }
     
-include_once("footer.php");
+include_once("footer.inc");
 
 ?>

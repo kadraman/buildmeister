@@ -4,7 +4,7 @@ include_once("common.inc");
 include_once("session.php");
 
 	// check and clean form fields
-	$user = isset($_POST['user']) ? clean_data($_POST['user']) : '';
+	$user = isset($_POST['user']) ? $database->clean_data($_POST['user']) : '';
 		
 	// array for JSON result
 	$json_result = array();

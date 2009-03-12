@@ -5,11 +5,11 @@ include_once("session.php");
 
 // get title of article and add to HTML header
 if (isset($_GET['id'])) {
-	$html_head_title = $database->getArticleTitle(clean_data($_GET['id']));
+	$html_head_title = $database->getArticleTitle($database->clean_data($_GET['id']));
 }
 
 include_once("fckeditor/fckeditor.php");
-include_once("header.php");
+include_once("header.inc");
 
 // do we have an article id?
 if (!isset($_GET['id'])) {
@@ -25,7 +25,7 @@ if (!isset($_GET['id'])) {
         SITE_BASEDIR . "/pages/articles/");		        	        
 } else {
     // retrieve the id of the article to display
-    $currentid = clean_data($_GET['id']);
+    $currentid = $database->clean_data($_GET['id']);
 	    
     // update view count
     if (!$session->isAdmin()) {
@@ -266,6 +266,6 @@ $oFCKeditor->Create();
 		echo "</div>\n";
     }
     
-include_once("footer.php");
+include_once("footer.inc");
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 
 if (!$session->isAdmin()) {
 	// insufficient permission to delete article
@@ -15,7 +15,7 @@ if (!$session->isAdmin()) {
 	    	"No article has been specified, please select an article on the "
 	        . "<b>articles</b> page to see its content.",
 	        SITE_BASEDIR . "/pages/articles/");       
-	} else if (!$database->articleExists(clean_data($_GET['id']))) {
+	} else if (!$database->articleExists($database->clean_data($_GET['id']))) {
 		// invalid article specified
 		$session->displayDialog("Article Does Not Exist",
 	    	"The specified article does not exist, please select an article on the "
@@ -23,7 +23,7 @@ if (!$session->isAdmin()) {
 	        SITE_BASEDIR . "/pages/articles/");		        
     } else {
         // delete the article
-	    if ($database->deleteArticle(clean_data($_GET['id']))) {
+	    if ($database->deleteArticle($database->clean_data($_GET['id']))) {
 	    	// delete succeeded
 	    	$session->displayDialog("Article Deleted",
 	    	"The specified article has been succesfully deleted.",
@@ -37,6 +37,6 @@ if (!$session->isAdmin()) {
     }    
 }
     
-include_once("footer.php");
+include_once("footer.inc");
 
 ?>

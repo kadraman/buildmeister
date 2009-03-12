@@ -1,7 +1,7 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 include_once("fckeditor/fckeditor.php") ;
 
 if (!isset($_GET['id'])) {
@@ -10,7 +10,7 @@ if (!isset($_GET['id'])) {
 	 	"No article has been specified, please select an article on the "
 	   	. "<b>articles</b> page to edit its content.",
 	   	SITE_BASEDIR . "/pages/articles");        
-} else if (!$database->articleExists(clean_data($_GET['id']))) {
+} else if (!$database->articleExists($database->clean_data($_GET['id']))) {
 	// does the article exist?
 	$session->displayDialog("Article Does Not Exist",
 	   	"The specified article does not exist, please select an article on the "
@@ -25,7 +25,7 @@ if (!isset($_GET['id'])) {
 	} else {
 				
 		// retrieve the id of the article to display
-		$currentid = clean_data($_GET['id']);
+		$currentid = $database->clean_data($_GET['id']);
 	
 		// fetch article data
 		$sql = "SELECT id, title, summary, state, DATE_FORMAT(date_posted, \"%d-%m-%Y\")"
@@ -222,5 +222,5 @@ $oFCKeditor->Create() ;
     	}
 	}
 
-	include_once("footer.php");
+	include_once("footer.inc");
 ?>

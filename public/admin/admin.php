@@ -8,7 +8,7 @@
  * Based on code originally written by: Jpmaster77. 
  */
 
-include("../include/header.php");
+include("../include/header.inc");
     
 // displays the users database table as html
 function displayUsers() {
@@ -213,6 +213,6 @@ Username:<br>
 <?php
 }
 
-include("../include/footer.php"); 
+include("../include/footer.inc"); 
 ?>
 

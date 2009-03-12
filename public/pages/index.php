@@ -1,7 +1,7 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 
 ?>
 
@@ -81,11 +81,12 @@ include_once("header.php");
             		"'>" . $row['title'] . "</a></strong><br/>" . $row['summary'] . "</div>\n";
 			}
 		}
+		mysqli_free_result($result);
 	}
 
 ?>
 </div>
 
 <?php 
-include_once("footer.php");
+include_once("footer.inc");
 ?>

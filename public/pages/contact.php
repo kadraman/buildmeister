@@ -3,7 +3,7 @@
 include_once("common.inc");
 include_once("session.php");
 include_once("fckeditor/fckeditor.php");
-include_once("header.php");
+include_once("header.inc");
 
 ?>
 
@@ -96,6 +96,6 @@ $oFCKeditor->Create();
 
 <?php
 				
-include_once("footer.php");
+include_once("footer.inc");
 
 ?>

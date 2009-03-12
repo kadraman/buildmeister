@@ -1,7 +1,7 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 
 ?>
 
@@ -15,7 +15,7 @@ if (!isset($_GET['term'])) {
 	    SITE_BASEDIR . "/pages/public/glossary/");
 } else {
     // retrieve the id of the article to display
-	$gitem = clean_data($_GET['term']);
+	$gitem = $database->clean_data($_GET['term']);
     
 ?>
 
@@ -74,6 +74,6 @@ if (!isset($_GET['term'])) {
 
 <?php
 
-include_once("footer.php");
+include_once("footer.inc");
 
 ?>

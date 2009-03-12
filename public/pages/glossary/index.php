@@ -1,7 +1,7 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 
 ?>
 
@@ -79,5 +79,5 @@ for ($i = 65; $i <= 90; $i++) {
 </div>
 
 <?php
-include_once("footer.php");
+include_once("footer.inc");
 ?>

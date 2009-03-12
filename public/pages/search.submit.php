@@ -12,10 +12,10 @@ if (!isset($_POST['keywords']) || ($_POST['keywords'] == "")
 	echo "<h2>No keywords have been specified...</h2>\n";
 	echo "</div>\n"; 
 } else {
-	# retrieve the keywords
-	$keywordArray = explode(" ", clean_data($_POST['keywords']));
+	// retrieve the keywords
+	$keywordArray = explode(" ", $database->clean_data($_POST['keywords']));
 
-	# search for the entries
+	// search for the entries
 	$search_sql = "SELECT id, DATE_FORMAT(date_posted, \"%M %D, %Y\") " .
 		" as newdate, posted_by, title, summary FROM " . TBL_ARTICLES . 
 		" WHERE content LIKE '%" . $keywordArray[0] . "%'";
@@ -24,15 +24,19 @@ if (!isset($_POST['keywords']) || ($_POST['keywords'] == "")
 	}
 	$search_sql = $search_sql . " AND state = " . PUBLISHED_STATE . " ORDER BY date_posted DESC;";
 
-	$result = mysql_query($search_sql);
-	$numrows = mysql_num_rows($result);
-	
-	echo "<h2>Found " . $numrows . " matching article(s) with keyword(s): " . 
+	$result = mysqli_query($database->getConnection(), $search_sql);
+
+	if (!$result || (mysqli_num_rows($result) < 1)) {
+		echo "<h2>No matching article(s) with keyword(s): " . 
 		"<u>" . $_POST['keywords'] . "</u></h2>\n";
-	echo "</div>\n";
-	
-	if ($numrows > 0) {
-    	while ($row = mysql_fetch_assoc($result)) {
+		echo "</div>\n";
+	} else {
+		echo "<h2>Found " . mysqli_num_rows($result) 
+			. " matching article(s) with keyword(s): " 
+			. "<u>" . $_POST['keywords'] . "</u></h2>\n";
+		echo "</div>\n";
+
+    	while ($row = mysqli_fetch_assoc($result)) {
         	echo "<div id='splitlist'><strong><a href='"
         		. SITE_PREFIX . "/pages/articles/view.php?id=" . $row['id'] . "'>"
  		    	. $row['title'] . "</a></strong><br/>"
@@ -42,6 +46,8 @@ if (!isset($_POST['keywords']) || ($_POST['keywords'] == "")
  		    	. $row['newdate'] . "</small><br/>"
 		    	. $row['summary'] . "</div>";
     	}
+    	
+    	mysqli_free_result($result);
 	}
 }
 

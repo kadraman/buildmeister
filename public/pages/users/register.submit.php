@@ -4,16 +4,16 @@ include_once("common.inc");
 include_once("session.php");
 
 	// check and clean form fields
-	$firstname = isset($_POST['firstname']) ? clean_data($_POST['firstname']) : '';
-	$lastname = isset($_POST['lastname']) ? clean_data($_POST['lastname']) : '';
-	$username = isset($_POST['username']) ? clean_data($_POST['username']) : '';
-	$password = isset($_POST['password']) ? clean_data($_POST['password']) : '';
-	$verify = isset($_POST['verify']) ? clean_data($_POST['verify']) : '';		
-	$email = isset($_POST['email']) ? clean_data($_POST['email']) : '';
-	$website = isset($_POST['website']) ? clean_data($_POST['website']) : '';
-	$catchpa_text = isset($_POST['catchpa_text']) ? clean_data($_POST['catchpa_text']) : '';
-	$mailok = isset($_POST['mailok']) ? clean_data($_POST['mailok']) : '';
-	$agreedisc = isset($_POST['agreedisc']) ? clean_data($_POST['agreedisc']) : '';
+	$firstname = isset($_POST['firstname']) ? $database->clean_data($_POST['firstname']) : '';
+	$lastname = isset($_POST['lastname']) ? $database->clean_data($_POST['lastname']) : '';
+	$username = isset($_POST['username']) ? $database->clean_data($_POST['username']) : '';
+	$password = isset($_POST['password']) ? $database->clean_data($_POST['password']) : '';
+	$verify = isset($_POST['verify']) ? $database->clean_data($_POST['verify']) : '';		
+	$email = isset($_POST['email']) ? $database->clean_data($_POST['email']) : '';
+	$website = isset($_POST['website']) ? $database->clean_data($_POST['website']) : '';
+	$catchpa_text = isset($_POST['catchpa_text']) ? $database->clean_data($_POST['catchpa_text']) : '';
+	$mailok = isset($_POST['mailok']) ? $database->clean_data($_POST['mailok']) : '';
+	$agreedisc = isset($_POST['agreedisc']) ? $database->clean_data($_POST['agreedisc']) : '';
 	
 	// array for JSON result
 	$json_result = array();

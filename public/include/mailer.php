@@ -18,12 +18,12 @@
  */
 
 require("XPertMailer/MAIL.php");
-include_once("constants.php");
+include_once("constants.inc");
 
 error_reporting(E_ALL); // report all errors
 
 /**
- * Support class for sendind formatted emails .
+ * Support class for sending formatted emails.
  *
  * @author Kevin A. Lee
  * @email kevin.lee@buildmeister.com

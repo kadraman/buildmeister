@@ -100,8 +100,8 @@
                 </replacetokens>
             </filterchain>
         </copy>
-		<copy overwrite="true" file="${dir.public}/include/template_constants.php" 
-		tofile="${dir.public}/include/constants.php">
+		<copy overwrite="true" file="${dir.public}/include/template_constants.inc" 
+		tofile="${dir.public}/include/constants.inc">
             <filterchain>
                 <replacetokens begintoken="@" endtoken="@">
                     <token key="db_server" value="${db.server}" />

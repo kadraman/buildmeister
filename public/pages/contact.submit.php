@@ -3,10 +3,10 @@
 include_once("common.inc");
 include_once("session.php");
 
-	$name = isset($_POST['name']) ? clean_data($_POST['name']) : '';
-	$email = isset($_POST['email']) ? clean_data($_POST['email']) : '';
-	$message = isset($_POST['messageText']) ? clean_data($_POST['messageText']) : '';
-	$catchpa_text = isset($_POST['catchpa_text']) ? clean_data($_POST['catchpa_text']) : '';
+	$name = isset($_POST['name']) ? $database->clean_data($_POST['name']) : '';
+	$email = isset($_POST['email']) ? $database->clean_data($_POST['email']) : '';
+	$message = isset($_POST['messageText']) ? $database->clean_data($_POST['messageText']) : '';
+	$catchpa_text = isset($_POST['catchpa_text']) ? $database->clean_data($_POST['catchpa_text']) : '';
 
 	// array for JSON result
 	$json_result = array();
@@ -35,10 +35,10 @@ include_once("session.php");
 	}
 	
 	// do we have a message
-	if ((strcmp($message,"Enter your message here...") == 0) || (strcmp($message,"") == 0)) {
-		$json_result['message'] = "A <b>message</b> is required.";
-		exit(json_encode($json_result));
-	}
+	//if ((strcmp($message,"Enter your message here...") == 0) || (strcmp($message,"") == 0)) {
+	//	$json_result['message'] = "A <b>message</b> is required.";
+	//	exit(json_encode($json_result));
+	//}
 	
 	// do we have a catchpa
 	if (!$catchpa_text) {
@@ -63,7 +63,8 @@ include_once("session.php");
 		$json_result['message'] = "Success"; 
 		exit(json_encode($json_result));
 	} else {
-		$json_result['message'] = "Error submitting contact message."; 
+		$json_result['message'] = "Error submitting contact message: "
+			. print_r($mailer->error_message, true);; 
 		exit(json_encode($json_result));
 	}
 	

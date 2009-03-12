@@ -1,7 +1,7 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 
 ?>
 
@@ -54,5 +54,5 @@ include_once("header.php");
 
 
 <?php
-include_once("footer.php");
+include_once("footer.inc");
 ?>

@@ -1,7 +1,7 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 
 if (!$session->isAdmin()) {
 	// insufficient permission to delete comments
@@ -18,12 +18,12 @@ if (!$session->isAdmin()) {
 		// invalid comment specified
 		$session->displayDialog("Comment Does Not Exist",
 	    	"The specified comment does not exist, please select a comment to be deleted.",
-	        SITE_PREFIX . "/pages/articles/view.php?id=" . clean_data($_GET['aid']));		        
+	        SITE_PREFIX . "/pages/articles/view.php?id=" . $database->clean_data($_GET['aid']));		        
     } else {
-    	$artid = clean_data($_GET['aid']);
+    	$artid = $database->clean_data($_GET['aid']);
         // delete the article comment
         // TODO: cater for other types of comments
-	    if ($database->deleteArticleComment(clean_data($_GET['cid']))) {
+	    if ($database->deleteArticleComment($database->clean_data($_GET['cid']))) {
 	    	// delete succeeded
 	    	$session->displayDialog("Comment Deleted",
 	    	"The specified comment has been succesfully deleted.",
@@ -37,6 +37,6 @@ if (!$session->isAdmin()) {
     }    
 }
     
-include_once("footer.php");
+include_once("footer.inc");
 
 ?>

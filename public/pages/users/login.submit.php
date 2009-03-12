@@ -4,8 +4,8 @@ include_once("common.inc");
 include_once("session.php");
 
 	// check and clean form fields
-	$user = isset($_POST['user']) ? clean_data($_POST['user']) : '';
-	$pass = isset($_POST['pass']) ? clean_data($_POST['pass']) : '';
+	$user = isset($_POST['user']) ? $database->clean_data($_POST['user']) : '';
+	$pass = isset($_POST['pass']) ? $database->clean_data($_POST['pass']) : '';
 	$remember = isset($_POST['remember']);
 	
 	// array for JSON result

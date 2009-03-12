@@ -8,36 +8,37 @@ include_once("functions.php");
 	if (!isset($_GET['page']))
 		$page = 1;
 	else  
-		$page = clean_data($_GET["page"]);
+		$page = $database->clean_data($_GET["page"]);
 
 	// get the search string to filter users on
 	if (!isset($_GET['searchstring']))
 		$searchstring = "";
 	else
-		$searchstring = clean_data($_GET["searchstring"]);
+		$searchstring = $database->clean_data($_GET["searchstring"]);
 
 	// get the column to filter users on
 	if (!isset($_GET['searchcolumn']))
 		$searchcolumn = "username";
 	else
-		$searchcolumn = clean_data($_GET["searchcolumn"]);
+		$searchcolumn = $database->clean_data($_GET["searchcolumn"]);
 		
 	// get the number of rows to show
 	if (!isset($_GET['rows']))
 		$rows_per_page = PAGE_LIMIT;
 	else
-		$rows_per_page = clean_data($_GET["rows"]);	
+		$rows_per_page = $database->clean_data($_GET["rows"]);	
 	// TODO: check rows_per_page is a number;	
 	
 	// find the number of users
-	$q = "SELECT COUNT(*) FROM " . TBL_USERS . " WHERE " . $searchcolumn . 
+	$sql = "SELECT COUNT(*) FROM " . TBL_USERS . " WHERE " . $searchcolumn . 
 		" LIKE '%" . $searchstring . "%'";
-	$result = $database->query($q);
-	if (!$result) {
+	$result = mysqli_query($database->getConnection(), $sql);
+	if (!$result || (mysqli_num_rows($result) < 1)) {
 		$num_users = 0;
 		$num_pages = 0;
 	} else {	
-		$num_users = mysql_result($result, 0);
+		$row = mysqli_fetch_row($result);
+		$num_users = $row['0'];
 		if (isset($_GET['rows']) && $rows_per_page == 0) {
 			$num_pages = 1;		
 		} else {
@@ -47,26 +48,26 @@ include_once("functions.php");
 			
 	// get the details of the users
 	if ($searchstring == "") {
-		$q = "SELECT * FROM " . TBL_USERS . " ORDER BY userlevel DESC,username";
+		$sql = "SELECT * FROM " . TBL_USERS . " ORDER BY userlevel DESC,username";
 		if ($rows_per_page > 0) {
-			$q .= " LIMIT " . ($page-1) * $rows_per_page . "," . $rows_per_page;
+			$sql .= " LIMIT " . ($page-1) * $rows_per_page . "," . $rows_per_page;
 		}
 	} else {
-		$q = "SELECT * FROM " . TBL_USERS
+		$sql = "SELECT * FROM " . TBL_USERS
 			. " WHERE " . $searchcolumn . " LIKE '%" . $searchstring . "%' " 
 	    	. " ORDER BY userlevel DESC,username";
 		if ($rows_per_page > 0) {
-			$q .= " LIMIT " . ($page-1) * $rows_per_page . "," . $rows_per_page;
+			$sql .= " LIMIT " . ($page-1) * $rows_per_page . "," . $rows_per_page;
 		}
 	}
-	$result = $database->query($q);
-	$num_rows = mysql_numrows($result);
+	$result = mysqli_query($database->getConnection(), $sql);
+	$num_rows = mysqli_num_rows($result);
 	
 	if (!$result || ($num_rows < 0)) {
 		echo "<div align='center'><p class='error'>Error Searching for Users.</p></div>";
 	}		
 
-	# create hidden fields for navigation
+	// create hidden fields for navigation
 	echo "<input type='hidden' id='curPage'  value='" . $page . "'/>";
 	echo "<input type='hidden' id='maxPage'  value='" . $num_pages . "'/>";
 	echo "<input type='hidden' id='numEntries' value='" . $num_users . "'/>";
@@ -79,11 +80,12 @@ include_once("functions.php");
 				echo "<tr class='altrow'>\n";
 			else
 				echo "<tr>\n";
-			$uname  = mysql_result($result, $i, "username");
-			$ulevel = mysql_result($result, $i, "userlevel");
-			$email  = mysql_result($result, $i, "email");
-			$time   = date("M d, Y", mysql_result($result, $i, "timestamp"));
-			$active = ((mysql_result($result, $i, "active") == 1) ? "Yes" : "No");
+			$row = mysqli_fetch_assoc($result);	
+			$uname  = $row['username'];
+			$ulevel = $row['userlevel'];
+			$email  = $row['email'];
+			$time   = date("M d, Y", $row['timestamp']);
+			$active = (($row['active'] == 1) ? "Yes" : "No");
 			echo "<td><a href='" . SITE_PREFIX . "/pages/users/view.php?user=" . $uname
 				. "'><img src='" . SITE_BASEDIR . "/images/icons/16x16/edit.png'></img></a>";
 			echo "<td><a href='delete.php?user=" . $uname 
@@ -101,6 +103,8 @@ include_once("functions.php");
 		// display empty table
 		echo "<tr><td>No results found</td></tr>";
 	}
+	mysqli_free_result($result);
+	
 	echo "</table>\n";
 
 ?>

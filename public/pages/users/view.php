@@ -1,9 +1,9 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 
-$current_user = isset($_GET['user']) ? clean_data($_GET['user']) : '';
+$current_user = isset($_GET['user']) ? $database->clean_data($_GET['user']) : '';
 
 // if no user set, assume logged in user
 if (!$current_user) {
@@ -11,7 +11,7 @@ if (!$current_user) {
 }
 
 // does the user exist	   	        
-if (!$database->usernameTaken(clean_data($current_user))) {
+if (!$database->usernameTaken($database->clean_data($current_user))) {
 	// does the user exist?
 	$session->displayDialog("User Does Not Exist",
 	   	"The specified user does not exist.",
@@ -101,6 +101,6 @@ if (!$database->usernameTaken(clean_data($current_user))) {
 	
     }
     
-include_once("footer.php");
+include_once("footer.inc");
 ?>
 

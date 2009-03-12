@@ -1,46 +1,29 @@
 <?php
 
-function pf_fix_slashes($string) {
-	if (get_magic_Quotes_gpc() == 1) {
-		return ($string);
-	} else {
-		return (addslashes($string));
-	}
-}
+/*
+ * Copyright 2007-2009 Kevin A. Lee
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 
-function pf_check_number($value) {
-	if (isset($value) == FALSE) {
-		$error = 1;
-	}
-	if (is_numeric($value) == FALSE) {
-		$error = 1;
-	}
+/**
+ * General support functions
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
+ */
 
-	if ($error == 1) {
-		return FALSE;
-	} else {
-		return TRUE;
-	}
-}
 
-function short_date($date) {
-	return "(" . date("m-d", strtotime($date)) . ")";
-}
-
-function clean_data($string) {
-	if (get_magic_quotes_gpc()) {
-		$string = stripslashes($string);
-	}
-	return mysql_real_escape_string($string);
-}
-
-function clean_html_data($string) {
-	if (get_magic_quotes_gpc()) {
-		$string = htmlspecialchars(stripslashes($string));
-	} else {
-		$string = htmlspecialchars($string);
-	}
-	return mysql_real_escape_string($string);
-}
 
 ?>

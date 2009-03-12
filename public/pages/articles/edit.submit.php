@@ -3,13 +3,13 @@
 include_once("common.inc");
 include_once("session.php");
 
-	$title = isset($_POST['title']) ? clean_data($_POST['title']) : '';
-	$summary = isset($_POST['summary']) ? clean_data($_POST['summary']) : '';
-	$content = isset($_POST['contentText']) ? clean_data($_POST['contentText']) : '';
-	$date = isset($_POST['dateposted']) ? clean_data($_POST['dateposted']) : '';
-	$state = isset($_POST['state']) ? clean_data($_POST['state']) : '';
-	$author = isset($_POST['author']) ? clean_data($_POST['author']) : '';
-	$article_id	= isset($_POST['article_id']) ? clean_data($_POST['article_id']) : '';
+	$title = isset($_POST['title']) ? $database->clean_data($_POST['title']) : '';
+	$summary = isset($_POST['summary']) ? $database->clean_data($_POST['summary']) : '';
+	$content = isset($_POST['contentText']) ? $database->clean_data($_POST['contentText']) : '';
+	$date = isset($_POST['dateposted']) ? $database->clean_data($_POST['dateposted']) : '';
+	$state = isset($_POST['state']) ? $database->clean_data($_POST['state']) : '';
+	$author = isset($_POST['author']) ? $database->clean_data($_POST['author']) : '';
+	$article_id	= isset($_POST['article_id']) ? $database->clean_data($_POST['article_id']) : '';
 	$category	= isset($_POST['category']) ? $_POST['category'] : '';
 		
 	// check if we have enough parameters

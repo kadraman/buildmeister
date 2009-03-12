@@ -4,14 +4,14 @@ include_once("common.inc");
 include_once("session.php");
 
 	// check and clean form fields
-	$user = isset($_POST['user']) ? clean_data($_POST['user']) : '';
-	$newusername = isset($_POST['newusername']) ? clean_data($_POST['newusername']) : '';
-	$firstname = isset($_POST['firstname']) ? clean_data($_POST['firstname']) : '';
-	$lastname = isset($_POST['lastname']) ? clean_data($_POST['lastname']) : '';
-	$email = isset($_POST['email']) ? clean_data($_POST['email']) : '';
-	$website = isset($_POST['website']) ? clean_data($_POST['website']) : '';
-	$currentpass = isset($_POST['currentpass']) ? clean_data($_POST['currentpass']) : '';
-	$newpass = isset($_POST['newpass']) ? clean_data($_POST['newpass']) : '';
+	$user = isset($_POST['user']) ? $database->clean_data($_POST['user']) : '';
+	$newusername = isset($_POST['newusername']) ? $database->clean_data($_POST['newusername']) : '';
+	$firstname = isset($_POST['firstname']) ? $database->clean_data($_POST['firstname']) : '';
+	$lastname = isset($_POST['lastname']) ? $database->clean_data($_POST['lastname']) : '';
+	$email = isset($_POST['email']) ? $database->clean_data($_POST['email']) : '';
+	$website = isset($_POST['website']) ? $database->clean_data($_POST['website']) : '';
+	$currentpass = isset($_POST['currentpass']) ? $database->clean_data($_POST['currentpass']) : '';
+	$newpass = isset($_POST['newpass']) ? $database->clean_data($_POST['newpass']) : '';
 	
 	// array for JSON result
 	$json_result = array();

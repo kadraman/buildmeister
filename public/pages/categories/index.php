@@ -1,7 +1,7 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 
 // do we have a category id?
 if (!isset($_GET['catid'])) {
@@ -11,7 +11,7 @@ if (!isset($_GET['catid'])) {
 	    SITE_BASEDIR . "/pages/articles/");
 } else {
 	// retrieve the id of the category to display
-	$catid = clean_data($_GET['catid']);
+	$catid = $database->clean_data($_GET['catid']);
 	
 	// get category name
 	$cat_name_sql = "SELECT name from " . TBL_CATEGORIES . " where id = " . $catid;
@@ -66,5 +66,5 @@ if (!isset($_GET['catid'])) {
 <?php
     }
     
-include_once("footer.php");
+include_once("footer.inc");
 ?>

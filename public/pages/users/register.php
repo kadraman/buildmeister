@@ -1,7 +1,7 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 
 // the user is already logged in
 if ($session->logged_in) {
@@ -123,7 +123,7 @@ This site system uses cookies to store information on your local computer. These
 <?php
 }
 
-include_once("footer.php");
+include_once("footer.inc");
 
 ?>
 

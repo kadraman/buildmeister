@@ -1,18 +1,36 @@
 <?php
+
+/*
+ * Copyright 2007-2009 Kevin A. Lee
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 /**
- * constants.php
  *
  * This file is intended to group all constants to
  * make it easier to tweak the application.
  *
- * @author Kevin A. Lee <kevin.lee@buildmeister.com>
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
  
 // database constants for MySQL
-define("DB_SERVER", "@db_server@");
-define("DB_USER", "@db_user@");
-define("DB_PASS", "@db_pass@");
-define("DB_NAME", "@db_name@");
+define("DB_SERVER", "localhost");
+define("DB_USER", "root");
+define("DB_PASS", "root");
+define("DB_NAME", "buildmeister");
 
 // database tables
 define("TBL_USERS", "users");
@@ -32,8 +50,8 @@ define("TBL_ARTCOM", "article_comm");
 define("TBL_GLOSSCOM", "glossary_comm");
 
 // special names and level constants
-define("SITE_BASEDIR", "@site_basedir@");
-define("SITE_PREFIX", "@site_prefix@");
+define("SITE_BASEDIR", "http://127.0.0.1/buildmeister.com/public");
+define("SITE_PREFIX", "/buildmeister.com/public");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");
@@ -63,7 +81,7 @@ define("EMAIL_FROM_ADDR", "webmaster@buildmeister.com");
 define("EMAIL_WELCOME", false);
 define("SMTP_SERVER", "smtp.strato.com");
 define("SMTP_USERNAME", "webmaster@buildmeister.com");
-define("SMTP_PASSWORD", "@db_pass@");
+define("SMTP_PASSWORD", "redrock71");
 
 // forces all users to have lowercase usernames
 define("ALL_LOWERCASE", false);

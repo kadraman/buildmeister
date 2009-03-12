@@ -1,20 +1,34 @@
 <?php
-/**
- * Session.php
+
+/*
+ * Copyright 2007-2009 Kevin A. Lee
  *
- * The Session class is meant to simplify the task of keeping
- * track of logged in users.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Written by: Jpmaster77 a.k.a. The Grandmaster of C++ (GMC)
- * Last Updated: August 19, 2004
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
+
 include_once("database.php");
 include_once("mailer.php");
 include_once("form.php");
 include_once("functions.php");
 include_once("securimage/securimage.php");
 
-
+/**
+ * Class to simplify keeping track of users and tasks.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
+ */
 class Session
 {
 	var $username;     //Username given on sign-up
@@ -207,91 +221,7 @@ class Session
 		#$this->userlevel = GUEST_LEVEL;
 	}
 
-	/**
-	 * Gets called when the user has just submitted the
-	 * registration form.
-	 *
-	 * @param string $subuser
-	 * @param string $subpass
-	 * @param string $subemail
-	 * @param bool $mailok
-	 * @return 0 if no errors with the fields, 1 if errors
-	 * or 2 if the registration attempt failed.
-	 */
-	function register($subuser, $subpass, $subfirst, $sublast, $subemail, $mailok) {
-		global $database, $form, $mailer;  // the database, form and mailer object
-
-		// username error checking
-		$field = "user";  // use field name for username
-		if (!$subuser || strlen($subuser = trim($subuser)) == 0) {
-			$form->setError($field, "A Username is required.");
-		} else {
-			// spruce up username, and check validity
-			$subuser = stripslashes($subuser);
-			if (strlen($subuser) < 5) {
-				$form->setError($field, "Username is required to be 5 or more characters.");
-			} else if (strlen($subuser) > 30) {
-				$form->setError($field, "Username is required to be 30 characters or less.");
-			} else if (!eregi("^([0-9a-z])+$", $subuser)) {
-				$form->setError($field, "Username should contain alpha numeric characters only.");
-			} else if (strcasecmp($subuser, GUEST_NAME) == 0) {
-				$form->setError($field, "The Username is reserved.");
-			} else if ($database->usernameTaken($subuser)) {
-				$form->setError($field, "The Username is already in use.");
-			} else if ($database->usernameBanned($subuser)) {
-				$form->setError($field, "The Username contains a banned word.");
-			}
-		}
-
-		// password error checking
-		$field = "pass";  // use field name for password
-		if (!$subpass) {
-			$form->setError($field, "A password is required.");
-		} else {
-			// spruce up password and check validity
-			$subpass = stripslashes($subpass);
-			if (strlen($subpass) < 5) {
-				$form->setError($field, "Password is required to be 5 or more characters.");
-			} else if (!eregi("^([0-9a-z])+$", ($subpass = trim($subpass)))){
-				$form->setError($field, "Password should contain alpha numeric characters only.");
-			}
-		}
-
-		// email error checking
-		$field = "email";  // use field name for email
-		if (!$subemail || strlen($subemail = trim($subemail)) == 0){
-			$form->setError($field, "An email is required.");
-		} else {
-			// check validity
-			$regex = "^[_+a-z0-9-]+(\.[_+a-z0-9-]+)*"
-			."@[a-z0-9-]+(\.[a-z0-9-]{1,})*"
-			."\.([a-z]{2,}){1}$";
-			if (!eregi($regex,$subemail)) {
-				$form->setError($field, "The Email address is invalid.");
-			}
-			$subemail = stripslashes($subemail);
-		}
-
-
-		// Errors exist, have user correct them
-		if ($form->num_errors > 0) {
-			return 1;
-		} else {
-			$randomstring = "";
-			// calculate verifystring
-			for ($i = 0; $i < 16; $i++) {
-				$randomstring .= chr(mt_rand(32, 126));
-			}
-			$verifystring = urlencode($randomstring);
-			if ($database->addNewUser($subuser, md5($subpass), $subfirst, $sublast, $subemail, $verifystring, $mailok)) {
-				$mailer->sendVerification($subuser, $subemail, $subpass, $verifystring);
-				$mailer->sendNotification("A new user has registered: " . $subuser);
-				return 0;  // new inactive user added succesfully
-			} else {
-				return 2;   // registration attempt failed
-			}
-		}
-	} // register
+	
 
 	/**
 	 * Submit a new article, checking the paramters supplied.
@@ -512,46 +442,7 @@ class Session
 			}
 		}
 	} // submitBook
-
 	
-	/***************** CAN BE REMOVED **/
-	/**
-	 * Submit a new comment on an article, checking the parameters supplied.
-	 *
-	 * @param string $artid
-	 * @param string $comment
-	 * @return 0 if succesfull, 1 if form errors or 2 if submission failed
-	 */
-	function submitArticleComment($artid, $comment, $catchpa) {
-		global $database, $form, $mailer;  // the database, form and mailer object
-
-		// comment error checking
-		$field = "comment";
-		if (!$comment || strlen($comment = trim($comment)) == 0) {
-			$form->setError($field, "A comment is required.");
-		}
-		$comment = nl2br(htmlentities($comment));
-		//$comment = addslashes($comment);
-
-		// catchpa checking
-		$field = "catchpa_code";		
-		if ($this->securimage->check($catchpa) == false) {
-			$form->setError($field, "Invalid catchpa code.");  
-		}
-
-		// errors exist, have user correct them
-		if ($form->num_errors > 0) {
-			return 1;
-		} else {
-			if ($database->addNewArticleComment($this->username, $artid, $comment)) {
-				$mailer->sendNotification("New article comment added by " . $this->username . ": " . $comment);
-				return 0;      // new comment added succesfully
-			} else {
-				return 2;      // submission attempt failed
-			}
-		}
-	} // submitArticleComment
-
 	/**
 	 * Submit a new comment on a glossary item, checking the parameters supplied.
 	 *
@@ -685,49 +576,6 @@ class Session
 		}
 	} // updateArticle
 	
-	/**
-	 * Sends a contact email to the webmaster
-	 * @param string $firstname
-	 * @param string $lastname
-	 * @param string $subemail
-	 * @param string $submessage
-	 */
-	function contactUs($firstname, $lastname, $subemail, $submessage) {
-		global $database, $form, $mailer;  // the database, form and mailer object
-
-		// email error checking
-		$field = "email";  // use field name for email
-		if (!$subemail || strlen($subemail = trim($subemail)) == 0){
-			$form->setError($field, "An email is required.");
-		} else {
-			// check validity
-			$regex = "^[_+a-z0-9-]+(\.[_+a-z0-9-]+)*"
-			."@[a-z0-9-]+(\.[a-z0-9-]{1,})*"
-			."\.([a-z]{2,}){1}$";
-			if (!eregi($regex,$subemail)) {
-				$form->setError($field, "The Email address is invalid.");
-			}
-			$subemail = stripslashes($subemail);
-		}
-
-		// comment error checking
-		$field = "message";
-		if (!$submessage || strlen($submessage = trim($submessage)) == 0) {
-			$form->setError($field, "A message is required.");
-		}
-
-		// errors exist, have user correct them
-		if ($form->num_errors > 0) {
-			return 1;
-		} else {
-			if ($mailer->sendNotification("New message from: " . $subemail . ":\n\n" . $submessage)) {
-				return 0;      // new message sent succesfully
-			} else {
-				return 2;      // submission attempt failed
-			}
-		}
-	} // contactUs
-
 	/**
 	 * Attempts to edit the user's account information
 	 * including the password, which it first makes sure is correct

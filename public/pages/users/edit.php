@@ -1,7 +1,7 @@
 <?php
 
 include_once("common.inc");
-include_once("header.php");
+include_once("header.inc");
 
 // do we have a user?
 if (!isset($_POST['user'])) {
@@ -9,12 +9,12 @@ if (!isset($_POST['user'])) {
 	 	"No username has been specified.",
 	 	SITE_BASEDIR . "/index.php");
 // does the user exist	 	
-} else if (!$database->usernameTaken(clean_data($_POST['user']))) {
+} else if (!$database->usernameTaken($database->clean_data($_POST['user']))) {
 	$session->displayDialog("Username Does Not Exist",
 	   	"The specified username does not exist.",
 	    SITE_BASEDIR . "/index.php");
 // do we have permission to edit this user?	    
-} else if (strcmp($session->username, clean_data($_POST['user'])) != 0) {
+} else if (strcmp($session->username, $database->clean_data($_POST['user'])) != 0) {
 	if (!$session->isAdmin()) {
 		$session->displayDialog("Insufficient Permission",
    			"Sorry you do not have permission to edit this user.",
@@ -23,7 +23,7 @@ if (!isset($_POST['user'])) {
 } else {	
 
 	// retrieve the username of the user to display
-	$username = clean_data($_POST['user']);
+	$username = $database->clean_data($_POST['user']);
 	$newusername = "";
 	
 	echo "<div id='toptitle'>\n";
@@ -36,7 +36,7 @@ if (!isset($_POST['user'])) {
 
 	// fetch username data
 	$sql = "SELECT * from " . TBL_USERS . " where username = '" . $username. "'";
-	$result = mysqli_query($database->conn, $sql);
+	$result = mysqli_query($database->getConnection(), $sql);
 	$numrows = mysqli_num_rows($result);
 
 	if ($numrows != 0) {
@@ -139,5 +139,5 @@ if (!isset($_POST['user'])) {
 <?php
 	}
 
-include_once("footer.php");
+include_once("footer.inc");
 ?>
