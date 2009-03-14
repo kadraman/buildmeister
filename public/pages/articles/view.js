@@ -1,12 +1,11 @@
 window.addEvent('domready', function() {
 
-	var articleId = $('articleId').get('value');
+	var articleTitle = $('articleTitle').get('value');
 	
 	new FormValidator($('commentForm'), "Successfully added comment, reloading page...",
 		{
 			redirect: true,
-			redirectURL: CONFIG.site_prefix + "/pages/articles/view.php?id=" +
-				articleId 
+			redirectURL: CONFIG.rewrite_prefix + "/articles/" +	articleTitle 
 		}
 	);
 	

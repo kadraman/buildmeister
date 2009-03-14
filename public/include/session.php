@@ -20,7 +20,6 @@
 include_once("database.php");
 include_once("mailer.php");
 include_once("form.php");
-include_once("functions.php");
 include_once("securimage/securimage.php");
 
 /**

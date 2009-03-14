@@ -1,0 +1,4 @@
+<IfModule mod_rewrite.c>
+#RewriteEngine on
+#RewriteRule ^([0-9]+)/$ view.php?id=$1
+</IfModule> 

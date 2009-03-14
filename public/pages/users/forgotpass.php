@@ -8,18 +8,19 @@ include_once("header.inc");
 	<h2>Forgotten password</h2>
 </div>
 
-<form id="forgotPassForm" action="forgotpass.submit.php" method="post">
+<form id="forgotPassForm" action="<?php echo SITE_BASEDIR . "/pages/users/forgotpass.submit.php" ?>" method="post">
 	<fieldset style="width:400px; margin: 0px auto">
 
 		<!-- ajax login response -->
 		<div id="response">
-			To retrieve your password enter your username below.
+			To retrieve your password enter your email address below.
 		</div>
 	
 		<!-- username -->
 		<div>
-			<label for="user" class="required" accesskey="U">Username:</label>
-    		<input type="text" name="user" maxlength="30" id="user" class="txt">
+			<label for="user" class="required" accesskey="E">Email:</label>
+    		<input type="text" name="email" maxlength="100" id="email" class="txt"
+    			style="width:200px">
     	</div>
     
     	<!-- buttons and ajax processing -->

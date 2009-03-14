@@ -11,7 +11,7 @@ include_once("header.inc");
 	<h2>Contact us</h2>
 </div>
 
-<form id="contactForm" action="contact.submit.php" method="post">
+<form id="contactForm" action="<?php echo SITE_BASEDIR . "/pages/contact.submit.php" ?>" method="post">
 	<fieldset style="width:650px; margin: 0px auto">
 		
 		<!-- ajax submit response -->
@@ -71,7 +71,7 @@ $oFCKeditor->Create();
 		<div>
 			<label for="kludge"><!-- empty --></label>
 			<img class="txt" id="catchpa" 
-				src="../include/securimage/securimage_show.php" alt="CAPTCHA Image" />
+				src="<?php echo SITE_PREFIX . "/include/securimage/securimage_show.php" ?>" alt="CAPTCHA Image" />
 			<a href="" id="reload" class="txt">Reload Image</a>				
 		</div>
 		<div>

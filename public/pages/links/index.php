@@ -17,7 +17,7 @@ include_once("header.inc");
 		this is simply a collection of sites that members of this web site have 
 		recommended, together with some personal comments about them. </p>
 		<p>If you believe that there is a link that has been missed and should
- 		be included then please <a href="../contact.php">contact us</a>.</p>
+ 		be included then please <a href="../contact/">contact us</a>.</p>
 	</div>
 
 <?php

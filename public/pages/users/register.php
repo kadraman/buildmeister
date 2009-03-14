@@ -16,7 +16,7 @@ if ($session->logged_in) {
 	<h2>Register</h2>
 </div>
 
-<form id="registrationForm" action="register.submit.php" method="post">
+<form id="registrationForm" action="<?php echo SITE_BASEDIR . "/pages/users/register.submit.php" ?>" method="post">
 	<fieldset style="width:650px; margin: 0px auto">
 	
 		
@@ -74,7 +74,8 @@ if ($session->logged_in) {
 		<div>
 			<label for="kludge"><!-- empty --></label>
 			<img class="txt" id="catchpa" 
-				src="../../include/securimage/securimage_show.php" alt="CAPTCHA Image" />
+				src="<?php echo SITE_PREFIX . "/include/securimage/securimage_show.php" ?>" 
+				alt="CAPTCHA Image" />
 			<a href="" id="reload" class="txt">Reload Image</a>				
 		</div>
 		<div>

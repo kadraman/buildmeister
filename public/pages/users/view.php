@@ -28,7 +28,7 @@ if (!$database->usernameTaken($database->clean_data($current_user))) {
 	}
 ?>
 
-<form id="viewUserForm" action="edit.php" method="post">
+<form id="viewUserForm" action="<?php echo REWRITE_PREFIX . "/users/edit/" . $current_user; ?>" method="post">
 	<fieldset style="width:400px; margin: 0px auto">
 
 		<!-- user name -->		

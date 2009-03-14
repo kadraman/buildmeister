@@ -14,7 +14,7 @@ include_once("header.inc");
 	<div id="introductory">
 		<p>This page is intended to define a number of terms that are used in
 		or related to the build process. If you believe that a definition is
-		missing and should be included then please <a href="../contact.php">contact us</a>.</p>
+		missing and should be included then please <a href="../contact/">contact us</a>.</p>
 	</div>
 
 	<div id="alphabet">
@@ -52,7 +52,8 @@ for ($i = 65; $i <= 90; $i++) {
             	$title = $row['title'];
             	$href = str_replace(' ', '_', $title);
             	echo "<td class='glossitem' valign='top'><strong><a id='#" . $href . "'></a>"
-        	    	. "<a href='viewterm.php?term=" . $href . "'>" 
+        	    	. "<a href='" . REWRITE_PREFIX . "/categories/" 
+        	    	. $href . "'>" 
                 	. $row['title'] . "</a></strong><br/>"
 		        	. stripslashes($row['summary']) . "</td>\n";
             	// do we have just a single row?

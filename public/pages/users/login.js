@@ -7,6 +7,10 @@ window.addEvent('domready', function() {
 		// where we will place the response
 		var responseDiv = $('loginForm').getElement('#response');
 		
+		// where we will redirect to on login
+		var redirectURL = CONFIG.rewrite_prefix
+		    + '/users/' + $('user').get('value'); 
+		
 		// remove error style from fields
 		this.getElements('.error').each(function(input) {
 			if (input.hasClass('error')) { 
@@ -56,7 +60,9 @@ window.addEvent('domready', function() {
 						"'<br>Please wait while we redirect you to your home page...</span></div>");
 
 					// go to home page
-					setTimeout('go_to_home_page()', 3000);
+					setTimeout(function() { 
+						window.location = redirectURL;
+					}, 3000);	
 				} else {
 					// failed login
 					
@@ -82,8 +88,3 @@ window.addEvent('domready', function() {
 	// set focus to username
 	$("user").focus();
 });
-
-// navigate to users home page
-function go_to_home_page() {
-	window.location = 'view.php'; 
-}

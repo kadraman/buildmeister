@@ -4,24 +4,24 @@ include_once("common.inc");
 include_once("session.php");
 
 	// check and clean form fields
-	$user = isset($_POST['user']) ? $database->clean_data($_POST['user']) : '';
+	$email = isset($_POST['email']) ? $database->clean_data($_POST['email']) : '';
 		
 	// array for JSON result
 	$json_result = array();
 	$json_result['code'] = 0; 		// assume failure		
 			
 	// do we have the username
-	if (!$user) {  
-		$json_result['message'] = "Your <b>username</b> is required.";	
-		$json_result['field'] = "user";	
+	if (!$email) {  
+		$json_result['message'] = "Your <b>email</b> is required.";	
+		$json_result['field'] = "email";	
 		exit(json_encode($json_result));
 	}
 	
-	// check username
-	if ($user) {
-		if (!$database->usernameTaken($user)) {
-			$json_result['message'] = "The <b>username</b> does not exist.";
-			$json_result['field'] = "user";
+	// check email
+	if ($email) {
+		if (!$database->emailTaken($email)) {
+			$json_result['message'] = "The <b>email</b> address does not exist.";
+			$json_result['field'] = "email";
 			exit(json_encode($json_result));
 		} 
 	}
@@ -30,8 +30,8 @@ include_once("session.php");
     $newpass = $session->generateRandStr(8);
 
     // Get email of user */
-    $user_info = $database->getUserInfo($user);
-    $email  = $user_info['email'];
+    $user_info = $database->getUserInfoByEmail($email);
+    $user  = $user_info['username'];
 
     // attempt to send the email with new password
     if ($mailer->sendNewPass($user, $email, $newpass)) {

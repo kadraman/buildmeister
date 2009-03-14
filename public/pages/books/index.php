@@ -17,7 +17,7 @@ include_once("header.inc");
 		this is simply a list of books that members of this web site have 
 		read and enjoyed. </p>
 		<p>If you believe that there is a book that has been missed and should
- 		be included then please <a href="../contact.php">contact us</a>.</p>
+ 		be included then please <a href="../contact/">contact us</a>.</p>
 	</div>
 
 <?php

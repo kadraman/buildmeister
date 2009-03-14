@@ -52,7 +52,7 @@ if (!isset($_POST['user'])) {
 
 ?>
 
-<form id="userEditForm" action="edit.submit.php" method="post">
+<form id="userEditForm" action="<?php echo SITE_BASEDIR . "/pages/users/edit.submit.php" ?>" method="post">
 	<fieldset style="width:500px; margin: 0px auto">
 		
 		<!-- ajax login response -->

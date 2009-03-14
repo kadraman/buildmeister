@@ -12,7 +12,7 @@ include_once("header.inc");
 <!-- named div so content can be replaced on successfull login -->
 <div id="status" style="width:400px; margin: 0px auto">
 
-<form id="loginForm" action="login.submit.php" method="post">
+<form id="loginForm" action="<?php echo SITE_BASEDIR . "/pages/users/login.submit.php"?>" method="post">
     <fieldset>   	
 
 		<!-- ajax login response -->

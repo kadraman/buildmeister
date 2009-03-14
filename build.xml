@@ -110,6 +110,8 @@
                     <token key="db_name" value="${db.name}" />
                     <token key="site_basedir" value="${site.basedir}" />
                 	<token key="site_prefix" value="${site.prefix}" />
+                	<token key="rewrite_prefix" value="${rewrite.prefix}" />
+                	<token key="stmp_pass" value="${smtp.pass}" />
                 </replacetokens>
             </filterchain>
         </copy>
@@ -123,7 +125,15 @@
                     <token key="db_name" value="${db.name}" />
                     <token key="site_basedir" value="${site.basedir}" />
                 	<token key="site_prefix" value="${site.prefix}" />
+                	<token key="rewrite_prefix" value="${rewrite.prefix}" />
                 	<token key="image_dir" value="${image.dir}" />
+                </replacetokens>
+            </filterchain>
+        </copy> 
+		<copy overwrite="true" file="template.htaccess"	tofile=".htaccess">
+            <filterchain>
+                <replacetokens begintoken="@" endtoken="@">
+                	<token key="site_prefix" value="${site.prefix}" />
                 </replacetokens>
             </filterchain>
         </copy> 

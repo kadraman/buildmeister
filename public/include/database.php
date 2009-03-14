@@ -251,6 +251,26 @@ class MySQLDB {
 			return false;
 		}
 	} // usernameTaken
+	
+	/**
+	 * Checks whether the specified email is already taken.
+	 *
+	 * @param string $email
+	 * @return true if the email has been taken, otherwise
+	 * false.
+	 */
+	function emailTaken($email){
+		$sql = "SELECT email FROM " . TBL_USERS
+		. " WHERE email = '$email'";
+		$result = mysqli_query($this->connection, $sql);
+		if (mysqli_num_rows($result) > 0) {
+			mysqli_free_result($result);
+			return true;
+		} else {
+			mysqli_free_result($result);
+			return false;
+		}
+	} // emailTaken
 
 	/**
 	 * Checks whether the specified username has been
@@ -365,6 +385,28 @@ class MySQLDB {
 	function getUserInfo($username) {
 		$sql = "SELECT * FROM " . TBL_USERS
 		. " WHERE username = '$username'";
+		$result = mysqli_query($this->connection, $sql);
+		// error occurred, return given name by default
+		if (!$result || (mysqli_num_rows($result) < 1)) {
+			return NULL;
+		}
+		// return result array
+		$dbarray = mysqli_fetch_assoc($result);
+		mysqli_free_result($result);
+		return $dbarray;
+	} // getUserInfo
+	
+	/**
+	 * Gets all the information for a specific email address.
+	 *
+	 * @param string $email
+	 * @return the result array with all information stored
+	 * regarding the given username. If query fails, NULL
+	 * is returned.
+	 */
+	function getUserInfoByEmail($email) {
+		$sql = "SELECT * FROM " . TBL_USERS
+		. " WHERE email = '$email'";
 		$result = mysqli_query($this->connection, $sql);
 		// error occurred, return given name by default
 		if (!$result || (mysqli_num_rows($result) < 1)) {
@@ -624,6 +666,64 @@ class MySQLDB {
 		}
 		return $retval;
 	} // getArticleTitle
+	
+	/**
+	 * Get the id of an article by title
+	 *
+	 * @param string $atitle
+	 * @return article title else NULL
+	 */
+	function getArticleIdByTitle($atitle) {
+		$retval = NULL;
+		// select id
+		$sql = "SELECT id FROM " . TBL_ARTICLES . " WHERE title = '$atitle'";
+		if ($result = mysqli_query($this->connection, $sql)) {
+			$row = mysqli_fetch_row($result);
+			$retval = $row['0'];
+			mysqli_free_result($result);
+		}
+		return $retval;
+	} // getArticleIdByTitle
+	
+	/**
+	 * Get the summary of an article
+	 *
+	 * @param integer $artid
+	 * @return article summary else NULL
+	 */
+	function getArticleSummary($artid) {
+		$retval = NULL;
+		// select article
+		$sql = "SELECT summary FROM " . TBL_ARTICLES . " WHERE id = '$artid'";
+		if ($result = mysqli_query($this->connection, $sql)) {
+			$row = mysqli_fetch_row($result);
+			$retval = $row['0'];
+			mysqli_free_result($result);
+		}
+		return $retval;
+	} // getArticleSummary
+	
+	/**
+	 * Get the categories of an article
+	 *
+	 * @param integer $artid
+	 * @return article categories else NULL
+	 */
+	function getArticleCategories($artid) {
+		$retval = NULL;
+		// get categories for article
+		$sql = "SELECT a.cat_id, c.name FROM " . TBL_ARTICLE_CATEGORIES . " a, " 
+			. TBL_CATEGORIES . " c WHERE a.article_id = " . $artid 
+			. " AND a.cat_id = c.id;";
+		if ($result = mysqli_query($this->connection, $sql)) {
+			while ($row = mysqli_fetch_assoc($result)) {
+	    		$retval = $retval . $row['name'] . " ";
+			}
+   			// free result set
+    		mysqli_free_result($result);
+		}
+		return $retval;
+	} 
 
 	/**
 	 * Updates an article in the database.
@@ -646,6 +746,7 @@ class MySQLDB {
 		// TODO: turn state into number
 		// update article
 		$sql = "UPDATE " . TBL_ARTICLES . " SET date_posted = STR_TO_DATE('$date','%d-%m-%Y'), "
+		. "date_updated = now(), "
 		. "title = '$title', summary = '$summary', content = '$text', state = '$state', "
 		. "posted_by = '$author' WHERE id = '$artid'";
 		if (!mysqli_query($this->connection, $sql)) {

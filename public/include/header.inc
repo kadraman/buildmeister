@@ -6,37 +6,46 @@ include_once("session.php");
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <head>
-	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-	<title>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 <?php
+// meta description
+if (isset($html_head_description)) {
+	echo "<meta name=\"description\" content=\"" . $html_head_description . "\"/>\n"; 
+} 
+// meta keywords
+if (isset($html_head_keywords)) {
+	echo "<meta name=\"keywords\" content=\"" . $html_head_keywords . "\">\n";
+}
+// page title
+echo "<title>";
 if (isset($html_head_title)) {
 	echo SITE_NAME . ": " . $html_head_title; 
 } else {
 	echo SITE_NAME;
 }
+echo "</title>";
 ?>	
-	</title>
-	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/include/config.js"></script>
-	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/mootools-1.2.1-core.js"></script>
-	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/mootools-1.2-more.js"></script>
-	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/clientcide-1.2.js"></script>
-	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/datetimepicker.js"></script>
-	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/global.js"></script>
-	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/FilterTable.js"></script>
-	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/FormValidator.js"></script>
-	<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/LabelledInput.js"></script>
+<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/include/config.js"></script>
+<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/mootools-1.2.1-core.js"></script>
+<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/mootools-1.2-more.js"></script>
+<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/clientcide-1.2.js"></script>
+<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/datetimepicker.js"></script>
+<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/global.js"></script>
+<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/FilterTable.js"></script>
+<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/FormValidator.js"></script>
+<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/LabelledInput.js"></script>
 <?php
-	// include supporting javascript file for page (if present)
-    $jsfile = basename($_SERVER['PHP_SELF'], ".php") . ".js";
-	if (file_exists($jsfile)) {
-		echo "    <script type=\"text/javascript\" src=\"" . $jsfile . "\"></script>";
-	}
+// include supporting javascript file for page (if present)
+$jsfile = str_replace(".php", ".js", $_SERVER['PHP_SELF']);
+//if (file_exists($jsfile)) {
+	echo "<script type=\"text/javascript\" src=\"" . $jsfile . "\"></script>";
+//}
 ?>	
-	<style type="text/css">
-		@import "<?php echo SITE_PREFIX; ?>/stylesheets/main.css";
-		@import "<?php echo SITE_PREFIX; ?>/stylesheets/admin.css";
-		@import "<?php echo SITE_PREFIX; ?>/stylesheets/article.css";
-	</style>
+<style type="text/css">
+@import "<?php echo SITE_PREFIX; ?>/stylesheets/main.css";
+@import "<?php echo SITE_PREFIX; ?>/stylesheets/admin.css";
+@import "<?php echo SITE_PREFIX; ?>/stylesheets/article.css";
+</style>
 </head>
 
 <body id="buildmeister">
@@ -79,11 +88,11 @@ if (isset($html_head_title)) {
 			<div id="navigation">
 				<ul id="links">
 					<li class="menuTitle">Main Menu</li>
-					<li><a href="<?php echo SITE_PREFIX; ?>/">Home</a></li>
-					<li><a href="<?php echo SITE_PREFIX; ?>/pages/articles/">Articles</a></li>
-					<li><a href="<?php echo SITE_PREFIX; ?>/pages/books/">Books</a></li>
-					<li><a href="<?php echo SITE_PREFIX; ?>/pages/glossary/">Glossary</a></li>
-					<li><a href="<?php echo SITE_PREFIX; ?>/pages/links/">Links</a></li>
+					<li><a href="<?php echo REWRITE_PREFIX; ?>/">Home</a></li>
+					<li><a href="<?php echo REWRITE_PREFIX; ?>/articles/">Articles</a></li>
+					<li><a href="<?php echo REWRITE_PREFIX; ?>/books/">Books</a></li>
+					<li><a href="<?php echo REWRITE_PREFIX; ?>/glossary/">Glossary</a></li>
+					<li><a href="<?php echo REWRITE_PREFIX; ?>/links/">Links</a></li>
 				</ul>
 			</div>		
 		 		
@@ -112,16 +121,16 @@ if (isset($html_head_title)) {
 				if ($session->logged_in) {
 ?>
 					<ul class="sideBoxList">
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/users/view.php?user=<?php echo $session->username; ?>">My account</a></li>
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/users/logout.php">Logout</a></li>
+						<li><a class="sideBoxLink" href="<?php echo REWRITE_PREFIX; ?>/users/<?php echo $session->username; ?>">My account</a></li>
+						<li><a class="sideBoxLink" href="<?php echo REWRITE_PREFIX; ?>/users/logout.html">Logout</a></li>
 					</ul>
 <?php
 				} else {
 ?>
 					<ul class="sideBoxList">
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/users/login.php">Login</a></li>
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/users/forgotpass.php">Forgotten password?</a></li>
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/users/register.php">Register now?</a></li>
+						<li><a class="sideBoxLink" href="<?php echo REWRITE_PREFIX; ?>/users/login.html">Login</a></li>
+						<li><a class="sideBoxLink" href="<?php echo REWRITE_PREFIX; ?>/users/forgotpass.html">Forgotten password?</a></li>
+						<li><a class="sideBoxLink" href="<?php echo REWRITE_PREFIX; ?>/users/register.html">Register now?</a></li>
 					</ul>
 <?php
 				}

@@ -3,29 +3,38 @@
 include_once("common.inc");
 include_once("session.php");
 
-// get title of article and add to HTML header
+// get details of article and add to HTML header
 if (isset($_GET['id'])) {
-	$html_head_title = $database->getArticleTitle($database->clean_data($_GET['id']));
+	$aid = $database->clean_data($_GET['id']);
+	$html_head_title = $database->getArticleTitle($aid);
+	$html_head_description = $database->getArticleSummary($aid);
+	$html_head_keywords = $database->getArticleCategories($aid);
+} else if (isset($_GET['title'])) {
+	$atitle_unformatted = $database->clean_data($_GET['title']);
+	$atitle = str_replace("_", " ", $atitle_unformatted);
+	$aid = $database->getArticleIdByTitle($atitle);
+	$html_head_title = $database->getArticleTitle($aid);
+	$html_head_description = $database->getArticleSummary($aid);
+	$html_head_keywords = $database->getArticleCategories($aid);
 }
 
 include_once("fckeditor/fckeditor.php");
 include_once("header.inc");
 
 // do we have an article id?
-if (!isset($_GET['id'])) {
+if (!isset($_GET['id']) && !isset($_GET['title'])) {
     $session->displayDialog("No Article Specified",
     	"No article has been specified, please select an article on the "
         . "<b>articles</b> page to see its content.",
         SITE_BASEDIR . "/pages/articles/");
 // does the article exist?	        
-} else if (!$database->articleExists($_GET['id'])) {
+} else if (!$database->articleExists($aid)) {
 	$session->displayDialog("Article Does Not Exist",
     	"The specified article does not exist, please select an article on the "
     	. "<b>articles</b> page to see its content.",
         SITE_BASEDIR . "/pages/articles/");		        	        
 } else {
-    // retrieve the id of the article to display
-    $currentid = $database->clean_data($_GET['id']);
+    $currentid = $aid;
 	    
     // update view count
     if (!$session->isAdmin()) {
@@ -38,8 +47,9 @@ if (!isset($_GET['id'])) {
     // fetch article content
     echo "<div id='article'>\n";       
         
-    $article_sql = "SELECT id, title, posted_by, DATE_FORMAT(date_posted, \"%M %D, %Y\")" .
-   		" as newdate, content, state from " . TBL_ARTICLES . " where id = " . $currentid;
+    $article_sql = "SELECT id, title, posted_by, DATE_FORMAT(date_posted, \"%M %D, %Y\")"
+   		. " as newdate, DATE_FORMAT(date_updated, \"%M %D, %Y\") as updated, "
+    	. "content, state from " . TBL_ARTICLES . " where id = " . $currentid;
         
     if ($result = mysqli_query($database->getConnection(), $article_sql)) {
 		$row = mysqli_fetch_assoc($result);
@@ -59,8 +69,11 @@ if (!isset($_GET['id'])) {
     	if ($row['state'] == PUBLISHED_STATE || $session->isAdmin()) {
    			// display article
    			echo "<p class='header'>Posted by <a href='"
-   				. SITE_PREFIX . "/pages/users/view.php?user=" . $row['posted_by'] 
+   				. REWRITE_PREFIX . "/users/" . $row['posted_by'] 
     			. "'>" . $row['posted_by'] . "</a> on " . $row['newdate'];
+    		if (strcmp($row['updated'], "") != 0) {
+    			echo ", last updated on " . $row['updated'];
+    		}
 
     		// display edit and delete links
    			if ($session->isAdmin()) {
@@ -82,7 +95,9 @@ if (!isset($_GET['id'])) {
    					echo "Uncategorized"; 
    				} else {
 					while ($cat_row = mysqli_fetch_assoc($cat_result)) {
-	    				echo "<a class=\"labels\" href=\"../categories/index.php?catid=" . $cat_row['cat_id'] . "\">" 
+						$cname = strtolower(str_replace(" ", "_", $cat_row['name']));
+	    				echo "<a class=\"labels\" href=\"" . REWRITE_PREFIX
+	    					. "/categories/" . $cname . "\">" 
 	    					. $cat_row['name'] . "</a>&nbsp;\n";
 					}
    				}
@@ -168,7 +183,7 @@ if (!isset($_GET['id'])) {
 
 <h3 class="sub">Submit a new comment</h3>  
 
-<form id="commentForm" action="comment.submit.php" method="post">
+<form id="commentForm" action="<?php echo SITE_BASEDIR . "/pages/articles/comment.submit.php" ?>" method="post">
 	<fieldset style="width:650px; margin: 0px auto">
 		
 		<!-- ajax submit response -->
@@ -228,7 +243,7 @@ $oFCKeditor->Create();
 		<div>
 			<label for="kludge"><!-- empty --></label>
 			<img class="txt" id="catchpa" 
-				src="../../include/securimage/securimage_show.php" alt="CAPTCHA Image" />
+				src="<?php echo SITE_PREFIX . "/include/securimage/securimage_show.php" ?>" alt="CAPTCHA Image" />
 			<a href="" id="reload" class="txt">Reload Image</a>				
 		</div>
 		<div>
@@ -252,6 +267,9 @@ $oFCKeditor->Create();
 			<!-- id of the article -->
 			<input type="hidden" name="article_id" id="articleId" 
 				value="<?php echo $currentid; ?>"/>
+			<!-- title of the article -->
+			<input type="hidden" name="article_title" id="articleTitle" 
+				value="<?php echo $atitle_unformatted; ?>"/>				
 		</div>
 
 	</fieldset>

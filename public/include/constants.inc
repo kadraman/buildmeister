@@ -52,6 +52,7 @@ define("TBL_GLOSSCOM", "glossary_comm");
 // special names and level constants
 define("SITE_BASEDIR", "http://127.0.0.1/buildmeister.com/public");
 define("SITE_PREFIX", "/buildmeister.com/public");
+define("REWRITE_PREFIX", "/buildmeister.com");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");

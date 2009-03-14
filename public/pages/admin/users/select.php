@@ -2,7 +2,6 @@
 
 include_once("common.inc");
 include_once("database.php");
-include_once("functions.php");
 	
 	// get the page number to show
 	if (!isset($_GET['page']))

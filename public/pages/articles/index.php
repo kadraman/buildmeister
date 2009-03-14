@@ -14,7 +14,7 @@ include_once("header.inc");
 	<div id="introductory">
 		<p>This page lists all of the articles that are contained on this site. We are always
 		looking for new articles, if you have an idea for an article or have written some content 
-		yourself that you would like to shared, then please <a href="../contact.php">contact us</a> 
+		yourself that you would like to shared, then please <a href="../contact/">contact us</a> 
 		for more information.</p>
 	</div>
 
@@ -26,10 +26,11 @@ include_once("header.inc");
 	
 	if ($result = mysqli_query($database->getConnection(), $sql)) {		
 		while ($row = mysqli_fetch_assoc($result)) {
-			echo "<div id='splitlist'><strong><a href='view.php?id=" . $row['id'] . "'>"
+			$atitle = strtolower(str_replace(" ", "_", $row['title']));
+			echo "<div id='splitlist'><strong><a href='" . $atitle . "'>"
  		    	. $row['title'] . "</a></strong><br/>"
- 		    	. "<small>Posted by <a href='" . SITE_PREFIX 
- 		    	. "/pages/users/view.php?user=" . $row['posted_by'] 
+ 		    	. "<small>Posted by <a href='" . REWRITE_PREFIX
+ 		    	. "/users/" . $row['posted_by'] 
  		    	. "'>" . $row['posted_by'] . "</a> on "
  		    	. $row['newdate'] . "</small><br/>"
 		    	. $row['summary'] . "</div>";

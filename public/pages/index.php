@@ -34,7 +34,8 @@ include_once("header.inc");
 			of the build process - <i>The Buildmeister</i>.</p>
 			<hr>
 			<p align="justify">If you enjoy this site then please <a
-				href="users/register.php">register</a> and contribute.</p>
+				href="<?php echo REWRITE_PREFIX; ?>/users/register.html">register</a> 
+				and contribute.</p>
 			</td>
 
 		</tr>
@@ -56,7 +57,7 @@ include_once("header.inc");
 			articles and information from this site together with some
 			significant and new unpublished content. A hardcopy version of the
 			book is also available from <a
-				href="http://www.lulu.com/items/volume_63/4152000/4152376/1/print/AgileSCMInTheEnterprise.pdf">stores.lulu.com/buildmeisterbooks</a>.&nbsp;</p>
+				href="http://stores.lulu.com/buildmeisterbooks">stores.lulu.com/buildmeisterbooks</a>.&nbsp;</p>
 			</td>
 			<td>
 			<div align="center"><a href="http://www.lulu.com/content/409652"> <img
@@ -77,7 +78,8 @@ include_once("header.inc");
 	if ($result = mysqli_query($database->getConnection(), $sql)) {
 		if (mysqli_num_rows($result) != 0) {
 			while ($row = mysqli_fetch_assoc($result)) {
-				echo "<div id='splitlist'><strong><a href='articles/view.php?id=" . $row['id'] .
+				$atitle = strtolower(str_replace(" ", "_", $row['title']));
+				echo "<div id='splitlist'><strong><a href='articles/" . $atitle .
             		"'>" . $row['title'] . "</a></strong><br/>" . $row['summary'] . "</div>\n";
 			}
 		}

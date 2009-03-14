@@ -52,6 +52,7 @@ define("TBL_GLOSSCOM", "glossary_comm");
 // special names and level constants
 define("SITE_BASEDIR", "@site_basedir@");
 define("SITE_PREFIX", "@site_prefix@");
+define("REWRITE_PREFIX", "@rewrite_prefix@");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");
@@ -81,7 +82,7 @@ define("EMAIL_FROM_ADDR", "webmaster@buildmeister.com");
 define("EMAIL_WELCOME", false);
 define("SMTP_SERVER", "smtp.strato.com");
 define("SMTP_USERNAME", "webmaster@buildmeister.com");
-define("SMTP_PASSWORD", "@db_pass@");
+define("SMTP_PASSWORD", "redrock71");
 
 // forces all users to have lowercase usernames
 define("ALL_LOWERCASE", false);
