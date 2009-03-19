@@ -20,27 +20,11 @@ include_once("header.inc");
  		be included then please <a href="../contact/">contact us</a>.</p>
 	</div>
 
-<?php
-	// fetch all active books
-	$sql = "SELECT * from " . TBL_BOOKS 
-		. " where active = 1 ORDER BY date_published DESC;";
-	
-	if ($result = mysqli_query($database->getConnection(), $sql)) {
-		while ($row = mysqli_fetch_assoc($result)) {
-        	echo "<div id='splitsection'>\n";
-       		echo "<table width='100%' border=0'><tr>\n";
-        	echo "<td align='center' width='150px'><img src='"
-        		. $row['image_url'] . "' alt='[book image]'></td>\n";
-        	echo "<td><strong><a href='" . $row['url'] . "'>" . $row['title'] . "</a></strong><br/>by <i>"
-        		. $row['author'] . "</i><br/><br/>"
-				. $row['summary'] . "</td>\n";
-			echo "</tr></table>"; 
-			echo "</div>";
-    	}
-	}
+	<div id="store">
+		<iframe src="http://astore.amazon.com/thebuildmeist-20" width="100%" 
+			height="4000" frameborder="0" scrolling="no"></iframe>
+	</div>
   
-?>
-
 </div>
 
 <?php

@@ -4,5 +4,5 @@ include_once("common.inc");
 include_once("session.php");
 
 $session->logout();
-header("Location: " . REWRITE_PREFIX);
+header("Location: " . SITE_BASEDIR);
 ?>

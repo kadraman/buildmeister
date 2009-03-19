@@ -17,6 +17,7 @@ window.addEvent('domready', function() {
 			'/include/securimage/securimage_show.php?' + Math.random());
 	});
 	
+	new SmoothScroll({ duration:700 }, window); 	
 	
 });
 

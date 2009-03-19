@@ -45,7 +45,7 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
     $show_comments = true;
 	    
     // fetch article content
-    echo "<div id='article'>\n";       
+    echo "<div id='article'>\n";    
         
     $article_sql = "SELECT id, title, posted_by, DATE_FORMAT(date_posted, \"%M %D, %Y\")"
    		. " as newdate, DATE_FORMAT(date_updated, \"%M %D, %Y\") as updated, "
@@ -54,9 +54,26 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
     if ($result = mysqli_query($database->getConnection(), $article_sql)) {
 		$row = mysqli_fetch_assoc($result);
 
-		echo "<h1 id='title'>" . $row['title'] . "</h1>\n";
+		$realTitle = $row['title'];
+		echo "<a id='top' name='top' title='top'></a>";
+		echo "<h1 id='title'>" . $realTitle . "</h1>\n";
 		
-		echo "<div id='comment'><div class='odd'>\n";
+		// summary
+		echo "<div id='articleSummary'>\n";
+		
+		// dzone
+		echo "<div id='dZoneBox'>\n";
+		echo "<script type='text/javascript'>var dzone_url = '"
+			. SITE_BASEDIR . "/articles/" . $atitle_unformatted . "';</script>\n";
+		echo "<script type='text/javascript'>var dzone_title = '"
+			. $realTitle . "';</script>\n";
+		echo "<script type='text/javascript'>var dzone_blurb = '"
+			. $html_head_description . "';</script>\n";
+		echo "<script type='text/javascript'>var dzone_style = '1';</script>\n";
+		echo "<script language='javascript' src='http://widgets.dzone.com/widgets/zoneit.js'></script>\n";
+		echo "</div>";
+				
+		echo "<div id='articleMeta'>\n";
 		
    		// has the article been published?
     	if ($row['state'] != PUBLISHED_STATE) {
@@ -68,7 +85,7 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
     	// show the article if unpublished and admin
     	if ($row['state'] == PUBLISHED_STATE || $session->isAdmin()) {
    			// display article
-   			echo "<p class='header'>Posted by <a href='"
+   			echo "<span class='header'>Posted by <a href='"
    				. REWRITE_PREFIX . "/users/" . $row['posted_by'] 
     			. "'>" . $row['posted_by'] . "</a> on " . $row['newdate'];
     		if (strcmp($row['updated'], "") != 0) {
@@ -83,8 +100,8 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
 					. ">Delete</a>";
        		}
 
-       		echo "</small></p>\n";
-	       	echo "<p>";
+       		echo "</small></span>\n";
+	       	echo "<br/>";
 			echo "Filed under:&nbsp;\n";
   					
 			// get categories for entry
@@ -104,35 +121,85 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
 				// free result set
     			mysqli_free_result($cat_result);
 			} 
+			echo "<br/>";
 								
     		// fetch number of comments
    			$comment_sql = "SELECT COUNT(id) from " . TBL_ARTCOM . " where state = 1 AND art_id = ". $currentid;
    			if ($comment_result = mysqli_query($database->getConnection(), $comment_sql)) {
    				if (mysqli_num_rows($comment_result) == 0) {
-   					echo "&nbsp;|&nbsp;There are <a href='#comments'>no comments</a> on this article.</p>"; 
+   					echo "There are <a href='#comments'>no comments</a> on this article."; 
    				} else {
    					$comment_row = mysqli_fetch_row($comment_result);
-   					echo " | There are <a href='#comments'>" 
-   						. $comment_row[0] . " comments</a> on this article.</p>";
+   					echo "There are <a href='#comments'>" 
+   						. $comment_row[0] . " comments</a> on this article.";
    				}
    			}
    			// free result set
     		mysqli_free_result($comment_result);
 
     		echo "</div></div>\n";
-    		
+    		   		
+?>
+
+<!-- social networking/bookmarking -->
+<div id="addThis">
+
+<!-- AddThis Button BEGIN -->
+<script type="text/javascript">
+	var addthis_pub = "kevinlee";
+	var addthis_brand = 'The Buildmeister';
+	var addthis_header_color = "#412288";
+	var addthis_header_background = "#BECEDC";		
+</script>
+<a href="http://www.addthis.com/bookmark.php?v=20" 
+	onmouseover="return addthis_open(this, '', 
+		'<?php echo SITE_BASEDIR . "/articles/" . $atitle_unformatted ?>', 
+		'<?php echo $realTitle ?>')" 
+	onmouseout="addthis_close()" onclick="return addthis_sendto()">
+	<img src="http://s7.addthis.com/static/btn/lg-bookmark-en.gif" 
+	width="125" height="16" alt="Bookmark and Share" style="border:0"/>
+</a>
+<script type="text/javascript" src="http://s7.addthis.com/js/200/addthis_widget.js"></script>
+<!-- AddThis Button END -->
+
+</div>
+
+<?php 				
 			echo htmlspecialchars_decode($row['content']);  															
     	}
     	
     	// free result set
     	mysqli_free_result($result);
 	}
-	    
-    // TODO: rate article
+?>
 
+<!-- social networking/bookmarking -->
+<div id="addThis">
+
+<!-- AddThis Button BEGIN -->
+<script type="text/javascript">
+	var addthis_pub = "kevinlee";
+	var addthis_brand = 'The Buildmeister';
+	var addthis_header_color = "#412288";
+	var addthis_header_background = "#BECEDC";		
+</script>
+<a href="http://www.addthis.com/bookmark.php?v=20" 
+	onmouseover="return addthis_open(this, '', 
+		'<?php echo SITE_BASEDIR . "/articles/" . $atitle_unformatted ?>', 
+		'<?php echo $realTitle ?>')" 
+	onmouseout="addthis_close()" onclick="return addthis_sendto()">
+	<img src="http://s7.addthis.com/static/btn/lg-bookmark-en.gif" 
+	width="125" height="16" alt="Bookmark and Share" style="border:0"/>
+</a>
+<script type="text/javascript" src="http://s7.addthis.com/js/200/addthis_widget.js"></script>
+<!-- AddThis Button END -->
+
+</div>
+
+<?php 		   
 	// display comments and comment form
 	if ($show_comments) {
-		echo "<a id='comments' href=''></a>";
+		echo "<a id='comments' name='comments' title='comments'></a>";
 		
 		echo "<div id='comment'>\n";
 	   	echo "<h3 class='sub'>Comments</h3>\n";
@@ -143,7 +210,7 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
        		" ORDER BY date_posted DESC;";
    		if ($result = mysqli_query($database->getConnection(), $comment_sql)) {
    			if (mysqli_num_rows($result) == 0) {
-   				echo "<p>There are no comments on this article.</p>"; 
+   				echo "There are no comments on this article."; 
    			} else {
        			$current_row = 0;
        			while ($comment_row = mysqli_fetch_assoc($result)) {
@@ -153,10 +220,10 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
         		   		echo "<div class='odd'>";
           	 		}
           	 		if ($comment_row['website'] != "") {
-          		  		echo "<p class='header'>Posted by <a href='http://" . $comment_row['website']
+          		  		echo "<span class='header'>Posted by <a href='http://" . $comment_row['website']
           		  			. "'>" . $comment_row['posted_by'] . "</a>";
           	 		} else {
-          	 			echo "<p class='header'>Posted by <b>". $comment_row['posted_by'] . "</b>";
+          	 			echo "<span class='header'>Posted by <b>". $comment_row['posted_by'] . "</b>";
           	 		}
  		    		
 					// display edit and delete links 		    		
@@ -164,12 +231,12 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
         				echo "<small> | <a href='comment.delete.php?aid=$currentid&cid=" 
         					. $comment_row['id'] . "'"
 							. "onclick=\"return confirm('Are you sure you want to delete this comment?')\""
-							. ">Delete</a>";					
+							. ">Delete</a></small>";					
         			}	
         		
-         	   		echo "</small></p>";
+         	   		echo "</span>";
             		echo "<p>" . htmlspecialchars_decode($comment_row['comment']) . "</p>";
-            		echo "<p class='footer'>Posted on " . $comment_row['newdate']. "</p>";
+            		echo "<span class='footer'>Posted on " . $comment_row['newdate']. "</span>";
             		echo "</div>";
         		}
    			}
@@ -179,7 +246,10 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
     	}     	
 ?>
 
-<a id="submitcomment" href=""></a>
+<br/>
+<a href="#top">Back to Top</a>
+
+<a id="submitcomment" name="submitcomment" title="submitcomment"></a>
 
 <h3 class="sub">Submit a new comment</h3>  
 

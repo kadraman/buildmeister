@@ -34,6 +34,7 @@ echo "</title>";
 <script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/FilterTable.js"></script>
 <script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/FormValidator.js"></script>
 <script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/LabelledInput.js"></script>
+<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/LabelledInput.js"></script>
 <?php
 // include supporting javascript file for page (if present)
 $jsfile = str_replace(".php", ".js", $_SERVER['PHP_SELF']);
@@ -45,6 +46,7 @@ $jsfile = str_replace(".php", ".js", $_SERVER['PHP_SELF']);
 @import "<?php echo SITE_PREFIX; ?>/stylesheets/main.css";
 @import "<?php echo SITE_PREFIX; ?>/stylesheets/admin.css";
 @import "<?php echo SITE_PREFIX; ?>/stylesheets/article.css";
+@import "<?php echo SITE_PREFIX; ?>/stylesheets/socializer.css";
 </style>
 </head>
 
@@ -158,10 +160,18 @@ $jsfile = str_replace(".php", ".js", $_SERVER['PHP_SELF']);
 
 			<!-- related reading begin -->
 			<div id="readingBox" class="sideBox">
-				<div class="sideBoxTitle">Related Reading</div>
+				<div class="sideBoxTitle">Recommended Reading</div>
 				<div id="advertFields" class="sideBoxContent">
 					<div align="center">
-						<iframe src="http://rcm.amazon.com/e/cm?t=thebuildmeist-20&o=1&p=8&l=st1&mode=books&search=software%20build%20development%20agile&nou=1&fc1=000000&lt1=_blank&lc1=3366FF&bg1=FFFFFF&f=ifr" marginwidth="0" marginheight="0" width="120" height="240" border="0" frameborder="0" style="border:none;" scrolling="no"></iframe>	
+<script type="text/javascript"><!--
+amazon_ad_tag="thebuildmeist-20"; 
+amazon_ad_width="120"; 
+amazon_ad_height="600"; 
+amazon_color_background="FFFFFF"; 
+amazon_color_border="FFFFFF"; 
+amazon_color_logo="412288"; 
+amazon_color_link="2B5A6B"; //--></script>
+<script type="text/javascript" src="http://www.assoc-amazon.com/s/asw.js"></script>						
 					</div>
 				</div>
 			</div>

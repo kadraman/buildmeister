@@ -55,9 +55,7 @@ include_once("header.inc");
 			Buildmeister's Guide - Achieving Agile Software Delivery</a> - the
 			book of this website, which contains a collection of the best
 			articles and information from this site together with some
-			significant and new unpublished content. A hardcopy version of the
-			book is also available from <a
-				href="http://stores.lulu.com/buildmeisterbooks">stores.lulu.com/buildmeisterbooks</a>.&nbsp;</p>
+			significant and new unpublished content.</p>
 			</td>
 			<td>
 			<div align="center"><a href="http://www.lulu.com/content/409652"> <img
