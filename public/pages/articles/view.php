@@ -94,13 +94,14 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
 
     		// display edit and delete links
    			if ($session->isAdmin()) {
-   				echo "<small> | <a href='edit.php?id=" . $row['id'] . "'>Edit</a>";
+   				echo "&nbsp;|&nbsp;<a href='" . REWRITE_PREFIX .
+   					"/articles/edit/" . $row['id'] . "'>Edit</a>";
 				echo " | <a href='article.delete.php?id=" . $row['id'] . "'"
 					. "onclick=\"return confirm('Are you sure you want to delete this article?')\""
 					. ">Delete</a>";
        		}
 
-       		echo "</small></span>\n";
+       		echo "</span>\n";
 	       	echo "<br/>";
 			echo "Filed under:&nbsp;\n";
   					
@@ -210,7 +211,7 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
        		" ORDER BY date_posted DESC;";
    		if ($result = mysqli_query($database->getConnection(), $comment_sql)) {
    			if (mysqli_num_rows($result) == 0) {
-   				echo "There are no comments on this article."; 
+   				echo "There are no comments on this article.<br/>"; 
    			} else {
        			$current_row = 0;
        			while ($comment_row = mysqli_fetch_assoc($result)) {
@@ -228,9 +229,8 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
  		    		
 					// display edit and delete links 		    		
             		if ($session->isAdmin()) {
-        				echo "<small> | <a href='comment.delete.php?aid=$currentid&cid=" 
-        					. $comment_row['id'] . "'"
-							. "onclick=\"return confirm('Are you sure you want to delete this comment?')\""
+        				echo "<small> | <a class='deleteComment' id='"
+        					. $comment_row['id'] . "' href=''"
 							. ">Delete</a></small>";					
         			}	
         		
@@ -301,7 +301,6 @@ $oFCKeditor->EditorAreaCSS = SITE_BASEDIR . '/stylesheets/article.css' ;
 $oFCKeditor->ToolbarSet = 'Basic';
 $oFCKeditor->Config['LinkBrowser'] = 'false';
 $oFCKeditor->Config['LinkUpload'] = 'false';
-$oFCKeditor->Value = 'Enter your comment here...';
 $oFCKeditor->Create();
 
 ?>			

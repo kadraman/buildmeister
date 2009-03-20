@@ -12,10 +12,36 @@ include_once("session.php");
 	$article_id	= isset($_POST['article_id']) ? $database->clean_data($_POST['article_id']) : '';
 	$category	= isset($_POST['category']) ? $_POST['category'] : '';
 		
-	// check if we have enough parameters
-	if ($title == "" || $summary == "" || $content == "" || $date == "" 
-		|| $state == "" || $author == "" || $article_id == "") {
-		exit("INVALID_ARGS");
+	// array for JSON result
+	$json_result = array();
+	$json_result['code'] = 0; 		// assume failure
+	
+	// do we have a title
+	if (!$title) {
+		$json_result['message'] = "A <b>title</b> is required.";
+		$json_result['field'] = "title";
+		exit(json_encode($json_result));
+	}
+	
+	// do we have a summary
+	if (!$title) {
+		$json_result['message'] = "A <b>summary</b> is required.";
+		$json_result['field'] = "summary";
+		exit(json_encode($json_result));
+	}
+	
+	// do we have a date
+	if (!$title) {
+		$json_result['message'] = "A <b>date</b> is required.";
+		$json_result['field'] = "date";
+		exit(json_encode($json_result));
+	}
+	
+	// do we have some content
+	if (!$title) {
+		$json_result['message'] = "Some <b>content</b> is required.";
+		$json_result['field'] = "contentText";
+		exit(json_encode($json_result));
 	}
 	
 	// convert html entities
@@ -24,9 +50,13 @@ include_once("session.php");
 	// try to save article
 	if ($database->updateArticle($article_id, $title, $summary, 
 		$category, $date, $state, $author, $content)) {
-		exit("OK");
+		$json_result['code'] = 1;
+		$json_result['message'] = "Success"; 
+		exit(json_encode($json_result));
 	} else {
-		exit("DB_ERROR");
+		$json_result['code'] = 1;
+		$json_result['message'] = "Error submitting article to the database."; 
+		exit(json_encode($json_result));
 	}
 	
 ?>

@@ -35,6 +35,7 @@ if (!isset($_GET['id'])) {
     	if ($result = mysqli_query($database->getConnection(), $sql)) {
 			$row = mysqli_fetch_assoc($result);
        		$article_title = $row['title'];
+       		$atitle = str_replace(" ", "_", $article_title);
        		$article_summary = $row['summary'];
        		$article_date  = $row['newdate'];
        		$article_state  = $row['state'];
@@ -122,7 +123,13 @@ if (!isset($_GET['id'])) {
     	mysqli_free_result($result);
 ?>
 
-<form id="editForm" action="edit.submit.php" method="post">
+<div class="article">
+
+<a id="top" name="top"></a>
+<a href="#bottom">Go to bottom</a>
+<br/><br/>
+
+<form id="editForm" action="<?php echo SITE_BASEDIR . "/pages/articles/edit.submit.php" ?>" method="post">
 	<fieldset style="width:700px; margin: 0px auto">
 	
 		<!-- ajax submit response -->
@@ -186,7 +193,7 @@ if (!isset($_GET['id'])) {
 
 $oFCKeditor = new FCKeditor('contentText') ;
 $oFCKeditor->BasePath = SITE_BASEDIR . '/include/fckeditor/' ;
-$oFCKeditor->Height = '400';
+$oFCKeditor->Height = '800';
 $oFCKeditor->Width = '700';
 $oFCKeditor->EditorAreaCSS = SITE_BASEDIR . '/stylesheets/article.css' ;
 $oFCKeditor->ToolbarComboPreviewCSS = SITE_BASEDIR . '/stylesheets/article.css' ;
@@ -196,7 +203,7 @@ $oFCKeditor->Create() ;
 
 ?>	
 		</div>
-	
+			
 		<!-- buttons and ajax processing -->
 		<div>		
 			<input type="submit" value="Save" id="submit" class="btn"/>
@@ -206,17 +213,26 @@ $oFCKeditor->Create() ;
 				&nbsp;<strong>Processing...<strong>
 			</span>	
 			<input type="submit" value="Cancel" id="cancel" onclick="history.back()" 
-				class="btn" style="align:right"/>
+				class="btn"/>
 		</div>
 		
 		<div>
 			<!-- id of the article -->
 			<input type="hidden" name="article_id" id="articleId" 
 				value="<?php echo $currentid; ?>"/>
+			<!-- title of the article -->
+			<input type="hidden" name="article_title" id="articleTitle" 
+				value="<?php echo $atitle; ?>"/>			
 		</div>
 	
 	</fieldset>	
 </form>
+
+<br/>
+<a href="#top">Back to top</a>
+<a id="bottom" name="bottom"></a>
+
+</div>
 
 <?php
     	}

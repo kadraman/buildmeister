@@ -539,4 +539,17 @@ a:hover.sideBoxLink {
 	font-size: 1.25em;
 }
 
+/*
+ * delicious bookmarks
+ */
+.delicious-posts { margin-top: 5px; margin-bottom: 5px; padding-top: 10px; padding-bottom: 10px; font-family: arial, "lucida console", sans-serif; }
+.delicious-posts ul, .delicious-posts li, .delicious-banner { margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px}
+.delicious-post { border-top: 1px solid #eee; padding-left: 5px; padding-right: 5px; font-size: 10pt; }
+.delicious-odd { background-color: #f8f8f8 }
+.delicious-banner a { margin-bottom: 0.5em; font-size: 12pt; letter-spacing: 2px; color: #000}
+.delicious-posts a:hover { text-decoration: underline }
+.delicious-posts a { text-decoration: none; color: #412288; padding: 0.3em; }
+.delicious-post a { color: #412288; font-size: 10pt }
+p.delicious-extended { font-size: 8pt; color: #0000; padding: 5px}
+
 /* end */
