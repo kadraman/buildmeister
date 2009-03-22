@@ -22,7 +22,9 @@ if (isset($_GET['email']) && isset($_GET['verify'])) {
 			$session->displayDialog("User Activated",
     		"The user for email " . $email . " has been activated. "
     			. "You may now login to the site.",
-    			SITE_BASEDIR . "/pages/users/login.php");			
+    			SITE_BASEDIR . "/pages/users/login.php");
+    		$mailer->sendNotification("The user with email address: "
+    			 . $email . " has completed their registration.");			
 		} else {
 			// NO, display message
 			$session->displayDialog("Already Activated",
