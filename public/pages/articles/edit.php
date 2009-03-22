@@ -104,7 +104,7 @@ if (!isset($_GET['id'])) {
 			if ($users_authors_result = mysqli_query($database->getConnection(), $users_authors_sql)) {
         		$article_authors_html = "";
         		while ($users_authors_row = mysqli_fetch_assoc($users_authors_result)) {
-    	           	if ($users_authors_row['username'] == $article_author) {
+    	           	if (strcmp($users_authors_row['username'],$article_author) == 0) {
             	       	$article_authors_html = $article_authors_html  
 		                	. "<option value='" . $users_authors_row['username'] . "' selected>" 
 		           	    	. $users_authors_row['username'] . "</option> ";
@@ -129,7 +129,7 @@ if (!isset($_GET['id'])) {
 <a href="#bottom">Go to bottom</a>
 <br/><br/>
 
-<form id="editForm" action="<?php echo SITE_BASEDIR . "/pages/articles/edit.submit.php" ?>" method="post">
+<form id="editForm" action="<?php echo SITE_BASEDIR . "/pages/articles/_edit.submit.php" ?>" method="post">
 	<fieldset style="width:700px; margin: 0px auto">
 	
 		<!-- ajax submit response -->
@@ -206,14 +206,13 @@ $oFCKeditor->Create() ;
 			
 		<!-- buttons and ajax processing -->
 		<div>		
-			<input type="submit" value="Save" id="submit" class="btn"/>
+			<input type="submit" value="Save" id=submit class="btn"/>
 			&nbsp;
 			<span id="waiting" style="visibility:hidden">			
 				<img align="absmiddle" src="<?php echo SITE_PREFIX; ?>/images/spinner.gif"/>
 				&nbsp;<strong>Processing...<strong>
 			</span>	
-			<input type="submit" value="Cancel" id="cancel" onclick="history.back()" 
-				class="btn"/>
+			<input type="submit" value="Cancel" id="cancel" class="btn"/>
 		</div>
 		
 		<div>

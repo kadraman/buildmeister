@@ -3,15 +3,15 @@
 include_once("common.inc");
 include_once("header.inc");
 
-$current_user = isset($_GET['user']) ? $database->clean_data($_GET['user']) : '';
+$username = isset($_GET['user']) ? $database->clean_data($_GET['user']) : '';
 
 // if no user set, assume logged in user
-if (!$current_user) {
-   	$current_user = $session->username;
+if (!$username) {
+   	$username = $session->username;
 }
 
 // does the user exist	   	        
-if (!$database->usernameTaken($database->clean_data($current_user))) {
+if (!$database->usernameTaken($username)) {
 	// does the user exist?
 	$session->displayDialog("User Does Not Exist",
 	   	"The specified user does not exist.",
@@ -19,16 +19,16 @@ if (!$database->usernameTaken($database->clean_data($current_user))) {
 } else {	
 	
     // display requested user information 
-	$user_info = $database->getUserInfo($current_user);
+	$user_info = $database->getUserInfo($username);
     
-	if ($session->isAdmin() || ($session->username != $current_user)) {
-		echo "<h1>" . $current_user . "'s account</h1>";
+	if ($session->username != $username) {
+		echo "<h1>" . $username . "'s account</h1>";
 	} else {
 		echo "<h1>My account</h1>";
 	}
 ?>
 
-<form id="viewUserForm" action="<?php echo REWRITE_PREFIX . "/users/edit/" . $current_user; ?>" method="post">
+<form id="viewUserForm" action="<?php echo REWRITE_PREFIX . "/users/edit/" . $username; ?>" method="post">
 	<fieldset style="width:400px; margin: 0px auto">
 
 		<!-- user name -->		
@@ -54,7 +54,7 @@ if (!$database->usernameTaken($database->clean_data($current_user))) {
 				
 <?php
     // if admin user or displaying own account show email
-	if ($session->isAdmin() || (strcmp($session->username, $current_user) == 0)) {
+	if ($session->isAdmin() || (strcmp($session->username, $username) == 0)) {
 ?>		
 		<!-- email -->
 		<div>
@@ -76,7 +76,7 @@ if (!$database->usernameTaken($database->clean_data($current_user))) {
 
 <?php 	
 	// if admin user or logged in and user viewing own account, give link to edit
-	if ($session->isAdmin() || strcmp($session->username, $current_user) == 0) {
+	if ($session->isAdmin() || strcmp($session->username, $username) == 0) {
 ?>
 		<!-- buttons -->
 		<div>
@@ -93,12 +93,44 @@ if (!$database->usernameTaken($database->clean_data($current_user))) {
 
 <?php
 	
-	echo "<h2>Articles by this user</h2>";
-	// TODO: display articles by this user
+		echo "<h2>Articles by this user</h2>";
+		// fetch all published articles by this user
+		$sql = "SELECT id, title, posted_by, DATE_FORMAT(date_posted, \"%M %D, %Y\")"
+    		. " as newdate, summary from " . TBL_ARTICLES . " WHERE state = "
+			. PUBLISHED_STATE . " AND posted_by = '$username' ORDER BY date_posted DESC;";
 	
-	echo "<h2>Comments by this user</h2>";
-	// TODO: display comments by this user
+		if ($result = mysqli_query($database->getConnection(), $sql)) {		
+			while ($row = mysqli_fetch_assoc($result)) {
+				$atitle = strtolower(str_replace(" ", "_", $row['title']));
+				echo "<div id='splitlist'><strong><a href='" 
+					. REWRITE_PREFIX . "/articles/" . $atitle . "'>"
+ 			    	. $row['title'] . "</a></strong><br/>"
+ 			    	. "Posted on " . $row['newdate'];			 
+ 			    echo "</small></div>";
+    		}
+    		// free result set
+    		mysqli_free_result($result);
+		}
 	
+		/*echo "<h2>Comments by this user</h2>";
+		// fetch all comments by this user
+   		$sql = "SELECT id, posted_by, comment, DATE_FORMAT(date_posted, \"%M %D, %Y\") " 
+   			. "as newdate, art_id from " . TBL_ARTCOM . " where state = 1 AND posted_by = "
+   			. "'$username' ORDER BY date_posted DESC;";
+	
+		if ($result = mysqli_query($database->getConnection(), $sql)) {		
+			while ($row = mysqli_fetch_assoc($result)) {
+				$atitle = $database->getArticleTitle($row['id']);
+				$atitle_link = strtolower(str_replace(" ", "_", $atitle));
+				echo "<div id='splitlist'><strong>Comment on article "
+					. "<a href='" . REWRITE_PREFIX . "/articles/" . $atitle_link . "'>"
+ 		    		. $atitle . "</a></strong><br/>"
+ 		    		. "Posted on " . $row['newdate'];			 
+ 		    	echo "</small></div>";
+    		}
+    		// free result set
+    		mysqli_free_result($result);
+		}*/
     }
     
 include_once("footer.inc");

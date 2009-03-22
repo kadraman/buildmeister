@@ -67,18 +67,19 @@ include_once("header.inc");
 </table>
 
 <div id="block">
-	<div id='boxedtitle'>Latest Articles</div>
+	<div id='boxedtitle'>Recommended Articles</div>
 <?php
-	// fetch latest articles
+	// fetch random articles
 	$sql = "SELECT * from " . TBL_ARTICLES .
     	" where state = " . PUBLISHED_STATE . 
-    	" ORDER BY date_posted DESC LIMIT 5;";
+    	" ORDER BY RAND() LIMIT 5;";
 	if ($result = mysqli_query($database->getConnection(), $sql)) {
 		if (mysqli_num_rows($result) != 0) {
 			while ($row = mysqli_fetch_assoc($result)) {
 				$atitle = strtolower(str_replace(" ", "_", $row['title']));
-				echo "<div id='splitlist'><strong><a href='articles/" . $atitle .
-            		"'>" . $row['title'] . "</a></strong><br/>" . $row['summary'] . "</div>\n";
+				echo "<div id='splitlist'><strong><a href='"
+					. REWRITE_PREFIX . "/articles/" . $atitle . "'>" 
+					. $row['title'] . "</a></strong><br/>" . $row['summary'] . "</div>\n";
 			}
 		}
 		mysqli_free_result($result);

@@ -3,7 +3,8 @@ var FormValidator = new Class({
 	options: {			
 	redirect: false,
 	redirectURL: "",
-	enableSubmitOnComplete: false
+	enableSubmitOnComplete: false,
+	alertOnComplete: false
 },		
 initialize: function(form, successText, options) {
 	this.setOptions(options);
@@ -69,27 +70,35 @@ attach: function() {
 								window.location = this.options.redirectURL;
 							}.bind(this), 3000);	
 						} else {
-							if (responseDiv) {
-								responseDiv.set('html',
-										"<span class='success'><b>" + this.successText + "</b></span>");
-								responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
-								responseDiv.morph({ 'opacity': '1' });
-							} else {
+							if (this.options.alertOnComplete) {
 								alert(this.successText)
+							} else {
+								if (responseDiv) {
+									responseDiv.set('html',
+										"<span class='success'><b>" + this.successText + "</b></span>");
+									responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
+									responseDiv.morph({ 'opacity': '1' });
+								} else {
+									alert(this.successText)
+								}
 							}
 							// re-enable the submit button
-							if (this.enableSubmitOnComplete) {
+							if (this.options.enableSubmitOnComplete) {
 								$('submit').disabled = false;
 							}
 						}
 					} else {
-						if (responseDiv) {
-							responseDiv.set('html',
-									"<span class='error'>" + status.message + "</span>");
-							responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
-							responseDiv.morph({ 'opacity': '1' });
+						if (this.options.alertOnComplete) {
+							alert(status.message);
 						} else {
-							alert(status.message)
+							if (responseDiv) {
+								responseDiv.set('html',
+									"<span class='error'>" + status.message + "</span>");
+								responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
+								responseDiv.morph({ 'opacity': '1' });
+							} else {
+								alert(status.message)
+							}
 						}
 						if ($(status.field)) {
 							$(status.field).addClass('error').morph({ 'border-color': '#f00', 'background-color': '#ffebe8' });

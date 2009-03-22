@@ -21,7 +21,7 @@ RewriteRule ^public/$ /buildmeister.com/public/pages/index.php
 RewriteRule ^articles/$ /buildmeister.com/public/pages/articles/index.php
 RewriteRule ^articles/(.*)\.html$ /buildmeister.com/public/pages/articles/$1.php
 RewriteRule ^articles/(.*)\.js$ /buildmeister.com/public/pages/articles/$1.js
-RewriteRule ^articles/([a-zA-Z0-9\-_.,]+)/?$ /buildmeister.com/public/pages/articles/view.php?title=$1
+RewriteRule ^articles/([a-zA-Z0-9\-_,]+)/?$ /buildmeister.com/public/pages/articles/view.php?title=$1
 RewriteRule ^articles/edit/([0-9]+)/?$ /buildmeister.com/public/pages/articles/edit.php?id=$1
 
 RewriteRule ^categories/([a-zA-Z0-9_-]+)/?$ /buildmeister.com/public/pages/categories/viewcategory.php?name=$1

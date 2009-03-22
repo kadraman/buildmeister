@@ -139,7 +139,7 @@ include_once("session.php");
 	if ($session->isAdmin() && $newusername) {
 		$database->updateUserField($user, "username", $newusername);
 		// if changing own username, re-register session variables
-		if ($session->username == $user) {
+		if (strcmp($session->username,$user) == 0) {
 			 $session->username  = $_SESSION['username'] = $newusername;
 		}
 	}

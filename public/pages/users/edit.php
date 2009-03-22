@@ -13,13 +13,12 @@ if (!isset($_POST['user'])) {
 	$session->displayDialog("Username Does Not Exist",
 	   	"The specified username does not exist.",
 	    SITE_BASEDIR . "/index.php");
-// do we have permission to edit this user?	    
-} else if (strcmp($session->username, $database->clean_data($_POST['user'])) != 0) {
-	if (!$session->isAdmin()) {
-		$session->displayDialog("Insufficient Permission",
-   			"Sorry you do not have permission to edit this user.",
-		SITE_BASEDIR . "/index.php");
-	}
+// do we have permission to edit this user as it is not us?	    
+} else if ((strcmp($session->username, $database->clean_data($_POST['user'])) != 0)
+	&& !$session->isAdmin()) {
+	$session->displayDialog("Insufficient Permission",
+   		"Sorry you do not have permission to edit this user.",
+		SITE_BASEDIR . "/index.php");	
 } else {	
 
 	// retrieve the username of the user to display

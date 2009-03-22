@@ -125,7 +125,7 @@ class MySQLDB {
 		$password = stripslashes($password);
 
 		// validate that password is correct
-		if ($password == $dbarray['password']) {
+		if (strcmp($password,$dbarray['password']) == 0) {
 			mysqli_free_result($result);
 			return 0; // success! username and password confirmed
 		} else {
@@ -161,7 +161,7 @@ class MySQLDB {
 		$userid = stripslashes($userid);
 
 		// validate that userid is correct
-		if ($userid == $dbarray['userid']) {
+		if (strcmp($userid, $dbarray['userid']) == 0) {
 			mysqli_free_result($result);
 			return 0; // success! username and userid confirmed
 		} else {

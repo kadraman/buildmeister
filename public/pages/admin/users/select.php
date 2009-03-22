@@ -46,7 +46,7 @@ include_once("database.php");
 	}
 			
 	// get the details of the users
-	if ($searchstring == "") {
+	if (!$searchstring) {
 		$sql = "SELECT * FROM " . TBL_USERS . " ORDER BY userlevel DESC,username";
 		if ($rows_per_page > 0) {
 			$sql .= " LIMIT " . ($page-1) * $rows_per_page . "," . $rows_per_page;

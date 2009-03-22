@@ -7,15 +7,15 @@ include_once("session.php");
 if (isset($_GET['id'])) {
 	$aid = $database->clean_data($_GET['id']);
 	$html_head_title = $database->getArticleTitle($aid);
-	$html_head_description = $database->getArticleSummary($aid);
-	$html_head_keywords = $database->getArticleCategories($aid);
+	$html_head_description = str_replace("\n", "", trim($database->getArticleSummary($aid)));
+	$html_head_keywords = trim($database->getArticleCategories($aid));
 } else if (isset($_GET['title'])) {
 	$atitle_unformatted = $database->clean_data($_GET['title']);
 	$atitle = str_replace("_", " ", $atitle_unformatted);
 	$aid = $database->getArticleIdByTitle($atitle);
 	$html_head_title = $database->getArticleTitle($aid);
-	$html_head_description = $database->getArticleSummary($aid);
-	$html_head_keywords = $database->getArticleCategories($aid);
+	$html_head_description = str_replace("\n", "", trim($database->getArticleSummary($aid)));
+	$html_head_keywords = trim($database->getArticleCategories($aid));
 }
 
 include_once("fckeditor/fckeditor.php");
@@ -96,9 +96,7 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
    			if ($session->isAdmin()) {
    				echo "&nbsp;|&nbsp;<a href='" . REWRITE_PREFIX .
    					"/articles/edit/" . $row['id'] . "'>Edit</a>";
-				echo " | <a href='article.delete.php?id=" . $row['id'] . "'"
-					. "onclick=\"return confirm('Are you sure you want to delete this article?')\""
-					. ">Delete</a>";
+				echo " | <a id='articleDelete' href='' >Delete</a>";
        		}
 
        		echo "</span>\n";
@@ -253,7 +251,7 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
 
 <h3 class="sub">Submit a new comment</h3>  
 
-<form id="commentForm" action="<?php echo SITE_BASEDIR . "/pages/articles/comment.submit.php" ?>" method="post">
+<form id="commentForm" action="<?php echo SITE_BASEDIR . "/pages/articles/_comment.submit.php" ?>" method="post">
 	<fieldset style="width:650px; margin: 0px auto">
 		
 		<!-- ajax submit response -->

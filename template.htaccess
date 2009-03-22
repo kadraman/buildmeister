@@ -21,7 +21,7 @@ RewriteRule ^public/$ @site_prefix@/pages/index.php
 RewriteRule ^articles/$ @site_prefix@/pages/articles/index.php
 RewriteRule ^articles/(.*)\.html$ @site_prefix@/pages/articles/$1.php
 RewriteRule ^articles/(.*)\.js$ @site_prefix@/pages/articles/$1.js
-RewriteRule ^articles/([a-zA-Z0-9\-_.,]+)/?$ @site_prefix@/pages/articles/view.php?title=$1
+RewriteRule ^articles/([a-zA-Z0-9\-_,]+)/?$ @site_prefix@/pages/articles/view.php?title=$1
 RewriteRule ^articles/edit/([0-9]+)/?$ @site_prefix@/pages/articles/edit.php?id=$1
 
 RewriteRule ^categories/([a-zA-Z0-9_-]+)/?$ @site_prefix@/pages/categories/viewcategory.php?name=$1

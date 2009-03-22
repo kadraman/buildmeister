@@ -7,7 +7,7 @@ echo "<div id='article'>\n";
 echo "<div id='toptitle'>\n";
 
 if (!isset($_POST['keywords']) || ($_POST['keywords'] == "")
-	|| ($_POST['keywords'] == "keywords")) {
+	|| (strcmp($_POST['keywords'],"keywords")) == 0) {
 	// no keywords have been specified
 	echo "<h2>No keywords have been specified...</h2>\n";
 	echo "</div>\n"; 

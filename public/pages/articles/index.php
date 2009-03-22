@@ -32,15 +32,7 @@ include_once("header.inc");
  		    	. "<small>Posted by <a href='" . REWRITE_PREFIX
  		    	. "/users/" . $row['posted_by'] 
  		    	. "'>" . $row['posted_by'] . "</a> on "
- 		    	. $row['newdate'];
-			// display edit and delete links
-   			if ($session->isAdmin()) {
-   				echo "&nbsp;|&nbsp;<a href='" . REWRITE_PREFIX .
-   					"/articles/edit/" . $row['id'] . "'>Edit</a>";
-				echo " | <a href='article.delete.php?id=" . $row['id'] . "'"
-					. "onclick=\"return confirm('Are you sure you want to delete this article?')\""
-					. ">Delete</a>";
-       		} 		    	
+ 		    	. $row['newdate'];			 
  		    echo "</small><br/>" . $row['summary'] . "</div>";
     	}
     	// free result set
