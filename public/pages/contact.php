@@ -59,7 +59,6 @@ $oFCKeditor->EditorAreaCSS = SITE_BASEDIR . '/stylesheets/article.css' ;
 $oFCKeditor->ToolbarSet = 'Basic';
 $oFCKeditor->Config['LinkBrowser'] = 'false';
 $oFCKeditor->Config['LinkUpload'] = 'false';
-$oFCKeditor->Value = 'Enter your message here...';
 $oFCKeditor->Create();
 
 ?>			

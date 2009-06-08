@@ -22,10 +22,6 @@ include_once("header.inc");
  		on <a href="http://delicious.com/">delicious</a>.</p>
 	</div>
 
-	<h3>Tag Cloud</h3>
-	<script type="text/javascript" src="http://feeds.delicious.com/v2/js/tags/buildmeister?title=&icon&count=100&sort=alpha&flow=cloud&color=73adff-3274d0&size=12-35"></script>
-	
-	<h3>Bookmarks</h3>
 	<script type="text/javascript" src="http://feeds.delicious.com/v2/js/buildmeister?title=&icon=m&count=50&sort=date&tags&extended&name&showadd"></script>
 </div>
 

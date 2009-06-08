@@ -85,11 +85,11 @@ include_once("database.php");
 			$email  = $row['email'];
 			$time   = date("M d, Y", $row['timestamp']);
 			$active = (($row['active'] == 1) ? "Yes" : "No");
-			echo "<td><a href='" . SITE_PREFIX . "/pages/users/view.php?user=" . $uname
+			echo "<td><a class='editUser' href='" . SITE_PREFIX . "/pages/users/view.php?user=" . $uname
 				. "'><img src='" . SITE_BASEDIR . "/images/icons/16x16/edit.png'></img></a>";
-			echo "<td><a href='delete.php?user=" . $uname 
-				. "' onclick=\"return confirm('Are you sure you want to delete this user?')\""
-				. "'><img src='" . SITE_BASEDIR . "/images/icons/16x16/delete.png'></img></a>";
+			echo "<td><a class='deleteUser' id='" . $uname 
+				. "' href=''>"
+				. "<img src='" . SITE_BASEDIR . "/images/icons/16x16/delete.png'></img></a>";
 			echo "<td><a href='" . SITE_PREFIX . "/pages/users/view.php?user=" .
 				$uname . "'>$uname</a></td>\n";
 			echo "<td class='centerAlign'>$ulevel</td>\n";
@@ -105,6 +105,60 @@ include_once("database.php");
 	mysqli_free_result($result);
 	
 	echo "</table>\n";
+	
+// include javascript
+		
+$js = <<<EOD
+		
+	<script type="text/javascript">
+	
+	// delete comments
+	$$('a.deleteUser').each(function(link) {
+		link.addEvent('click', function(e) {
+			e.preventDefault();			
+			new StickyWinModal({
+				content: StickyWin.ui('Delete User', 'Are you sure you want to delete this user?', {
+					width: '400px',
+				    buttons: [
+                    {
+				        text: 'Yes', 
+				        onClick: function() {
+                    	
+                    		// delete the comment via ajax
+                    		var req = new Request({
+                    			method: 'post',
+                    			url: CONFIG.site_prefix + 
+                    				'/pages/admin/users/_user.delete.php',
+                    		    data: { 'user' : link.id },
+                    		    onComplete: function(response) { 
+                    		    	// decode the JSON response
+                					var status = JSON.decode(response);
 
+                					// act on the response
+                					if (status.code) {
+                						// successful, reload the page
+                						window.location = location.href;
+                					} else {
+                						alert("Error: " + status.message);
+                					}
+                    		    }	
+                    		}).send();
+                    	}
+				    },
+				    {
+				        text: 'No', 
+				        onClick: function(){ 
+				    		// ignore 
+				    	}
+				    }
+				    ]
+				})
+			});
+		});
+	});
+	
+	</script>
+EOD;
+echo $js;
 ?>
 

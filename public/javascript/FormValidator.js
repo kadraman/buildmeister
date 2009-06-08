@@ -63,7 +63,19 @@ attach: function() {
 								responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
 								responseDiv.morph({ 'opacity': '1' });
 							} else {
-								alert(this.successText)
+								new StickyWinModal({
+									content: StickyWin.ui('Success', this.successText, {
+										width: '400px',
+									    buttons: [
+					                    {
+									        text: 'Ok', 
+									        onClick: function(){ 
+									    		// ignore 
+									    	}
+									    }
+									    ]
+									})
+								});
 							}
 							// redirect to new page
 							setTimeout(function() { 
@@ -71,7 +83,19 @@ attach: function() {
 							}.bind(this), 3000);	
 						} else {
 							if (this.options.alertOnComplete) {
-								alert(this.successText)
+								new StickyWinModal({
+									content: StickyWin.ui('Success', this.successText, {
+										width: '400px',
+									    buttons: [
+					                    {
+									        text: 'Ok', 
+									        onClick: function(){ 
+									    		// ignore 
+									    	}
+									    }
+									    ]
+									})
+								});
 							} else {
 								if (responseDiv) {
 									responseDiv.set('html',
@@ -79,7 +103,19 @@ attach: function() {
 									responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
 									responseDiv.morph({ 'opacity': '1' });
 								} else {
-									alert(this.successText)
+									new StickyWinModal({
+										content: StickyWin.ui('Success', this.successText, {
+											width: '400px',
+										    buttons: [
+						                    {
+										        text: 'Ok', 
+										        onClick: function(){ 
+										    		// ignore 
+										    	}
+										    }
+										    ]
+										})
+									});
 								}
 							}
 							// re-enable the submit button
@@ -97,7 +133,19 @@ attach: function() {
 								responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
 								responseDiv.morph({ 'opacity': '1' });
 							} else {
-								alert(status.message)
+								new StickyWinModal({
+									content: StickyWin.ui('Error', this.successText, {
+										width: '400px',
+									    buttons: [
+					                    {
+									        text: 'Ok', 
+									        onClick: function(){ 
+									    		// ignore 
+									    	}
+									    }
+									    ]
+									})
+								});
 							}
 						}
 						if ($(status.field)) {

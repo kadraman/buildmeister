@@ -7,7 +7,7 @@ include_once("header.inc");
 if ($session->logged_in) {
     $session->displayDialog("Already Registered",
         "The user <b>$session->username</b>, is already registered and logged in.",
-        SITE_BASEDIR . "/index.php");
+        SITE_BASEDIR);
 } else {
     // fill out the registration form
 ?>

@@ -41,7 +41,7 @@ if (!$session->isAdmin()){
 	<input id="resetButton" type="button" value="Reset"/>
 	&nbsp;
 	<span id="waiting" style="visibility: hidden">			
-		<img align="top" src="<?php echo SITE_PREFIX; ?>/images/waiter.gif"/>
+		<img align="absmiddle" src="<?php echo SITE_PREFIX; ?>/images/spinner.gif"/>
 		&nbsp;<strong>Processing...<strong>
 	</span>	
 </div>

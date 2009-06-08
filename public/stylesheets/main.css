@@ -184,6 +184,8 @@ img { border: 0px; }
 
 .error { color:#ff0000; }
 .success { color:#228822; }
+.left { float: left; }
+.right { float: right; }
 
 /* blank line spacer */
 #spacer {
@@ -203,7 +205,7 @@ img { border: 0px; }
 #container {
 	background-color: #FFF;
 	background: #FFF
-		url("/buildmeister.com/public/images/template-background.gif")
+		url("/images/template-background.gif")
 		repeat-y 50% 0px;
 	margin: 0px auto;
 	padding: 0px 10px;
@@ -216,7 +218,7 @@ img { border: 0px; }
  */
 #header {
 	background: #FFF
-		url("/buildmeister.com/public/images/template-gradient.gif")
+		url("/images/template-gradient.gif")
 		repeat-x 50% 0%;
 	margin: 0px;
 	height: 88px;
@@ -384,7 +386,7 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
  */
 #footer {
 	background: #FFF
-		url("/buildmeister.com/public/images/template-links-gradient.gif")
+		url("/images/template-links-gradient.gif")
 		repeat-x;
 	clear: both;
 	margin: 0px;
@@ -420,7 +422,7 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
  */
 #shadow {
 	background:
-		url("/buildmeister.com/public/images/template-bottom.gif")
+		url("/images/template-bottom.gif")
 		no-repeat 50% 0%;
 	margin: 0px;
 	padding: 16px 0px 0px 0px;
@@ -439,7 +441,7 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
 }
 #navigation ul {
 	background: #C8D7E3 
-	    url("/buildmeister.com/public/images/template-leftnav.gif")
+	    url("/images/template-leftnav.gif")
 		no-repeat 100% 100%;
 	line-height: 1.25em;
 	list-style-type: none;
@@ -449,7 +451,7 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
 
 #navigation li a {
 	background: #7A96AB
-		url("/buildmeister.com/public/images/template-box.gif")
+		url("/images/template-box.gif")
 		repeat-x 0px 50%;
 	border-top: 1px solid #E6EDF2;
 	display: block;
@@ -465,7 +467,7 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
 	padding-top: 5px;
 	padding-bottom: 3px;
 	background: #FFF
-		url("/buildmeister.com/public/images/template-leftnav-selected.gif")
+		url("/images/template-leftnav-selected.gif")
 		repeat-x 0% 0%;
 	border-top: 1px solid #E6EDF2;
 	display: block;
@@ -482,7 +484,7 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
  * sidebar container for menu items, information etc.
  */
 .sideBox {
-	background:#C8D7E3 url("/buildmeister.com/public/images/template-leftnav.gif")
+	background:#C8D7E3 url("/images/template-leftnav.gif")
 		repeat-x 100% 100%;
 	position:relative;
 	float:left;
@@ -493,7 +495,7 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
 	padding: 0px 0px 20px 0px;
 }
 .sideBoxTitle {
-	background:#C8D7E3 url("/buildmeister.com/public/images/template-box.gif")
+	background:#C8D7E3 url("/images/template-box.gif")
 		repeat-x 100% 100%;
 	text-align: left;
 	color: #228;
@@ -530,6 +532,13 @@ a:hover.sideBoxLink {
 	display:block;
 	text-decoration:underline;
 	border-bottom:1px dotted #CCC;
+}
+
+#editInfo {
+	border: 1px solid #ccc;
+	padding: 2px;
+	height: 30px;
+	margin: 5px 0 5px 0;
 }
 
 #reload {

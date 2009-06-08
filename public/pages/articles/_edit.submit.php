@@ -24,23 +24,29 @@ include_once("session.php");
 	}
 	
 	// do we have a summary
-	if (!$title) {
+	if (!$summary) {
 		$json_result['message'] = "A <b>summary</b> is required.";
 		$json_result['field'] = "summary";
 		exit(json_encode($json_result));
 	}
 	
 	// do we have a date
-	if (!$title) {
+	if (!$date) {
 		$json_result['message'] = "A <b>date</b> is required.";
 		$json_result['field'] = "date";
 		exit(json_encode($json_result));
 	}
 	
 	// do we have some content
-	if (!$title) {
+	if (!$content) {
 		$json_result['message'] = "Some <b>content</b> is required.";
 		$json_result['field'] = "contentText";
+		exit(json_encode($json_result));
+	}
+	
+	// do we have a state
+	if (!$content) {
+		$json_result['message'] = "Internal error: state cannot be found.";
 		exit(json_encode($json_result));
 	}
 	

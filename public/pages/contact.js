@@ -11,6 +11,11 @@ window.addEvent('domready', function() {
 			'/include/securimage/securimage_show.php?' + Math.random());
 	});
 	
+	// hack for fckeditor
+	$('submit').addEvent('click', function() {		
+		$('messageText').value = FCKeditorAPI.GetInstance('messageText').GetXHTML();
+	});
+	
 	
 });
 

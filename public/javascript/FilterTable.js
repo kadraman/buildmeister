@@ -9,6 +9,7 @@ var FilterTable = new Class({
 		var req = new Request.HTML({
 			url: this.script, 
 			method: 'get',
+			evalScripts: true,
 			onRequest: function()  { 
 				this.busy = true;
 				$('waiting').setStyle('visibility', 'visible'); 

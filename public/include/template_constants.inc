@@ -60,7 +60,11 @@ define("ADMIN_LEVEL", 9);
 define("EDITOR_LEVEL", 5);
 define("USER_LEVEL",  1);
 define("GUEST_LEVEL", 0);
-define("PUBLISHED_STATE", 3); // state at which article is visible to all users
+define("SUBMITTED_STATE", 1); // state at which article has been initially created with no content
+define("DRAFT_STATE", 2); // state at which article has been initially drafted with content
+define("REVIEWED_STATE", 3); // state at which article has been reviewed
+define("PUBLISHED_STATE", 4); // state at which article is visible to all users
+define("WITHDRAWN_STATE", 5); // state at which article has been withdrawn and not visible on the site
 
 // page row limit for tables
 define("PAGE_LIMIT", 40);

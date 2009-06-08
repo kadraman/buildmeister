@@ -184,6 +184,8 @@ img { border: 0px; }
 
 .error { color:#ff0000; }
 .success { color:#228822; }
+.left { float: left; }
+.right { float: right; }
 
 /* blank line spacer */
 #spacer {
@@ -530,6 +532,13 @@ a:hover.sideBoxLink {
 	display:block;
 	text-decoration:underline;
 	border-bottom:1px dotted #CCC;
+}
+
+#editInfo {
+	border: 1px solid #ccc;
+	padding: 2px;
+	height: 30px;
+	margin: 5px 0 5px 0;
 }
 
 #reload {

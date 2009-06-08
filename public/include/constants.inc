@@ -27,10 +27,10 @@
  */
  
 // database constants for MySQL
-define("DB_SERVER", "localhost");
-define("DB_USER", "root");
-define("DB_PASS", "root");
-define("DB_NAME", "buildmeister");
+define("DB_SERVER", "rdbms.strato.de");
+define("DB_USER", "U493819");
+define("DB_PASS", "redrock71");
+define("DB_NAME", "DB493819");
 
 // database tables
 define("TBL_USERS", "users");
@@ -50,9 +50,9 @@ define("TBL_ARTCOM", "article_comm");
 define("TBL_GLOSSCOM", "glossary_comm");
 
 // special names and level constants
-define("SITE_BASEDIR", "http://127.0.0.1/buildmeister.com/public");
-define("SITE_PREFIX", "/buildmeister.com/public");
-define("REWRITE_PREFIX", "/buildmeister.com");
+define("SITE_BASEDIR", "http://www.buildmeister.com");
+define("SITE_PREFIX", "");
+define("REWRITE_PREFIX", "");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");
@@ -60,7 +60,11 @@ define("ADMIN_LEVEL", 9);
 define("EDITOR_LEVEL", 5);
 define("USER_LEVEL",  1);
 define("GUEST_LEVEL", 0);
-define("PUBLISHED_STATE", 3); // state at which article is visible to all users
+define("SUBMITTED_STATE", 1); // state at which article has been initially created with no content
+define("DRAFT_STATE", 2); // state at which article has been initially drafted with content
+define("REVIEWED_STATE", 3); // state at which article has been reviewed
+define("PUBLISHED_STATE", 4); // state at which article is visible to all users
+define("WITHDRAWN_STATE", 5); // state at which article has been withdrawn and not visible on the site
 
 // page row limit for tables
 define("PAGE_LIMIT", 40);

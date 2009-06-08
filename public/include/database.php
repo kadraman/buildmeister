@@ -36,7 +36,7 @@ class MySQLDB {
 	 */
 	function __construct() {
 		// connect to database
-		$this->connection = new mysqli(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
+		$this->connection = new mysqli(DB_SERVER, DB_USER, DB_PASS, DB_NAME);		
 		if (mysqli_connect_errno()) {
 			die("Database connect failed: " . mysqli_connect_error() . "\n");
 		}
@@ -724,6 +724,24 @@ class MySQLDB {
 		}
 		return $retval;
 	} 
+	
+	/**
+	 * Get the name of an article state
+	 *
+	 * @param integer $sid
+	 * @return article title else NULL
+	 */
+	function getArticleStateName($sid) {
+		$retval = NULL;
+		// select article
+		$sql = "SELECT name FROM " . TBL_STATES . " WHERE id = '$sid'";
+		if ($result = mysqli_query($this->connection, $sql)) {
+			$row = mysqli_fetch_row($result);
+			$retval = $row['0'];
+			mysqli_free_result($result);
+		}
+		return $retval;
+	} // getArticleStateName
 
 	/**
 	 * Updates an article in the database.

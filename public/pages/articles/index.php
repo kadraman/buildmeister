@@ -15,7 +15,7 @@ include_once("header.inc");
 		<p>This page lists all of the articles that are contained on this site. We are always
 		looking for new articles, if you have an idea for an article or have written some content 
 		yourself that you would like to shared, then please <a href="../contact/">contact us</a> 
-		for more information.</p>
+		for more information. </p>
 	</div>
 
 <?php
@@ -23,7 +23,7 @@ include_once("header.inc");
 	$sql = "SELECT id, title, posted_by, DATE_FORMAT(date_posted, \"%M %D, %Y\")"
     	. " as newdate, summary from " . TBL_ARTICLES . " where state = "
 		. PUBLISHED_STATE . " ORDER BY date_posted DESC;";
-	
+
 	if ($result = mysqli_query($database->getConnection(), $sql)) {		
 		while ($row = mysqli_fetch_assoc($result)) {
 			$atitle = strtolower(str_replace(" ", "_", $row['title']));

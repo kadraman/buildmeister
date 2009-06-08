@@ -48,7 +48,8 @@ window.addEvent('domready', function() {
                 					// act on the response
                 					if (status.code) {
                 						// successful, reload the page
-                						window.location = location.href;
+                						window.location = CONFIG.rewrite_prefix 
+                							+ "/articles/" + articleTitle
                 					} else {
                 						alert("Error: " + status.message);
                 					}

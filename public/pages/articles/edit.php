@@ -126,12 +126,52 @@ if (!isset($_GET['id'])) {
 <div class="article">
 
 <a id="top" name="top"></a>
-<a href="#bottom">Go to bottom</a>
-<br/><br/>
+<div id="editInfo">
+    <div class="left">
+        <b>Title</b>: <?php echo $article_title?><br/>
+		<b>State:</b> <?php echo $database->getArticleStateName($article_state);?>
+	</div>
+	<div class="right">
+		<a href="#bottom">Go to Bottom</a>
+	</div>
+</div>
 
 <form id="editForm" action="<?php echo SITE_BASEDIR . "/pages/articles/_edit.submit.php" ?>" method="post">
 	<fieldset style="width:700px; margin: 0px auto">
 	
+		<!-- buttons and ajax processing -->
+		<div>		
+			<input type="submit" value="Save" id="submit" class="btn"/>
+			<input type="submit" value="Back" id="back" class="btn"/>		
+<?php
+			switch ($article_state) {
+				case SUBMITTED_STATE:
+					echo "<input type=\"submit\" value=\"Draft\" id=\"draft\" class=\"btn\"/>\n";
+					break;
+				case DRAFT_STATE:
+					echo "<input type=\"submit\" value=\"Approve\" id=\"approve\" class=\"btn\"/>\n";
+					break;
+				case REVIEWED_STATE:
+					echo "<input type=\"submit\" value=\"ReDraft\" id=\"redraft\" class=\"btn\"/>\n";
+					echo "<input type=\"submit\" value=\"Publish\" id=\"publish\" class=\"btn\"/>\n";
+					break;
+				case PUBLISHED_STATE:
+					echo "<input type=\"submit\" value=\"ReDraft\" id=\"redraft\" class=\"btn\"/>\n";
+					echo "<input type=\"submit\" value=\"Withdraw\" id=\"withdraw\" class=\"btn\"/>\n";
+					break;
+				case WITHDRAWN_STATE:
+					echo "<input type=\"submit\" value=\"ReDraft\" id=\"redraft\" class=\"btn\"/>\n";
+					break;
+			}
+?>					
+			<br/><br/>
+			&nbsp;
+			<span id="waiting" style="visibility:hidden">			
+				<img align="absmiddle" src="<?php echo SITE_PREFIX; ?>/images/spinner.gif"/>
+				&nbsp;<strong>Processing...<strong>
+			</span>	
+		</div>	
+				
 		<!-- ajax submit response -->
 		<div id="response">
 			<p>All fields in <b>bold</b> fields are required.</p>
@@ -172,13 +212,13 @@ if (!isset($_GET['id'])) {
 			</a>	
 		</div>
 		
-		<!-- article state -->
+		<!-- article state 
 		<div>
 			<label class="required" for="state">State:</label>
 			<select name="state" id="state" class="txt">
-				<?php echo $article_states_html?>
+				<!--php echo $article_states_html?-->
 			</select>
-		</div>
+		</div> -->
 		
 		<div>
 			<label class="required" for="author">Author:</label>	
@@ -203,25 +243,17 @@ $oFCKeditor->Create() ;
 
 ?>	
 		</div>
-			
-		<!-- buttons and ajax processing -->
-		<div>		
-			<input type="submit" value="Save" id=submit class="btn"/>
-			&nbsp;
-			<span id="waiting" style="visibility:hidden">			
-				<img align="absmiddle" src="<?php echo SITE_PREFIX; ?>/images/spinner.gif"/>
-				&nbsp;<strong>Processing...<strong>
-			</span>	
-			<input type="submit" value="Cancel" id="cancel" class="btn"/>
-		</div>
-		
+					
 		<div>
 			<!-- id of the article -->
 			<input type="hidden" name="article_id" id="articleId" 
 				value="<?php echo $currentid; ?>"/>
 			<!-- title of the article -->
 			<input type="hidden" name="article_title" id="articleTitle" 
-				value="<?php echo $atitle; ?>"/>			
+				value="<?php echo $atitle; ?>"/>		
+			<!-- state of the article -->
+			<input type="hidden" name="state" id="state" 
+				value="<?php echo $article_state; ?>"/>	
 		</div>
 	
 	</fieldset>	

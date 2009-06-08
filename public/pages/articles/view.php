@@ -63,13 +63,12 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
 		
 		// dzone
 		echo "<div id='dZoneBox'>\n";
-		echo "<script type='text/javascript'>var dzone_url = '"
-			. SITE_BASEDIR . "/articles/" . $atitle_unformatted . "';</script>\n";
-		echo "<script type='text/javascript'>var dzone_title = '"
-			. $realTitle . "';</script>\n";
-		echo "<script type='text/javascript'>var dzone_blurb = '"
-			. $html_head_description . "';</script>\n";
-		echo "<script type='text/javascript'>var dzone_style = '1';</script>\n";
+		echo "<script type='text/javascript'>";
+		echo "var dzone_url = '" . SITE_BASEDIR . "/articles/" . $atitle_unformatted . "';\n";
+		echo "var dzone_title = '" . $realTitle . "';\n";
+		echo "var dzone_blurb = '" . $html_head_description . "';\n";
+		echo "var dzone_style = '1';\n";
+		echo "</script>";
 		echo "<script language='javascript' src='http://widgets.dzone.com/widgets/zoneit.js'></script>\n";
 		echo "</div>";
 				

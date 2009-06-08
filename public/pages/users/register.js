@@ -5,12 +5,14 @@ window.addEvent('domready', function() {
 			+ "<br>If you do not receive an email please check your email spam folder."
 	);
 	
-	$('reload').addEvent('click', function(e) {
-		new Event(e).stop();
+	if ($('reload')) {
+		$('reload').addEvent('click', function(e) {
+			new Event(e).stop();
 		
-		// reload the catchpa
-		$("catchpa").set('src', CONFIG.site_prefix +
-			'/include/securimage/securimage_show.php?' + Math.random());
-	});
+			// reload the catchpa
+			$("catchpa").set('src', CONFIG.site_prefix +
+					'/include/securimage/securimage_show.php?' + Math.random());
+		});
+	}
 	
 });	

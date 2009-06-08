@@ -1,5 +1,5 @@
 window.addEvent('domready', function() {
 
-	new FilterTable($('results'), 'select.php', $('filterString'));
-	
+	new FilterTable($('results'), '_users.select.php', $('filterString'));
+		
 });
