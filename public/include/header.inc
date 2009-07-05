@@ -61,24 +61,17 @@ $jsfile = str_replace(".php", ".js", $_SERVER['PHP_SELF']);
 	        </div>
 	    	<!-- advert begin -->
 	    	<div id="advert">
-	        	<script type="text/javascript"><!--
-               		google_ad_client = "pub-3805144493754901";
-		        	google_alternate_color = "F4F4F4";
-		        	google_ad_width = 468;
-		        	google_ad_height = 60;
-		        	google_ad_format = "468x60_as";
-		        	google_ad_type = "text_image";
-	         		//2007-07-19: buildmeister.com
-			        google_ad_channel = "7986490318";
-		        	google_color_border = "F4F4F4";
-		        	google_color_bg = "F4F4F4";
-		        	google_color_link = "0000FF";
-		        	google_color_text = "000000";
-		        	google_color_url = "008000";
-		        	google_ui_features = "rc:6";
-			        //-->
-		        </script> 
-	        	<script type="text/javascript"	src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>	
+<script type="text/javascript"><!--
+google_ad_client = "pub-3805144493754901";
+/* 468x60, created 04/07/09 */
+google_ad_slot = "4032349692";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
         	</div>
 	    	<!-- advert end -->	
 		</div>
@@ -150,6 +143,8 @@ $jsfile = str_replace(".php", ".js", $_SERVER['PHP_SELF']);
 				<div id="adminMenuFields" class="sideBoxContent">
 					<ul class="sideBoxList">
 						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/admin/users/">Users</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/admin/articles/">Articles</a></li>
+						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/admin/comments/">Comments</a></li>
 					</ul>	
 				</div>
 			</div>				
@@ -182,9 +177,29 @@ amazon_color_link="2B5A6B"; //--></script>
 				<!-- TODO: include logos -->
 				<b>Best viewed on:</b><br/>
 				<a href="http://www.mozilla.com/firefox?from=sfx&uid=256449&t=305"><img border="0" alt="Spreadfirefox Affiliate Button" src="http://sfx-images.mozilla.org/affiliates/Buttons/firefox3/110x32_best-yet.png" /></a>
+				<br/><br/>
 			</div>
 			<!-- logos end -->
 		
+			<div id="spacer">&nbsp;</div>
+			
+		    <!-- jobs begin -->
+		    <div align="center">
+		    <script type="text/javascript">
+<!-- 
+var jobthread_widget_title = "Jobs";
+var jobthread_widget_outer_style = "background-color:#dddddd;border:1px solid #999999;width:160px;";
+var jobthread_widget_inner_style = "background-color:#ffffff;color:#666666;border:1px solid #999999;margin-left:10px;margin-right:10px;padding:10px 10px 2px 8px;font:11px Arial, Helvetica, Sans-serif;line-height:16px;";
+var jobthread_widget_title_style = "color:#313131;font-weight:bold;";
+var jobthread_widget_link_style = "color:#0464bb;font-size:11px;font-weight:normal;text-decoration:none;border:none;";
+var jobthread_widget_top_style = "padding-top:8px;";
+var jobthread_widget_bottom_style = "padding-bottom:4px;";
+//-->
+</script>
+<script type="text/javascript" src="http://syndication.jobthread.com/widget/?id=3bac5b&num_jobs=5&keywords=<?php echo $html_head_keywords ?>"></script>		    
+		    </div>
+		    <!-- jobs end -->
+		    
 			<div id="spacer">&nbsp;</div>
 		
 		</div>

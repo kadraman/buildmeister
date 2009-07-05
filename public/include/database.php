@@ -573,6 +573,24 @@ class MySQLDB {
 		mysqli_query($this->connection, $sql);
 		$this->calcNumActiveGuests();
 	} // removeInactiveGuests
+	
+	/**
+	 * Get the name of a user level
+	 *
+	 * @param integer $ulid
+	 * @return level name else NULL
+	 */
+	function getUserLevelName($ulid) {
+		$retval = NULL;
+		// select state
+		$sql = "SELECT name FROM " . TBL_LEVELS . " WHERE id = '$ulid'";
+		if ($result = mysqli_query($this->connection, $sql)) {
+			$row = mysqli_fetch_row($result);
+			$retval = $row['0'];
+			mysqli_free_result($result);
+		}
+		return $retval;
+	} // getUserLevelName	
 
 	/**
 	 * Adds a new article into the database.
@@ -729,11 +747,11 @@ class MySQLDB {
 	 * Get the name of an article state
 	 *
 	 * @param integer $sid
-	 * @return article title else NULL
+	 * @return state name else NULL
 	 */
 	function getArticleStateName($sid) {
 		$retval = NULL;
-		// select article
+		// select state
 		$sql = "SELECT name FROM " . TBL_STATES . " WHERE id = '$sid'";
 		if ($result = mysqli_query($this->connection, $sql)) {
 			$row = mysqli_fetch_row($result);
@@ -742,7 +760,37 @@ class MySQLDB {
 		}
 		return $retval;
 	} // getArticleStateName
+	
+	/**
+	 * Get the id of an article state
+	 *
+	 * @param string $state
+	 * @return state id else NULL
+	 */
+	function getArticleStateId($state) {
+		$retval = NULL;
+		// select state
+		$sql = "SELECT id FROM " . TBL_STATES . " WHERE name = '$state'";
+		if ($result = mysqli_query($this->connection, $sql)) {
+			$row = mysqli_fetch_row($result);
+			$retval = $row['0'];
+			mysqli_free_result($result);
+		}
+		return $retval;
+	} // getArticleStateId
 
+	/**
+	 * Flatten the title of the article
+	 *
+	 * @param string $title
+	 * @return flattened title else NULL
+	 */
+	function flattenArticleTitle($title) {
+		$retval = NULL;
+		$retval = strtolower(str_replace(" ", "_", $title));
+		return $retval;
+	} // getArticleStateId
+		
 	/**
 	 * Updates an article in the database.
 	 * By default the article remains active.
@@ -872,7 +920,7 @@ class MySQLDB {
 			return true;
 		}
 	} // articleCommentExists
-
+	
 	/**
 	 * Delete an article comment from the database.
 	 *

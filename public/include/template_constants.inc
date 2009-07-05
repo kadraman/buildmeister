@@ -48,6 +48,7 @@ define("TBL_ARTRATE", "articles_ratings");
 define("TBL_LINKRATE", "links_ratings");
 define("TBL_ARTCOM", "article_comm");
 define("TBL_GLOSSCOM", "glossary_comm");
+define("TBL_LEVELS", "levels");
 
 // special names and level constants
 define("SITE_BASEDIR", "@site_basedir@");
