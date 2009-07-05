@@ -3,36 +3,36 @@
 include_once("common.inc");
 include_once("session.php");
 
-	$user = isset($_POST['user']) ? $database->clean_data($_POST['user']) : '';
+	$id = isset($_POST['id']) ? $database->clean_data($_POST['id']) : '';
 	
 	// array for JSON result
 	$json_result = array();
 	$json_result['code'] = 0; 		// assume failure
 	
 	if (!$session->isAdmin()) {
-		$json_result['message'] = "Only Administrators are allowed to delete users.";
+		$json_result['message'] = "Only Administrators are allowed to delete articles.";
 		exit(json_encode($json_result));
 	}
 
-	// do we have a user
-	if (!$user) {
-		$json_result['message'] = "A username is required.";
+	// do we have an id
+	if (!$id) {
+		$json_result['message'] = "An article id is required.";
 		exit(json_encode($json_result));
 	}
    
-	// does the user exist
-	if (!$database->userExists($user)) {
-		$json_result['message'] = "The user does not exist.";
+	// does the article exist
+	if (!$database->articleExists($id)) {
+		$json_result['message'] = "The article does not exist.";
 		exit(json_encode($json_result));	        
     } 
     
-    // delete the user
-	if ($database->deleteUser($user)) {
+    // delete the article
+	if ($database->deleteArticle($id)) {
 	 	$json_result['code'] = 1;
 		$json_result['message'] = "Success"; 
 		exit(json_encode($json_result));
 	} else {
-	   	$json_result['message'] = "Error deleting user from the database."; 
+	   	$json_result['message'] = "Error deleting article from the database."; 
 		exit(json_encode($json_result));
     }    
 

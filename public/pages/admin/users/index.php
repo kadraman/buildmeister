@@ -6,7 +6,7 @@ include_once("header.inc");
 ?>
 
 <div id="toptitle">
-	<h2>User Administration</h2>
+	<h2>Article Administration</h2>
 </div>
 
 <?php
@@ -19,6 +19,8 @@ if (!$session->isAdmin()){
 ?>
 
 <div class="tableNav">
+<a class="addButton" href="<?php echo REWRITE_PREFIX; ?>/articles/add/"><img src="<?php echo SITE_BASEDIR; ?>/images/icons-small/Doc-add.png"></img></a>
+	&nbsp;
 	<input id="firstButton" type="button" value="&nbsp;&lt;&lt;&nbsp;"/>
 	&nbsp;
 	<input id="prevButton" type="button" value="&nbsp;&lt;&nbsp;"/>
@@ -27,14 +29,15 @@ if (!$session->isAdmin()){
 	&nbsp;
 	<input id="lastButton" type="button" value="&nbsp;&gt;&gt;&nbsp;"/>
 	&nbsp;
-	<label id="searchLabel" for="searchString" class="formInputLabel">Filter:</label>
-	<select class="formInputText" id="searchColumn" class="formInputText">
-		<option id="1">username</option>
-		<option id="2">email</option>
+	<label id="searchLabel" for="filterString" class="formInputLabel">Filter:</label>
+	<select class="formInputText" id="filterColumn" class="formInputText">
+		<option id="1" value="title">title</option>
+		<option id="2" value="posted_by">posted_by</option>
+		<option id="3" value="state">state</option>
 	</select>
 	&nbsp; 
-	<input id="searchString" class="formInputText" style="width:100px" type="text" 
-		name="searchstring" maxlength="40" value=""/>
+	<input id="filterString" class="formInputText" style="width:100px" type="text" 
+		name="filterString" maxlength="40" value=""/>
 	&nbsp;
 	<input id="filterButton" type="button" value="Filter"/>
 	&nbsp;
