@@ -142,7 +142,7 @@ if (!isset($_GET['id'])) {
 		<!-- buttons and ajax processing -->
 		<div>		
 			<input type="submit" value="Save" id="submit" class="btn"/>
-			<input type="submit" value="Back" id="back" class="btn"/>		
+			<input type="submit" value="View Article" id="back" class="btn"/>		
 <?php
 			switch ($article_state) {
 				case SUBMITTED_STATE:
@@ -211,15 +211,7 @@ if (!isset($_GET['id'])) {
 					height="16" border="0"	alt="Pick a date">
 			</a>	
 		</div>
-		
-		<!-- article state 
-		<div>
-			<label class="required" for="state">State:</label>
-			<select name="state" id="state" class="txt">
-				<!--php echo $article_states_html?-->
-			</select>
-		</div> -->
-		
+			
 		<div>
 			<label class="required" for="author">Author:</label>	
 			<select name="author" id="author" class="txt">
@@ -233,7 +225,7 @@ if (!isset($_GET['id'])) {
 
 $oFCKeditor = new FCKeditor('contentText') ;
 $oFCKeditor->BasePath = SITE_BASEDIR . '/include/fckeditor/' ;
-$oFCKeditor->Height = '800';
+$oFCKeditor->Height = '1200';
 $oFCKeditor->Width = '700';
 $oFCKeditor->EditorAreaCSS = SITE_BASEDIR . '/stylesheets/article.css' ;
 $oFCKeditor->ToolbarComboPreviewCSS = SITE_BASEDIR . '/stylesheets/article.css' ;

@@ -4,6 +4,7 @@ include_once("common.inc");
 include_once("session.php");
 
 	$name = isset($_POST['name']) ? $database->clean_data($_POST['name']) : '';
+	$username = isset($_POST['username']) ? $database->clean_data($_POST['username']) : '';
 	$website = isset($_POST['website']) ? $database->clean_data($_POST['website']) : '';
 	$comment = isset($_POST['commentText']) ? $database->clean_data($_POST['commentText']) : '';
 	$article_id	= isset($_POST['article_id']) ? $database->clean_data($_POST['article_id']) : '';
@@ -24,6 +25,11 @@ include_once("session.php");
 		$json_result['message'] = "Your <b>name</b> is required.";
 		$json_result['field'] = "name";
 		exit(json_encode($json_result));
+	} else {
+		// if we have a username, use that as the name
+		if ($username) {
+			$name = $username;
+		}
 	}
 
 	// do we have a website
