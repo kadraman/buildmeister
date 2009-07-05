@@ -15,7 +15,7 @@ if (!$database->usernameTaken($username)) {
 	// does the user exist?
 	$session->displayDialog("User Does Not Exist",
 	   	"The specified user does not exist.",
-	    SITE_BASEDIR . "/index.php");		   	
+	    REWRITE_PREFIX . "/");		   	
 } else {	
 	
     // display requested user information 
@@ -95,16 +95,17 @@ if (!$database->usernameTaken($username)) {
 	
 		echo "<h2>Articles by this user</h2>";
 		// fetch all published articles by this user
-		$sql = "SELECT id, title, posted_by, DATE_FORMAT(date_posted, \"%M %D, %Y\")"
-    		. " as newdate, summary from " . TBL_ARTICLES . " WHERE state = "
-			. PUBLISHED_STATE . " AND posted_by = '$username' ORDER BY date_posted DESC;";
+		$sql = "SELECT id, title, state, posted_by, DATE_FORMAT(date_posted, \"%M %D, %Y\")"
+    		. " as newdate, summary from " . TBL_ARTICLES . " WHERE "
+			. "posted_by = '$username' ORDER BY date_posted DESC;";
 	
 		if ($result = mysqli_query($database->getConnection(), $sql)) {		
 			while ($row = mysqli_fetch_assoc($result)) {
 				$atitle = strtolower(str_replace(" ", "_", $row['title']));
 				echo "<div id='splitlist'><strong><a href='" 
 					. REWRITE_PREFIX . "/articles/" . $atitle . "'>"
- 			    	. $row['title'] . "</a></strong><br/>"
+ 			    	. $row['title'] . "</a></strong>"
+ 			    	. "&nbsp;[" . $database->getArticleStateName($row['state']) . "]<br/>"
  			    	. "Posted on " . $row['newdate'];			 
  			    echo "</small></div>";
     		}
@@ -112,15 +113,15 @@ if (!$database->usernameTaken($username)) {
     		mysqli_free_result($result);
 		}
 	
-		/*echo "<h2>Comments by this user</h2>";
+		echo "<h2>Comments by this user</h2>";
 		// fetch all comments by this user
-   		$sql = "SELECT id, posted_by, comment, DATE_FORMAT(date_posted, \"%M %D, %Y\") " 
+   		$sql = "SELECT id, art_id, posted_by, comment, DATE_FORMAT(date_posted, \"%M %D, %Y\") " 
    			. "as newdate, art_id from " . TBL_ARTCOM . " where state = 1 AND posted_by = "
    			. "'$username' ORDER BY date_posted DESC;";
 	
 		if ($result = mysqli_query($database->getConnection(), $sql)) {		
 			while ($row = mysqli_fetch_assoc($result)) {
-				$atitle = $database->getArticleTitle($row['id']);
+				$atitle = $database->getArticleTitle($row['art_id']);
 				$atitle_link = strtolower(str_replace(" ", "_", $atitle));
 				echo "<div id='splitlist'><strong>Comment on article "
 					. "<a href='" . REWRITE_PREFIX . "/articles/" . $atitle_link . "'>"
@@ -130,7 +131,7 @@ if (!$database->usernameTaken($username)) {
     		}
     		// free result set
     		mysqli_free_result($result);
-		}*/
+		}
     }
     
 include_once("footer.inc");
