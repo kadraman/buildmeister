@@ -1,38 +1,49 @@
 var FilterTable = new Class({
-	initialize: function(container, loadScript) {
+	initialize: function(container, loadScript, column) {
 		this.container = $(container);
-		this.script = loadScript;		
+		this.script = loadScript;	
+		this.defSortColumn = column;
+		// TODO: validate parameters
 		this.attach();
 	},
 	attach: function() {
+		var curPage = 1;						// the current page
+		var maxPages = 1;						// the maximum number of pages
+		var prevPage = 1;						// the previous page
+		var nextPage = 1;						// the next page
+		var numEntries = 0;						// the number of entries found
+		var sortColumn = this.defSortColumn;	// the table column to sort on
+		var sortDirection = "";					// the sort direction, default is ASC
+		
 		var busy = false;
 		var req = new Request.HTML({
 			url: this.script, 
 			method: 'get',
 			evalScripts: true,
 			onRequest: function()  { 
-				this.busy = true;
+				busy = true;
 				$('waiting').setStyle('visibility', 'visible'); 
 			},
 			update: $(this.container),
 			onComplete: function() {
-				mp = $('maxPage').get('value').toInt();
-				cp = $('curPage').get('value').toInt();
-				pp = cp - 1; 			// previous page
-				np = cp + 1; 			// next page
-				entries = $('numEntries').get('value');
+				// TODO: check if fields exist and validate input
+				maxPages = $('maxPage').get('value').toInt();
+				curPage  = $('curPage').get('value').toInt();
+				prevPage = curPage - 1; 			// previous page
+				nextPage = curPage + 1; 			// next page
+				numEntries = $('numEntries').get('value');
 				// disable buttons, based on where we are
-				if (mp == 1) { 			// we have just one page
+				if (maxPages == 1) { 			// we have just one page
 					$('firstButton').set('disabled', true);
 					$('lastButton').set('disabled', true);
 					$('nextButton').set('disabled', true);
 					$('prevButton').set('disabled', true);
-				} else if (cp == 1) {	// we have more than one page, but are on first
+				} else if (curPage == 1) {	// we have more than one page, but are on first
 					$('firstButton').set('disabled', true);
 					$('lastButton').set('disabled', false);
 					$('nextButton').set('disabled', false);
 					$('prevButton').set('disabled', true);
-				} else if (cp == mp) { 	// we have more than one page, but are on last
+				} else if (curPage == maxPages) { 	// we have more than one page, but are on last
 					$('firstButton').set('disabled', false);
 					$('lastButton').set('disabled', true);
 					$('nextButton').set('disabled', true);
@@ -43,18 +54,40 @@ var FilterTable = new Class({
 					$('nextButton').set('disabled', false);
 					$('prevButton').set('disabled', false);
 				}
-				$('numEntriesLabel').set('text', "Found " + entries + " matching entries");
-				this.busy = false; 
+				// TODO: check if label exists
+				$('numEntriesLabel').set('text', "Found " + numEntries + " matching entries");
+				busy = false; 
 				$('waiting').setStyle('visibility', 'hidden'); 
+				
+				// when user selects a column to sort
+				$$('a.sortable').each(function(link) {
+					link.addEvent('click', function(e) {
+						e.preventDefault();	
+						// does the sort column already have a value?
+						if (sortColumn == link.id) {
+							// if so, change sort direction
+							if (sortDirection == 'DESC') {
+								sortDirection = "";
+							} else {
+								sortDirection = 'DESC';
+							}
+						} else {
+							sortColumn = link.id;
+							sortDirection = '';
+						}
+						// fire an update
+						$('filterString').fireEvent('update');
+					});
+				});
 			}
 		});
 		
 		// when user enters search criteria
-		$('searchString').addEvents({
+		$('filterString').addEvents({
 			'keyup': function(e) {
     			if (e.key == 'enter') {
     				new Event(e).stop();
-    				$('searchString').fireEvent('update');
+    				$('filterString').fireEvent('update');
     			}
     		},
     		'blur': function(e) {
@@ -62,8 +95,10 @@ var FilterTable = new Class({
     		},
     		'update': function() {
     			if (!busy) {	
-    				req.send('searchstring=' + $('searchString').get('value') +
-    					"&searchcolumn=" + $('searchColumn').get('value') +
+    				req.send('searchstring=' + $('filterString').get('value') +
+    					"&searchcolumn=" + $('filterColumn').get('value') +
+    					"&sortcolumn=" + sortColumn +
+    					"&sortdirection=" + sortDirection +
     					"&page=1" +
     					"&rows="  + $('rowsString').get('value') +
     					"&time=" + ($random(0,100) - $time()).toString());
@@ -73,23 +108,24 @@ var FilterTable = new Class({
 		
 		// when user selects filter
 		$('filterButton').addEvent('click', function(e) {
-   			$('searchString').fireEvent('update');
+   			$('filterString').fireEvent('update');
 		});
 		
 		// when user selects reset
 		$('resetButton').addEvent('click', function(e) {
-			$('searchString').set('value', "");
-   			$('searchString').fireEvent('update');
+			$('filterString').set('value', "");
+   			$('filterString').fireEvent('update');
 		});
 	
 		// when user selects previous
 		$('prevButton').addEvent('click', function(e) {
 			if (!busy) {
 				new Event(e).stop();
-				pp = $('curPage').get('value').toInt() - 1;
-				req.send('searchstring=' + $('searchString').get('value') +
-					"&searchcolumn=" + $('searchColumn').get('value') +
-					"&page=" + pp.toString() +
+				req.send('searchstring=' + $('filterString').get('value') +
+					"&searchcolumn=" + $('filterColumn').get('value') +
+					"&sortcolumn=" + sortColumn +
+					"&sortdirection=" + sortDirection +
+					"&page=" + prevPage.toString() +
 					"&rows="  + $('rowsString').get('value') +
 					"&time=" + ($random(0,100) - $time()).toString());
 			}
@@ -99,10 +135,11 @@ var FilterTable = new Class({
 		$('nextButton').addEvent('click', function(e) {
 			if (!busy) {
 				new Event(e).stop();
-				np = $('curPage').get('value').toInt() + 1;
-				req.send('searchstring=' + $('searchString').get('value') +
-					"&searchcolumn=" + $('searchColumn').get('value') +
-					"&page=" + np.toString() +
+				req.send('searchstring=' + $('filterString').get('value') +
+					"&searchcolumn=" + $('filterColumn').get('value') +
+					"&sortcolumn=" + sortColumn +
+					"&sortdirection=" + sortDirection +
+					"&page=" + nextPage.toString() +
 					"&rows="  + $('rowsString').get('value') +
 					"&time=" + ($random(0,100) - $time()).toString());		
 			}
@@ -112,9 +149,10 @@ var FilterTable = new Class({
 		$('firstButton').addEvent('click', function(e) {
 			if (!busy) {
 				new Event(e).stop();
-				mp = $('maxPage').get('value').toInt();
-				req.send('searchstring=' + $('searchString').get('value') +
-					"&searchcolumn=" + $('searchColumn').get('value') +						
+				req.send('searchstring=' + $('filterString').get('value') +
+					"&searchcolumn=" + $('filterColumn').get('value') +	
+					"&sortcolumn=" + sortColumn +
+					"&sortdirection=" + sortDirection +
 					"&page=1" +
 					"&rows="  + $('rowsString').get('value') +
 					"&time=" + ($random(0,100) - $time()).toString());
@@ -125,10 +163,11 @@ var FilterTable = new Class({
 		$('lastButton').addEvent('click', function(e) {
 			if (!busy) {
 				new Event(e).stop();
-				mp = $('maxPage').get('value').toInt();
-				req.send('searchstring=' + $('searchString').get('value') +
-					"&searchcolumn=" + $('searchColumn').get('value') +						
-					"&page=" + mp.toString() +
+				req.send('searchstring=' + $('filterString').get('value') +
+					"&searchcolumn=" + $('filterColumn').get('value') +	
+					"&sortcolumn=" + sortColumn +
+					"&sortdirection=" + sortDirection +
+					"&page=" + maxPages.toString() +
 					"&rows="  + $('rowsString').get('value') +
 					"&time=" + ($random(0,100) - $time()).toString());		
 			}
@@ -147,10 +186,11 @@ var FilterTable = new Class({
 	    	},
 	    	'update': function() {
 	    		if (!busy) {	
-	    			cp = $('curPage').get('value').toInt();
-	    			req.send('searchstring=' + $('searchString').get('value') +
-	    					"&searchcolumn=" + $('searchColumn').get('value') +	    					
-	    					"&page=" + cp.toString() +
+	    			req.send('searchstring=' + $('filterString').get('value') +
+	    					"&searchcolumn=" + $('filterColumn').get('value') +	
+	    					"&sortcolumn=" + sortColumn +
+	    					"&sortdirection=" + sortDirection +
+	    					"&page=" + curPage.toString() +
 	    					"&rows="  + $('rowsString').get('value') +
 	    					"&time=" + ($random(0,100) - $time()).toString());
 	    		}
@@ -161,14 +201,15 @@ var FilterTable = new Class({
 		$('allRows').addEvent('click', function(e) {
 			if (!busy) {
 				new Event(e).stop();
-				mp = $('maxPage').get('value').toInt();
-				req.send('searchstring=' + $('searchString').get('value') +
-					"&searchcolumn=" + $('searchColumn').get('value') +						
+				req.send('searchstring=' + $('filterString').get('value') +
+					"&searchcolumn=" + $('filterColumn').get('value') +	
+					"&sortcolumn=" + sortColumn +
+					"&sortdirection=" + sortDirection +
 					"&rows=0" +
 					"&time=" + ($random(0,100) - $time()).toString());		
 			}
-		});
-	
+		});						
+		
 		// load defaults, first page
 		req.send('time=' + ($random(0,100) - $time()).toString());
 	}
