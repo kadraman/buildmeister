@@ -11,12 +11,14 @@
 	border: 1px solid #FFFFFF;
 	padding: 0 2px;
 	color: #228;
+	font-size: 8pt;
 }
 .admintable th {
 	background-color: #eee;
 	font-weight: bold;
 	text-align: center;
 	padding: 4px 4px 4px 14px;
+	font-size: 8pt;
 }
 .admintable tr.altrow {
 	background-color: #eee;

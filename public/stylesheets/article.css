@@ -2,7 +2,8 @@
     text-align: justify;
     padding-left: 0px;
     padding-right: 0px;
-    font-size: 8pt;
+    font-size: 9pt;
+    line-height: 150%;
 }
 #keyconcepts {
     width: 250px;
@@ -87,28 +88,12 @@ table#nicewidth {
 p { text-align: justify; }
 table#nicewidth th { background-color:#CCDDEE; padding: 5px;}
 table#nicewidth td { background-color:#FFF; padding: 5px; text-align: left; }
-/*table#code {
-    width: 90%;
-    BORDER-COLLAPSE: collapse;
-    bordercolor: #111111;
-    cellspacing: 0px;
-    cellpadding: 0px;
-    border: 0;
-    margin-left: auto;
-    margin-right: auto;
+table {
+	text-align: justify;
+    padding-left: 0px;
+    padding-right: 0px;
+    font-size: 9pt;
 }
-td#codelines {
-    FONT-FAMILY: monospace;
-    COLOR: #008080;
-    BACKGROUND-COLOR: rgb(255,255,204);
-    valign: top;
-    width: 50px;
-    align: center;
-}
-td#codecontent {
-    FONT-FAMILY: courier new;
-    BACKGROUND-COLOR: rgb(255,255,204);
-    valign: top;
-    width: 700px;
-    align: left;
-}   */
+td {
+	font-size: 9pt;
+}	

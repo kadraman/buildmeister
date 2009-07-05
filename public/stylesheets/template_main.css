@@ -2,13 +2,16 @@
  * default styles 
  */
 body {
-	background: #CCC;
+	/*background: #CCC;*/
+	background: #CCC
+		url("@image_dir@/template-background.gif")
+		repeat-y 50% 0px;
 	color: #000;
 	margin: 0px;
 	padding: 0px;
     font-family: arial, "lucida console", sans-serif;
     list-style-type: disc;
-    font-size: 8pt;
+    font-size: 9pt;    
 }
 
 /*
@@ -209,7 +212,7 @@ img { border: 0px; }
 		repeat-y 50% 0px;
 	margin: 0px auto;
 	padding: 0px 10px;
-	width: 930px;
+	width: 950px;
 	text-align: left;
 }
 
@@ -252,7 +255,7 @@ img { border: 0px; }
 	/*border-left:1px solid #E6EDF2;*/
 	float: left;
 	position: relative;
-	width: 710px;
+	width: 730px;
 	padding: 10px 10px 10px 10px;
 }
 #content #introductory {
@@ -297,7 +300,8 @@ img { border: 0px; }
 #alphabet { font-size:2em; padding: 0.5em; text-align:center; }
 #alphabet a { color:#228; text-decoration:underline; }
 #alphabet a.visited { color:#228; text-decoration:underline; }
-td.glossitem { width:50%; padding: 1.0em; text-align:justify }  
+td.glossitem { width:50%; padding: 1.0em; text-align:justify }
+#addButton a { text-decoration: none; }
 
 /*
  * comments - for articles etc
@@ -345,7 +349,7 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
  */
 #articleSummary {	
   	padding: 0;
-  	width: 720px;
+  	width: 740px;
   	height: 90px;
 }
 #dZoneBox {
@@ -361,7 +365,7 @@ td.glossitem { width:50%; padding: 1.0em; text-align:justify }
 	padding: 10px;
 	background-color: #F7F7F7;
 	border: dotted 1px #E1E1E1;  
-	width: 610px;
+	width: 630px;
 	line-height: 2.0em;
 }
 #articleMeta .header {
@@ -542,7 +546,7 @@ a:hover.sideBoxLink {
 }
 
 #reload {
-	width: 600px;
+	width: 620px;
 	margin: 0px auto;
 	padding: 20px;
 	font-size: 1.25em;
