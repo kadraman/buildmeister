@@ -6,7 +6,7 @@ include_once("header.inc");
 ?>
 
 <div id="toptitle">
-	<h2>Article Administration</h2>
+	<h2>Comment Administration</h2>
 </div>
 
 <?php
@@ -19,7 +19,7 @@ if (!$session->isAdmin()){
 ?>
 
 <div class="tableNav">
-<a class="addButton" href="<?php echo REWRITE_PREFIX; ?>/articles/add/"><img src="<?php echo SITE_BASEDIR; ?>/images/icons-small/Doc-add.png"></img></a>
+	<a class="addButton" href="<?php echo REWRITE_PREFIX; ?>/comments/add/"><img src="<?php echo SITE_BASEDIR; ?>/images/icons-small/Comments-add.png"></img></a>
 	&nbsp;
 	<input id="firstButton" type="button" value="&nbsp;&lt;&lt;&nbsp;"/>
 	&nbsp;
@@ -31,9 +31,10 @@ if (!$session->isAdmin()){
 	&nbsp;
 	<label id="searchLabel" for="filterString" class="formInputLabel">Filter:</label>
 	<select class="formInputText" id="filterColumn" class="formInputText">
-		<option id="1" value="title">title</option>
-		<option id="2" value="posted_by">posted_by</option>
+		<option id="1" value="posted_by">posted_by</option>
+		<option id="2" value="comment">comment</option>
 		<option id="3" value="state">state</option>
+	</select>
 	</select>
 	&nbsp; 
 	<input id="filterString" class="formInputText" style="width:100px" type="text" 
