@@ -36,8 +36,8 @@ RewriteRule ^links/$ /buildmeister.com/public/pages/links/index.php
 RewriteRule ^users/(.*)\.html$ /buildmeister.com/public/pages/users/$1.php
 RewriteRule ^users/(.*)\.js$ /buildmeister.com/public/pages/users/$1.js
 RewriteRule ^users/view/$ /buildmeister.com/public/pages/users/view.php
-RewriteRule ^users/([a-zA-Z0-9_-]+)/?$ /buildmeister.com/public/pages/users/view.php?user=$1
-RewriteRule ^users/edit/([a-zA-Z0-9_-]+)/?$ /buildmeister.com/public/pages/users/edit.php?user=$1
+RewriteRule ^users/([a-zA-Z0-9_-]+)/?$ /buildmeister.com/public/pages/users/view.php?username=$1
+RewriteRule ^users/edit/([a-zA-Z0-9_-]+)/?$ /buildmeister.com/public/pages/users/edit.php?username=$1
 
 RewriteRule ^contact/$ /buildmeister.com/public/pages/contact.php
 RewriteRule ^about/$ /buildmeister.com/public/pages/about.php

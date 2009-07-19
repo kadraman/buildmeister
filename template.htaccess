@@ -36,8 +36,8 @@ RewriteRule ^links/$ @site_prefix@/pages/links/index.php
 RewriteRule ^users/(.*)\.html$ @site_prefix@/pages/users/$1.php
 RewriteRule ^users/(.*)\.js$ @site_prefix@/pages/users/$1.js
 RewriteRule ^users/view/$ @site_prefix@/pages/users/view.php
-RewriteRule ^users/([a-zA-Z0-9_-]+)/?$ @site_prefix@/pages/users/view.php?user=$1
-RewriteRule ^users/edit/([a-zA-Z0-9_-]+)/?$ @site_prefix@/pages/users/edit.php?user=$1
+RewriteRule ^users/([a-zA-Z0-9_-]+)/?$ @site_prefix@/pages/users/view.php?username=$1
+RewriteRule ^users/edit/([a-zA-Z0-9_-]+)/?$ @site_prefix@/pages/users/edit.php?username=$1
 
 RewriteRule ^contact/$ @site_prefix@/pages/contact.php
 RewriteRule ^about/$ @site_prefix@/pages/about.php

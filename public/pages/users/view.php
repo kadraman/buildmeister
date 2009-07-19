@@ -3,7 +3,7 @@
 include_once("common.inc");
 include_once("header.inc");
 
-$username = isset($_GET['user']) ? $database->clean_data($_GET['user']) : '';
+$username = isset($_GET['username']) ? $database->clean_data($_GET['username']) : '';
 
 // if no user set, assume logged in user
 if (!$username) {

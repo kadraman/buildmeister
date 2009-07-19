@@ -4,17 +4,17 @@ include_once("common.inc");
 include_once("header.inc");
 
 // do we have a user?
-if (!isset($_POST['user'])) {
+if (!isset($_POST['username'])) {
 	$session->displayDialog("No Username Specified",
 	 	"No username has been specified.",
 	 	SITE_BASEDIR . "/index.php");
 // does the user exist	 	
-} else if (!$database->usernameTaken($database->clean_data($_POST['user']))) {
+} else if (!$database->usernameTaken($database->clean_data($_POST['username']))) {
 	$session->displayDialog("Username Does Not Exist",
 	   	"The specified username does not exist.",
 	    SITE_BASEDIR . "/index.php");
 // do we have permission to edit this user as it is not us?	    
-} else if ((strcmp($session->username, $database->clean_data($_POST['user'])) != 0)
+} else if ((strcmp($session->username, $database->clean_data($_POST['username'])) != 0)
 	&& !$session->isAdmin()) {
 	$session->displayDialog("Insufficient Permission",
    		"Sorry you do not have permission to edit this user.",
@@ -22,7 +22,7 @@ if (!isset($_POST['user'])) {
 } else {	
 
 	// retrieve the username of the user to display
-	$username = $database->clean_data($_POST['user']);
+	$username = $database->clean_data($_POST['username']);
 	$newusername = "";
 	
 	echo "<div id='toptitle'>\n";
