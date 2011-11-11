@@ -92,14 +92,7 @@
     <target name="config" depends="get-env"
         description="configure application for a specific environment">
         <input propertyname="db.pass">Enter database password for ${environment}:</input>
-		<copy overwrite="true" file="${dir.public}/stylesheets/template_main.css" 
-		tofile="${dir.public}/stylesheets/main.css">
-            <filterchain>
-                <replacetokens begintoken="@" endtoken="@">
-                  <token key="image_dir" value="${image.dir}" />
-                </replacetokens>
-            </filterchain>
-        </copy>
+        <input propertyname="smtp.pass">Enter smtp password for ${environment}:</input>
 		<copy overwrite="true" file="${dir.public}/include/template_constants.inc" 
 		tofile="${dir.public}/include/constants.inc">
             <filterchain>
@@ -108,35 +101,12 @@
                     <token key="db_user" value="${db.user}" />
                     <token key="db_pass" value="${db.pass}" />
                     <token key="db_name" value="${db.name}" />
-                    <token key="site_basedir" value="${site.basedir}" />
-                	<token key="site_prefix" value="${site.prefix}" />
-                	<token key="rewrite_prefix" value="${rewrite.prefix}" />
-                	<token key="stmp_pass" value="${smtp.pass}" />
+                    <token key="smtp_server" value="${smtp.server}" />
+                    <token key="smtp_user" value="${smtp.user}" />
+                	<token key="smtp_pass" value="${smtp.pass}" />
                 </replacetokens>
             </filterchain>
         </copy>
-		<copy overwrite="true" file="${dir.public}/include/template_config.js" 
-		tofile="${dir.public}/include/config.js">
-            <filterchain>
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="db_server" value="${db.server}" />
-                    <token key="db_user" value="${db.user}" />
-                    <token key="db_pass" value="${db.pass}" />
-                    <token key="db_name" value="${db.name}" />
-                    <token key="site_basedir" value="${site.basedir}" />
-                	<token key="site_prefix" value="${site.prefix}" />
-                	<token key="rewrite_prefix" value="${rewrite.prefix}" />
-                	<token key="image_dir" value="${image.dir}" />
-                </replacetokens>
-            </filterchain>
-        </copy> 
-		<copy overwrite="true" file="template.htaccess"	tofile=".htaccess">
-            <filterchain>
-                <replacetokens begintoken="@" endtoken="@">
-                	<token key="site_prefix" value="${site.prefix}" />
-                </replacetokens>
-            </filterchain>
-        </copy> 
     </target>
 
     <!-- bootstrap the relevant database for dbdeploy-->  
@@ -177,28 +147,29 @@
     <!-- deploy the applications files to the specific environment -->
     <target name="deploy" depends="get-env"
         description="update the application files in a specific environment">
-	<ftpdeploy host="${ftp.server}" port="${ftp.port}" 
-	    username="${ftp.user}" password="${ftp.pass}" 
-	    dir="." mode="ascii" clearfirst="true">
-	    <fileset refid="php.sources"/>
-	</ftpdeploy>
-	<ftpdeploy host="${ftp.server}" port="${ftp.port}" 
-	    username="${ftp.user}" password="${ftp.pass}" 
-	    dir="images" mode="binary" clearfirst="true">
-	    <fileset refid="php.images"/>
-	</ftpdeploy>
+        <input propertyname="db.pass">Enter ftp password for ${environment}:</input>
+        <ftpdeploy host="${ftp.server}" port="${ftp.port}"
+            username="${ftp.user}" password="${ftp.pass}"
+            dir="." mode="ascii" clearfirst="true">
+            <fileset refid="php.sources"/>
+        </ftpdeploy>
+        <ftpdeploy host="${ftp.server}" port="${ftp.port}"
+            username="${ftp.user}" password="${ftp.pass}"
+            dir="images" mode="binary" clearfirst="true">
+            <fileset refid="php.images"/>
+        </ftpdeploy>
     </target>
      
     <!-- sync the application files to the specific environment --> 
     <target name="sync" depends="config"
         description="update the application files in a specific environment">
-	<exec command="${project.basedir}\${dir.bin}\FTPSync.exe ${environment} /FTPSYNCDATA:${project.basedir}\${dir.sync} /INCREMENTAL" />
+	    <exec command="${project.basedir}\${dir.bin}\FTPSync.exe ${environment} /FTPSYNCDATA:${project.basedir}\${dir.sync} /INCREMENTAL" />
     </target>
 
     <!-- help -->
     <target name="help" description="display help">
         <echo>build file for ${phing.project.name}</echo>
-        <echo>please type ant -p for description of all targets</echo>
+        <echo>please type phing -p for description of all targets</echo>
     </target>
 
 </project>

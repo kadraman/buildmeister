@@ -39,9 +39,9 @@ if (!isset($_POST['keywords']) || ($_POST['keywords'] == "")
     	while ($row = mysqli_fetch_assoc($result)) {
     		$atitle = strtolower(str_replace(" ", "_", $row['title']));
         	echo "<div id='splitlist'><strong><a href='"
-        		. REWRITE_PREFIX . "/articles/" . $atitle . "'>"
+        		. "/articles/" . $atitle . "'>"
  		    	. $row['title'] . "</a></strong><br/>"
- 		    	. "<small>Posted by <a href='" . REWRITE_PREFIX
+ 		    	. "<small>Posted by <a href='"
  		    	. "/users/" . $row['posted_by'] 
  		    	. "'>" . $row['posted_by'] . "</a> on "
  		    	. $row['newdate'] . "</small><br/>"

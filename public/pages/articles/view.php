@@ -26,13 +26,13 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
     $session->displayDialog("No Article Specified",
     	"No article has been specified, please select an article on the "
         . "<b>articles</b> page to see its content.",
-        SITE_BASEDIR . "/pages/articles/");
+        "/pages/articles/");
 // does the article exist?	        
 } else if (!$database->articleExists($aid)) {
 	$session->displayDialog("Article Does Not Exist",
     	"The specified article does not exist, please select an article on the "
     	. "<b>articles</b> page to see its content.",
-        SITE_BASEDIR . "/pages/articles/");		        	        
+        "/pages/articles/");
 } else {
     $currentid = $aid;
 	    
@@ -64,7 +64,7 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
 		// dzone
 		echo "<div id='dZoneBox'>\n";
 		echo "<script type='text/javascript'>";
-		echo "var dzone_url = '" . SITE_BASEDIR . "/articles/" . $atitle_unformatted . "';\n";
+		echo "var dzone_url = '/articles/" . $atitle_unformatted . "';\n";
 		echo "var dzone_title = '" . $realTitle . "';\n";
 		echo "var dzone_blurb = '" . $html_head_description . "';\n";
 		echo "var dzone_style = '1';\n";
@@ -85,7 +85,7 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
     	if ($row['state'] == PUBLISHED_STATE || $session->isAdmin()) {
    			// display article
    			echo "<span class='header'>Posted by <a href='"
-   				. REWRITE_PREFIX . "/users/" . $row['posted_by'] 
+   				. "/users/" . $row['posted_by']
     			. "'>" . $row['posted_by'] . "</a> on " . $row['newdate'];
     		if (strcmp($row['updated'], "") != 0) {
     			echo ", last updated on " . $row['updated'];
@@ -93,7 +93,7 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
 
     		// display edit and delete links
    			if ($session->isAdmin()) {
-   				echo "&nbsp;|&nbsp;<a href='" . REWRITE_PREFIX .
+   				echo "&nbsp;|&nbsp;<a href='" .
    					"/articles/edit/" . $row['id'] . "'>Edit</a>";
 				echo " | <a id='articleDelete' href='' >Delete</a>";
        		}
@@ -111,7 +111,7 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
    				} else {
 					while ($cat_row = mysqli_fetch_assoc($cat_result)) {
 						$cname = strtolower(str_replace(" ", "_", $cat_row['name']));
-	    				echo "<a class=\"labels\" href=\"" . REWRITE_PREFIX
+	    				echo "<a class=\"labels\" href=\""
 	    					. "/categories/" . $cname . "\">" 
 	    					. $cat_row['name'] . "</a>&nbsp;\n";
 					}
@@ -151,7 +151,7 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
 </script>
 <a href="http://www.addthis.com/bookmark.php?v=20" 
 	onmouseover="return addthis_open(this, '', 
-		'<?php echo SITE_BASEDIR . "/articles/" . $atitle_unformatted ?>', 
+		'<?php echo "/articles/" . $atitle_unformatted ?>',
 		'<?php echo $realTitle ?>')" 
 	onmouseout="addthis_close()" onclick="return addthis_sendto()">
 	<img src="http://s7.addthis.com/static/btn/lg-bookmark-en.gif" 
@@ -203,7 +203,7 @@ ch_query = ch_queries[ch_selected];
 </script>
 <a href="http://www.addthis.com/bookmark.php?v=20" 
 	onmouseover="return addthis_open(this, '', 
-		'<?php echo SITE_BASEDIR . "/articles/" . $atitle_unformatted ?>', 
+		'<?php echo "/articles/" . $atitle_unformatted ?>',
 		'<?php echo $realTitle ?>')" 
 	onmouseout="addthis_close()" onclick="return addthis_sendto()">
 	<img src="http://s7.addthis.com/static/btn/lg-bookmark-en.gif" 
@@ -286,7 +286,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h3 class="sub">Submit a new comment</h3>  
 
-<form id="commentForm" action="<?php echo SITE_BASEDIR . "/pages/articles/_comment.submit.php" ?>" method="post">
+<form id="commentForm" action="<?php echo "/pages/articles/_comment.submit.php" ?>" method="post">
 	<fieldset style="width:650px; margin: 0px auto">
 		
 		<!-- ajax submit response -->
@@ -327,10 +327,10 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <?php
 
 $oFCKeditor = new FCKeditor('commentText') ;
-$oFCKeditor->BasePath = SITE_BASEDIR . '/include/fckeditor/' ;
+$oFCKeditor->BasePath = '/include/fckeditor/' ;
 $oFCKeditor->Height = '200';
 $oFCKeditor->Width = '500';
-$oFCKeditor->EditorAreaCSS = SITE_BASEDIR . '/stylesheets/article.css' ;
+$oFCKeditor->EditorAreaCSS = '/stylesheets/article.css' ;
 $oFCKeditor->ToolbarSet = 'Basic';
 $oFCKeditor->Config['LinkBrowser'] = 'false';
 $oFCKeditor->Config['LinkUpload'] = 'false';
@@ -345,7 +345,7 @@ $oFCKeditor->Create();
 		<div>
 			<label for="kludge"><!-- empty --></label>
 			<img class="txt" id="catchpa" 
-				src="<?php echo SITE_PREFIX . "/include/securimage/securimage_show.php" ?>" alt="CAPTCHA Image" />
+				src="<?php echo "/include/securimage/securimage_show.php" ?>" alt="CAPTCHA Image" />
 			<a href="" id="reload" class="txt">Reload Image</a>				
 		</div>
 		<div>
@@ -360,7 +360,7 @@ $oFCKeditor->Create();
 			<input type="submit" value="Submit Comment" id="submit" class="btn"/>
 			&nbsp;
 			<span id="waiting" style="visibility: hidden">			
-				<img align="absmiddle" src="<?php echo SITE_PREFIX; ?>/images/spinner.gif"/>
+				<img align="absmiddle" src="/images/spinner.gif"/>
 				&nbsp;<strong>Processing...<strong>
 			</span>	
 		</div>

@@ -5,7 +5,7 @@ window.addEvent('domready', function() {
 	new FormValidator($('commentForm'), "Successfully added comment, reloading page...",
 		{
 			redirect: true,
-			redirectURL: CONFIG.rewrite_prefix + "/articles/" +	articleTitle 
+			redirectURL: "/articles/" +	articleTitle
 		}
 	);
 	
@@ -48,8 +48,7 @@ window.addEvent('domready', function() {
                 					// act on the response
                 					if (status.code) {
                 						// successful, reload the page
-                						window.location = CONFIG.rewrite_prefix 
-                							+ "/articles/" + articleTitle
+                						window.location = "/articles/" + articleTitle
                 					} else {
                 						alert("Error: " + status.message);
                 					}

@@ -19,7 +19,7 @@ if (!$session->isAdmin()){
 ?>
 
 <div class="tableNav">
-	<a class="addButton" href="<?php echo REWRITE_PREFIX; ?>/comments/add/"><img src="<?php echo SITE_BASEDIR; ?>/images/icons-small/Comments-add.png"></img></a>
+	<a class="addButton" href="/comments/add/"><img src="/images/icons-small/Comments-add.png"></img></a>
 	&nbsp;
 	<input id="firstButton" type="button" value="&nbsp;&lt;&lt;&nbsp;"/>
 	&nbsp;

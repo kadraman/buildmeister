@@ -8,8 +8,7 @@ window.addEvent('domready', function() {
 		var responseDiv = $('loginForm').getElement('#response');
 		
 		// where we will redirect to on login
-		var redirectURL = CONFIG.rewrite_prefix
-		    + '/users/' + $('user').get('value'); 
+		var redirectURL = '/users/' + $('user').get('value');
 		
 		// remove error style from fields
 		this.getElements('.error').each(function(input) {

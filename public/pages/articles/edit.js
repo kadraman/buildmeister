@@ -29,8 +29,7 @@ window.addEvent('domready', function() {
 					    text: 'Yes', 
 			            onClick: function() { 
 						    var articleTitle = $('articleTitle').get('value');						    
-						    window.location = CONFIG.rewrite_prefix + "/articles/" 
-							    + articleTitle.toLowerCase();
+						    window.location = "/articles/" + articleTitle.toLowerCase();
 						}
 			    	},
 			    	{
@@ -44,8 +43,7 @@ window.addEvent('domready', function() {
 		    });
 		} else {
 			var articleTitle = $('articleTitle').get('value');						    
-		    window.location = CONFIG.rewrite_prefix + "/articles/" 
-			    + articleTitle.toLowerCase();
+		    window.location = "/articles/" + articleTitle.toLowerCase();
 		}
 	});
 	
@@ -55,8 +53,7 @@ window.addEvent('domready', function() {
 			$('state').value = 2;
 			saved = true;
 			var articleTitle = $('articleTitle').get('value');						    
-		    window.location = CONFIG.rewrite_prefix + "/articles/" 
-			    + articleTitle.toLowerCase();
+		    window.location = "/articles/" + articleTitle.toLowerCase();
 		});
 	}
 	
@@ -66,8 +63,7 @@ window.addEvent('domready', function() {
 			$('state').value = 3;
 			saved = true;
 			var articleTitle = $('articleTitle').get('value');						    
-		    window.location = CONFIG.rewrite_prefix + "/articles/" 
-			    + articleTitle.toLowerCase();
+		    window.location = "/articles/" + articleTitle.toLowerCase();
 		});
 	}
 	
@@ -77,8 +73,7 @@ window.addEvent('domready', function() {
 			$('state').value = 2;
 			saved = true;
 			var articleTitle = $('articleTitle').get('value');						    
-		    window.location = CONFIG.rewrite_prefix + "/articles/" 
-			    + articleTitle.toLowerCase();
+		    window.location = "/articles/" + articleTitle.toLowerCase();
 		});
 	}
 	
@@ -88,8 +83,7 @@ window.addEvent('domready', function() {
 			$('state').value = 4;
 			saved = true;
 			var articleTitle = $('articleTitle').get('value');						    
-		    window.location = CONFIG.rewrite_prefix + "/articles/" 
-			    + articleTitle.toLowerCase();
+		    window.location = "/articles/"  + articleTitle.toLowerCase();
 		});
 	}
 	
@@ -99,8 +93,7 @@ window.addEvent('domready', function() {
 			$('state').value = 5;
 			saved = true;
 			var articleTitle = $('articleTitle').get('value');						    
-		    window.location = CONFIG.rewrite_prefix + "/articles/" 
-			    + articleTitle.toLowerCase();
+		    window.location = "/articles/" + articleTitle.toLowerCase();
 		});
 	}
 	

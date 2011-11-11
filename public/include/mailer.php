@@ -1,7 +1,7 @@
 <?php 
 
 /*
- * Copyright 2007-2009 Kevin A. Lee
+ * Copyright 2007-2011 Kevin A. Lee
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,7 @@
  *
  */
 
-require("XPertMailer/MAIL.php");
 include_once("constants.inc");
-
-error_reporting(E_ALL); // report all errors
 
 /**
  * Support class for sending formatted emails.
@@ -40,12 +37,11 @@ class Mailer {
 	 * @param string $email - the user's email
 	 * @param string $verifyemail - the user's encoded email to be sent
 	 * @param string $verifystring - a verification string to be sent
-	 * @return true if email sent successfully, else false (the class variable 
-     * $error_message will be set with the error code and text)
+	 * @return true if email sent successfully, else false
      *  
      */
 	function sendVerification($user, $email, $verifyemail, $verifystring) {
-		global $_RESULT;
+		/*global $_RESULT;
    	   		
 		$m = new MAIL;
 
@@ -70,7 +66,23 @@ class Mailer {
 				return false;
 			}
 			return true;
-		}    	   	
+		}*/
+        $headers = 'From: ' . EMAIL_FROM_NAME . '<' . EMAIL_FROM_ADDR . '>' . "\r\n";
+        $headers .= 'Return-Path: <' . EMAIL_FROM_ADDR . '>' . "\r\n";
+        $headers .= 'MIME-Version 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $subject = '[' . SITE_NAME . '] registration';
+        $message = "Hello " . $user . ", <br><br>"
+             . "Please click on the following link to verify your new account at ."
+             . SITE_NAME . ": <br><br>"
+             . SITE_BASEDIR . "/pages/users/verify.php" . "?email=" . $verifyemail
+             . "&verify=" . $verifystring;
+
+        if (mail($email, $subject, $message, $headers))
+            return true;
+        else
+            return false;
+        
    } // sendVerification
    
    /**
@@ -81,11 +93,8 @@ class Mailer {
     * $error_message will be set with the error code and text)
     */
    function sendNotification($message) {
-   		// TODO: get users who wish to be notified            
-      	$email = "kevin.lee@buildmeister.com";
-      	$user  = "kevin";
       	
-        global $_RESULT;
+        /*global $_RESULT;
    	   		
 		$m = new MAIL;
 
@@ -106,7 +115,18 @@ class Mailer {
 				return false;
 			}
 			return true;
-		}    	
+		} */
+
+        $headers = 'From: ' . EMAIL_FROM_NAME . '<' . EMAIL_FROM_ADDR . '>' . "\r\n";
+        $headers .= 'Return-Path: <' . EMAIL_FROM_ADDR . '>' . "\r\n";
+        $headers .= 'MIME-Version 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $subject = '[' . SITE_NAME . '] notification';
+
+        if (mail(EMAIL_NOTIFY_ADDR, $subject, $message, $headers))
+            return true;
+        else
+            return false;
    } // sendNotification
    
    /**
@@ -117,11 +137,8 @@ class Mailer {
     * $error_message will be set with the error code and text)
     */
    function sendContact($name, $emailFrom, $message) {
-   		// TODO: get admin users who wish to be notified            
-      	$emailTo = "kevin.lee@buildmeister.com";
-      	$user  = "kevin";
       	
-        global $_RESULT;
+        /*global $_RESULT;
    	   		
 		$m = new MAIL;
 
@@ -143,7 +160,18 @@ class Mailer {
 				return false;
 			}
 			return true;
-		}    	
+		} */
+
+        $headers = 'From: ' . $name . '<' . $emailFrom . '>' . "\r\n";
+        $headers .= 'Return-Path: <' . $emailFrom . '>' . "\r\n";
+        $headers .= 'MIME-Version 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $subject = '[' . SITE_NAME . '] contact message';
+
+        if (mail(EMAIL_NOTIFY_ADDR, $subject, $message, $headers))
+            return true;
+        else
+            return false;
    } // sendContact
    
    /**
@@ -158,7 +186,7 @@ class Mailer {
     * 
     */
    function sendNewPass($user, $email, $pass) {
-   		global $_RESULT;
+   		/*global $_RESULT;
    	   		
 		$m = new MAIL;
 
@@ -190,7 +218,30 @@ class Mailer {
 				return false;
 			}
 			return true;
-		}    	   	
+		} */
+
+        $headers = 'From: ' . EMAIL_FROM_NAME . '<' . EMAIL_FROM_ADDR . '>' . "\r\n";
+        $headers .= 'Return-Path: <' . EMAIL_FROM_ADDR . '>' . "\r\n";
+        $headers .= 'MIME-Version 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $subject = '[' . SITE_NAME . '] your new password';
+        $message = "Hello " . $user . ",<br/><br/>"
+				. "At your request, we've generated a new password for you."
+             	. "You can now use the following username and password "
+             	. "to log in to " . SITE_NAME . ":<br/><br/>"
+                . "<blockquote>"
+             	. "Username: " . $user . "<br/>"
+             	. "Password: " . $pass . "<br/><br/>"
+                . "</blockquote>"
+             	. "It is recommended that you change your password "
+             	. "to something easier to remember. You can "
+             	. "do this from your account page immediately after "
+             	. "logging in.<br/><br/>";
+
+        if (mail($email, $subject, $message, $headers))
+            return true;
+        else
+            return false;
    } // sendNewPass
    
 };

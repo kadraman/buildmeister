@@ -14,8 +14,7 @@ if (!$username) {
 if (!$database->usernameTaken($username)) {
 	// does the user exist?
 	$session->displayDialog("User Does Not Exist",
-	   	"The specified user does not exist.",
-	    REWRITE_PREFIX . "/");		   	
+	   	"The specified user does not exist.", "/");
 } else {	
 	
     // display requested user information 
@@ -28,7 +27,7 @@ if (!$database->usernameTaken($username)) {
 	}
 ?>
 
-<form id="viewUserForm" action="<?php echo REWRITE_PREFIX . "/users/edit/" . $username; ?>" method="post">
+<form id="viewUserForm" action="<?php echo "/users/edit/" . $username; ?>" method="post">
 	<fieldset style="width:400px; margin: 0px auto">
 
 		<!-- user name -->		
@@ -103,7 +102,7 @@ if (!$database->usernameTaken($username)) {
 			while ($row = mysqli_fetch_assoc($result)) {
 				$atitle = strtolower(str_replace(" ", "_", $row['title']));
 				echo "<div id='splitlist'><strong><a href='" 
-					. REWRITE_PREFIX . "/articles/" . $atitle . "'>"
+					. "/articles/" . $atitle . "'>"
  			    	. $row['title'] . "</a></strong>"
  			    	. "&nbsp;[" . $database->getArticleStateName($row['state']) . "]<br/>"
  			    	. "Posted on " . $row['newdate'];			 
@@ -124,7 +123,7 @@ if (!$database->usernameTaken($username)) {
 				$atitle = $database->getArticleTitle($row['art_id']);
 				$atitle_link = strtolower(str_replace(" ", "_", $atitle));
 				echo "<div id='splitlist'><strong>Comment on article "
-					. "<a href='" . REWRITE_PREFIX . "/articles/" . $atitle_link . "'>"
+					. "<a href='/articles/" . $atitle_link . "'>"
  		    		. $atitle . "</a></strong><br/>"
  		    		. "Posted on " . $row['newdate'];			 
  		    	echo "</small></div>";

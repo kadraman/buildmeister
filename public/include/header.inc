@@ -25,16 +25,16 @@ if (isset($html_head_title)) {
 }
 echo "</title>";
 ?>	
-<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/include/config.js"></script>
-<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/mootools-1.2.1-core.js"></script>
-<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/mootools-1.2-more.js"></script>
-<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/clientcide-1.2.js"></script>
-<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/datetimepicker.js"></script>
-<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/global.js"></script>
-<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/FilterTable.js"></script>
-<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/FormValidator.js"></script>
-<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/LabelledInput.js"></script>
-<script type="text/javascript" src="<?php echo SITE_PREFIX; ?>/javascript/LabelledInput.js"></script>
+<script type="text/javascript" src="/include/config.js"></script>
+<script type="text/javascript" src="/javascript/mootools-1.2.1-core.js"></script>
+<script type="text/javascript" src="/javascript/mootools-1.2-more.js"></script>
+<script type="text/javascript" src="/javascript/clientcide-1.2.js"></script>
+<script type="text/javascript" src="/javascript/datetimepicker.js"></script>
+<script type="text/javascript" src="/javascript/global.js"></script>
+<script type="text/javascript" src="/javascript/FilterTable.js"></script>
+<script type="text/javascript" src="/javascript/FormValidator.js"></script>
+<script type="text/javascript" src="/javascript/LabelledInput.js"></script>
+<script type="text/javascript" src="/javascript/LabelledInput.js"></script>
 <?php
 // include supporting javascript file for page (if present)
 $jsfile = str_replace(".php", ".js", $_SERVER['PHP_SELF']);
@@ -43,10 +43,10 @@ $jsfile = str_replace(".php", ".js", $_SERVER['PHP_SELF']);
 //}
 ?>	
 <style type="text/css">
-@import "<?php echo SITE_PREFIX; ?>/stylesheets/main.css";
-@import "<?php echo SITE_PREFIX; ?>/stylesheets/admin.css";
-@import "<?php echo SITE_PREFIX; ?>/stylesheets/article.css";
-@import "<?php echo SITE_PREFIX; ?>/stylesheets/socializer.css";
+@import "/stylesheets/main.css";
+@import "/stylesheets/admin.css";
+@import "/stylesheets/article.css";
+@import "/stylesheets/socializer.css";
 </style>
 </head>
 
@@ -57,7 +57,7 @@ $jsfile = str_replace(".php", ".js", $_SERVER['PHP_SELF']);
 	    <!-- header begin -->
 	    <div id="header">
 	        <div id="logo">
-		        <img src="<?php echo SITE_PREFIX; ?>/images/logo.gif" alt="The Buildmeister" /> 
+		        <img src="/images/logo.gif" alt="The Buildmeister" />
 	        </div>
 	    	<!-- advert begin -->
 	    	<div id="advert">
@@ -83,11 +83,11 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 			<div id="navigation">
 				<ul id="links">
 					<li class="menuTitle">Main Menu</li>
-					<li><a href="<?php echo REWRITE_PREFIX; ?>/">Home</a></li>
-					<li><a href="<?php echo REWRITE_PREFIX; ?>/articles/">Articles</a></li>
-					<li><a href="<?php echo REWRITE_PREFIX; ?>/books/">Books</a></li>
-					<li><a href="<?php echo REWRITE_PREFIX; ?>/glossary/">Glossary</a></li>
-					<li><a href="<?php echo REWRITE_PREFIX; ?>/links/">Links</a></li>
+					<li><a href="/">Home</a></li>
+					<li><a href="/articles/">Articles</a></li>
+					<li><a href="/books/">Books</a></li>
+					<li><a href="/glossary/">Glossary</a></li>
+					<li><a href="/links/">Links</a></li>
 				</ul>
 			</div>		
 		 		
@@ -95,7 +95,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 			<div id="searchBox" class="sideBox">
 				<div class="sideBoxTitle">Search</div>				
 					<div id="searchFields" class="sideBoxContent">
-						<form id="searchForm" action="<?php echo SITE_PREFIX; ?>/pages/search.submit.php" method="post">
+						<form id="searchForm" action="/pages/search.submit.php" method="post">
 							<input id="keywords" class="labelled"
 								type="text" maxlength="80" 
 								name="keywords" value="keywords"/>
@@ -116,16 +116,16 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				if ($session->logged_in) {
 ?>
 					<ul class="sideBoxList">
-						<li><a class="sideBoxLink" href="<?php echo REWRITE_PREFIX; ?>/users/<?php echo $session->username; ?>">My account</a></li>
-						<li><a class="sideBoxLink" href="<?php echo REWRITE_PREFIX; ?>/users/logout.html">Logout</a></li>
+						<li><a class="sideBoxLink" href="/users/<?php echo $session->username; ?>">My account</a></li>
+						<li><a class="sideBoxLink" href="/users/logout.html">Logout</a></li>
 					</ul>
 <?php
 				} else {
 ?>
 					<ul class="sideBoxList">
-						<li><a class="sideBoxLink" href="<?php echo REWRITE_PREFIX; ?>/users/login.html">Login</a></li>
-						<li><a class="sideBoxLink" href="<?php echo REWRITE_PREFIX; ?>/users/forgotpass.html">Forgotten password?</a></li>
-						<li><a class="sideBoxLink" href="<?php echo REWRITE_PREFIX; ?>/users/register.html">Register now?</a></li>
+						<li><a class="sideBoxLink" href="/users/login.html">Login</a></li>
+						<li><a class="sideBoxLink" href="/users/forgotpass.html">Forgotten password?</a></li>
+						<li><a class="sideBoxLink" href="/users/register.html">Register now?</a></li>
 					</ul>
 <?php
 				}
@@ -142,9 +142,9 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				<div class="sideBoxTitle">Administration Menu</div>
 				<div id="adminMenuFields" class="sideBoxContent">
 					<ul class="sideBoxList">
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/admin/users/">Users</a></li>
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/admin/articles/">Articles</a></li>
-						<li><a class="sideBoxLink" href="<?php echo SITE_PREFIX; ?>/pages/admin/comments/">Comments</a></li>
+						<li><a class="sideBoxLink" href="/pages/admin/users/">Users</a></li>
+						<li><a class="sideBoxLink" href="/pages/admin/articles/">Articles</a></li>
+						<li><a class="sideBoxLink" href="/pages/admin/comments/">Comments</a></li>
 					</ul>	
 				</div>
 			</div>				
@@ -183,7 +183,7 @@ amazon_color_link="2B5A6B"; //--></script>
 		
 			<div id="spacer">&nbsp;</div>
 			
-		    <!-- jobs begin -->
+		    <!-- jobs begin --
 		    <div align="center">
 		    <script type="text/javascript">
 <!-- 
@@ -194,7 +194,7 @@ var jobthread_widget_title_style = "color:#313131;font-weight:bold;";
 var jobthread_widget_link_style = "color:#0464bb;font-size:11px;font-weight:normal;text-decoration:none;border:none;";
 var jobthread_widget_top_style = "padding-top:8px;";
 var jobthread_widget_bottom_style = "padding-bottom:4px;";
-//-->
+//--
 </script>
 <script type="text/javascript" src="http://syndication.jobthread.com/widget/?id=3bac5b&num_jobs=5&keywords=<?php echo $html_head_keywords ?>"></script>		    
 		    </div>

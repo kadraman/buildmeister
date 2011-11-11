@@ -4,9 +4,9 @@
     	<!-- footer begin -->
     	<div id="footer">
         	<ul>
-            	<li class="first"><a href="<?php echo REWRITE_PREFIX; ?>/about/">About</a></li>
-            	<li><a href="<?php echo REWRITE_PREFIX; ?>/contact/">Contact</a></li>
-            	<li><a href="<?php echo REWRITE_PREFIX; ?>/terms/">Terms of Use</a></li>
+            	<li class="first"><a href="/about/">About</a></li>
+            	<li><a href="/contact/">Contact</a></li>
+            	<li><a href="/terms/">Terms of Use</a></li>
        		</ul>
     	</div>
     	<!-- footer end -->
@@ -26,14 +26,14 @@ urchinTracker();
 
 <!-- TODO: only include if article? -->
 <!-- syntax highlighter -->
-<link type="text/css" rel="stylesheet" href="<?php echo SITE_PREFIX; ?>/stylesheets/SyntaxHighlighter.css"></link>
-<script language="javascript" src="<?php echo SITE_PREFIX; ?>/javascript/shCore.js"></script>
-<script language="javascript" src="<?php echo SITE_PREFIX; ?>/javascript/shBrushXml.js"></script>
-<script language="javascript" src="<?php echo SITE_PREFIX; ?>/javascript/shBrushJava.js"></script>
-<script language="javascript" src="<?php echo SITE_PREFIX; ?>/javascript/shBrushPhp.js"></script>
-<script language="javascript" src="<?php echo SITE_PREFIX; ?>/javascript/shBrushPython.js"></script>
+<link type="text/css" rel="stylesheet" href="/stylesheets/SyntaxHighlighter.css"></link>
+<script language="javascript" src="/javascript/shCore.js"></script>
+<script language="javascript" src="/javascript/shBrushXml.js"></script>
+<script language="javascript" src="/javascript/shBrushJava.js"></script>
+<script language="javascript" src="/javascript/shBrushPhp.js"></script>
+<script language="javascript" src="/javascript/shBrushPython.js"></script>
 <script language="javascript">
-dp.SyntaxHighlighter.ClipboardSwf = '<?php echo SITE_PREFIX; ?>/javascript/clipboard.swf';
+dp.SyntaxHighlighter.ClipboardSwf = '/javascript/clipboard.swf';
 dp.SyntaxHighlighter.HighlightAll('code');
 </script>
 

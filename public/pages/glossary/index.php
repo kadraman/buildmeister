@@ -52,7 +52,7 @@ for ($i = 65; $i <= 90; $i++) {
             	$title = $row['title'];
             	$href = str_replace(' ', '_', $title);
             	echo "<td class='glossitem' valign='top'><strong><a id='#" . $href . "'></a>"
-        	    	. "<a href='" . REWRITE_PREFIX . "/categories/" 
+        	    	. "<a href='/categories/"
         	    	. $href . "'>" 
                 	. $row['title'] . "</a></strong><br/>"
 		        	. stripslashes($row['summary']) . "</td>\n";

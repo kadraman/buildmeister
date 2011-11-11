@@ -49,11 +49,12 @@ define("TBL_LINKRATE", "links_ratings");
 define("TBL_ARTCOM", "article_comm");
 define("TBL_GLOSSCOM", "glossary_comm");
 define("TBL_LEVELS", "levels");
+define("TBL_SITE", "site");
 
 // special names and level constants
-define("SITE_BASEDIR", "@site_basedir@");
-define("SITE_PREFIX", "@site_prefix@");
-define("REWRITE_PREFIX", "@rewrite_prefix@");
+define("SITE_BASEDIR", "http://www.buildmeister.com");
+define("SITE_PREFIX", "");
+define("REWRITE_PREFIX", "");
 define("SITE_NAME", "The Buildmeister");
 define("ADMIN_NAME", "admin");
 define("GUEST_NAME", "Guest");
@@ -66,6 +67,7 @@ define("DRAFT_STATE", 2); // state at which article has been initially drafted w
 define("REVIEWED_STATE", 3); // state at which article has been reviewed
 define("PUBLISHED_STATE", 4); // state at which article is visible to all users
 define("WITHDRAWN_STATE", 5); // state at which article has been withdrawn and not visible on the site
+define("COMMENT_ACTIVE_STATE", 1);
 
 // page row limit for tables
 define("PAGE_LIMIT", 40);
@@ -82,12 +84,13 @@ define("COOKIE_EXPIRE", 60*60*24*100);    // 100 days by default
 define("COOKIE_PATH", "/");               // avaible in whole domain
 
 // email constants
-define("EMAIL_FROM_NAME", "webmaster");
+define("EMAIL_FROM_NAME", "The Buildmeister");
 define("EMAIL_FROM_ADDR", "webmaster@buildmeister.com");
+define("EMAIL_NOTIFY_ADDR", "kevin.lee@buildmeister.com");
 define("EMAIL_WELCOME", false);
-define("SMTP_SERVER", "smtp.strato.com");
-define("SMTP_USERNAME", "webmaster@buildmeister.com");
-define("SMTP_PASSWORD", "redrock71");
+define("SMTP_SERVER", "@smtp_server@");
+define("SMTP_USERNAME", "@smtp_user@");
+define("SMTP_PASSWORD", "@smtp_pass@");
 
 // forces all users to have lowercase usernames
 define("ALL_LOWERCASE", false);

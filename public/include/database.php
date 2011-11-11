@@ -101,6 +101,42 @@ class MySQLDB {
 	} // clean_html_data
 
 	/**
+	 * Get information about the site
+	 *
+	 * @return the result array with all information. 
+	 * If query fails, NULL is returned.
+	 */
+	function getSiteInfo() {
+		$sql = "SELECT * FROM " . TBL_SITE;
+		$result = mysqli_query($this->connection, $sql);
+		// error occurred
+		if (!$result || (mysqli_num_rows($result) < 1)) {
+			return NULL;
+		}
+		// return result array
+		$dbarray = mysqli_fetch_assoc($result);
+		mysqli_free_result($result);
+		return $dbarray;
+	} // getSiteInfo
+	
+	/**
+	 * Updates a field in the site table.
+	 *
+	 * @param string $field
+	 * @param string $value
+	 * @return true on success, false otherwise.
+	 */
+	function updateSiteField($field, $value) {
+		$sql = "UPDATE " . TBL_SITE . " SET " . $field
+			. " = '$value'";
+		if (mysqli_query($this->connection, $sql)) {
+			return true;
+		} else {
+			return false;
+		}
+	} // updateSiteField
+	
+	/**
 	 * Checks whether or not the given username is in the database,
 	 * and if so validates the supplied password.
 	 *
@@ -600,28 +636,28 @@ class MySQLDB {
 	 * @param string $summary
 	 * @param string $category
 	 * @param string $date
-	 * @param string $text
+	 * @param string $author
+	 * @param string $content
 	 * @return true on success, false otherwise.
 	 */
-	function addNewArticle($title, $summary, $category, $date, $text) {
+	function addNewArticle($title, $summary, $category, $author, $content) {
 		$retval = true;
 		// add article into database
 		$sql = "INSERT INTO " . TBL_ARTICLES
-		. " (date_posted, summary, title, content, state)"
-		. " VALUES ('$date', '$summary', '$title', '$text', '0')";
+		. " (date_posted, summary, title, content, posted_by, state)"
+		. " VALUES (now(), '$summary', '$title', '$content', '$author', 1)";
 		if (!mysqli_query($this->connection, $sql)) {
 			$retval = false;
 		} else {
-			$artid = mysqli_insert_id();
-			// add categories
-			$categories = explode(",", $category);
-			foreach ($categories as $catid) {
-				$sql = "INSERT INTO " . TBL_ARTICLE_CATEGORIES
-				. " (article_id, cat_id)"
-				. " VALUES ('$artid', '$catid')";
-				if (!mysqli_query($this->connection, $sql)) {
-					$retval = false;
-					break;
+			$artid = mysqli_insert_id($this->connection);
+			if ($category) {
+				foreach ($category as $catid) {
+					$sql = "INSERT INTO " . TBL_ARTICLE_CATEGORIES . " (article_id, cat_id)"
+					. " VALUES ('$artid', '$catid')";
+					if (!mysqli_query($this->connection, $sql)) {
+						$retval = false;
+						break;
+					}
 				}
 			}
 		}
@@ -922,6 +958,24 @@ class MySQLDB {
 	} // articleCommentExists
 	
 	/**
+	 * Updates an article comment in the database.
+	 *
+	 * @param string $id
+	 * @param string $comment
+	 * @param string $state
+	 * @return true on success, false otherwise.
+	 */
+	function updateArticleComment($id, $comment, $state) {		
+		$sql = "UPDATE " . TBL_ARTCOM . " SET comment = '$comment', "
+			. "state = '$state' WHERE id = '$id'";
+		if (!mysqli_query($this->connection, $sql)) {
+			return false;
+		} else {
+			return true;
+		}
+	} // updateArticleComment
+	
+	/**
 	 * Delete an article comment from the database.
 	 *
 	 * @param integer $comid
@@ -935,28 +989,76 @@ class MySQLDB {
 			return true;
 		}
 	} // deleteArticleComment
-
+	
 	/**
-	 * Adds a new book into the database.
-	 * By default the book is inactive.
+	 * Adds a new article category into the database.
 	 *
-	 * @param string $username
-	 * @param string $booktitle
-	 * @param string $bookauthor
-	 * @param string $bookurl
-	 * @param string $booksummary
+	 * @param string $name
 	 * @return true on success, false otherwise.
 	 */
-	function addNewBook($username, $booktitle, $bookauthor, $bookurl, $booksummary) {
-		$sql = "INSERT INTO " . TBL_BOOKS
-		. " (date_posted, posted_by, title, author, summary, url)"
-		. " VALUES (now(), '$username', '$booktitle', '$bookauthor', '$booksummary', '$bookurl')";
+	function addNewArticleCategory($name) {
+		$sql = "INSERT INTO " . TBL_CATEGORIES . " (name) VALUES ('$name')";
 		if (!mysqli_query($this->connection, $sql)) {
 			return false;
 		} else {
 			return true;
 		}
-	} // addNewBook
+	} // addNewArticleCategory
+	
+	/**
+	 * Checks whether an article category exists
+	 *
+	 * @param integer $id
+	 * @return true on success, false otherwise.
+	 */
+	function articleCategoryExists($id) {
+		$sql = "SELECT id FROM " . TBL_CATEGORIES . " WHERE id = '$id'";
+		$result = mysqli_query($this->connection, $sql);
+		if (!$result || (mysqli_num_rows($result) < 1)) {
+			mysqli_free_result($result);
+			return false;
+		} else {
+			mysqli_free_result($result);
+			return true;
+		}
+	} // articleCategoryExists
+	
+	/**
+	 * Updates an article category in the database.
+	 *
+	 * @param string $id
+	 * @param string $name
+	 * @return true on success, false otherwise.
+	 */
+	function updateArticleCategory($id, $name) {		
+		$sql = "UPDATE " . TBL_CATEGORIES . " SET name = '$name' "
+			. "WHERE id = '$id'";
+		if (!mysqli_query($this->connection, $sql)) {
+			return false;
+		} else {
+			return true;
+		}
+	} // updateArticleCategory
+	
+	/**
+	 * Delete an article category from the database.
+	 *
+	 * @param integer $id
+	 * @return true on success, false otherwise.
+	 */
+	function deleteArticleCategory($id) {
+		$sql = "DELETE FROM " . TBL_CATEGORIES . " WHERE id = '$id'";
+		if (!mysqli_query($this->connection, $sql)) {
+			return false;
+		} else {
+			$sql = "DELETE FROM " . TBL_ARTICLE_CATEGORIES . " WHERE cat_id = '$id'";
+			if (!mysqli_query($this->connection, $sql)) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	} // deleteArticleCategory
 
 	/**
 	 * Adds a new glossary item into the database.

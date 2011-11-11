@@ -29,7 +29,7 @@ include_once("header.inc");
 			$atitle = strtolower(str_replace(" ", "_", $row['title']));
 			echo "<div id='splitlist'><strong><a href='" . $atitle . "'>"
  		    	. $row['title'] . "</a></strong><br/>"
- 		    	. "<small>Posted by <a href='" . REWRITE_PREFIX
+ 		    	. "<small>Posted by <a href='"
  		    	. "/users/" . $row['posted_by'] 
  		    	. "'>" . $row['posted_by'] . "</a> on "
  		    	. $row['newdate'];			 
