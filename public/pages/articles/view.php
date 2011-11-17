@@ -162,25 +162,21 @@ if (!isset($_GET['id']) && !isset($_GET['title'])) {
 
 </div>
 
+<!-- advert begin -->
 <div align="center">
-<!-- You will NOT be able to see the ad on your site! This unit is hidden on your page, and will only display to your search engine traffic (from US and CA). To preview, paste the code up on your site, then add #chitikatest=mortgage to the end of your URL in your browser's address bar.  Example:  www.yourwebsite.com#chitikatest=mortgage. This will show you what the ad would look like to a user who is interested in "mortgages." -->
 <script type="text/javascript"><!--
-ch_client = "kelee71";
-ch_type = "mpu";
-ch_width = 728;
-ch_height = 90;
-ch_non_contextual = 4;
-ch_vertical ="premium";
-ch_sid = "Buildmeister";
-var ch_queries = new Array( );
-var ch_selected=Math.floor((Math.random()*ch_queries.length));
-if ( ch_selected < ch_queries.length ) {
-ch_query = ch_queries[ch_selected];
-}
-//--></script>
-<script  src="http://scripts.chitika.net/eminimalls/amm.js" type="text/javascript">
+google_ad_client = "pub-3805144493754901";
+/* 728x90, created 03/07/09 */
+google_ad_slot = "6425634926";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
 </div>
+<!-- advert end -->	
 
 <?php 				
 			echo htmlspecialchars_decode($row['content']);  															
@@ -336,7 +332,7 @@ $oFCKeditor->Config['LinkBrowser'] = 'false';
 $oFCKeditor->Config['LinkUpload'] = 'false';
 $oFCKeditor->Create();
 
-?>			
+?>
 			</span>	
 
 		</div>

@@ -16,7 +16,7 @@ if ($session->logged_in) {
 	<h2>Register</h2>
 </div>
 
-<form id="registrationForm" action="<?php echo SITE_BASEDIR . "/pages/users/register.submit.php" ?>" method="post">
+<form id="registrationForm" action="/pages/users/register.submit.php" method="post">
 	<fieldset style="width:650px; margin: 0px auto">
 	
 		
@@ -74,7 +74,7 @@ if ($session->logged_in) {
 		<div>
 			<label for="kludge"><!-- empty --></label>
 			<img class="txt" id="catchpa" 
-				src="<?php echo SITE_PREFIX . "/include/securimage/securimage_show.php" ?>" 
+				src="/include/securimage/securimage_show.php"
 				alt="CAPTCHA Image" />
 			<a href="" id="reload" class="txt">Reload Image</a>				
 		</div>
@@ -113,7 +113,7 @@ This site system uses cookies to store information on your local computer. These
 			<input type="submit" value="Register" id="submit" class="btn"/>
 			&nbsp;
 			<span id="waiting" style="visibility: hidden">			
-				<img align="absmiddle" src="<?php echo SITE_PREFIX; ?>/images/spinner.gif"/>
+				<img align="absmiddle" src="/images/spinner.gif"/>
 				&nbsp;<strong>Processing...<strong>
 			</span>	
 		</div>

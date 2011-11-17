@@ -18,7 +18,7 @@ if (!isset($_POST['username'])) {
 	&& !$session->isAdmin()) {
 	$session->displayDialog("Insufficient Permission",
    		"Sorry you do not have permission to edit this user.",
-		SITE_BASEDIR . "/index.php");	
+		"/index.php");
 } else {	
 
 	// retrieve the username of the user to display
@@ -51,7 +51,7 @@ if (!isset($_POST['username'])) {
 
 ?>
 
-<form id="userEditForm" action="<?php echo SITE_BASEDIR . "/pages/users/edit.submit.php" ?>" method="post">
+<form id="userEditForm" action="/pages/users/edit.submit.php" method="post">
 	<fieldset style="width:500px; margin: 0px auto">
 		
 		<!-- ajax login response -->
@@ -125,7 +125,7 @@ if (!isset($_POST['username'])) {
 			<label for="kludge"></label>			
 			<input type="submit" value="Submit" id="submit" class="btn"/>
 			<span id="waiting" style="visibility: hidden">			
-				<img src="<?php echo SITE_PREFIX; ?>/images/spinner.gif"/>
+				<img src="/images/spinner.gif"/>
 				&nbsp;<strong>Processing...<strong>
 			</span>	
 			<input type="hidden" name="user" id="user" value="<?php echo $username; ?>">

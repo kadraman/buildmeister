@@ -7,8 +7,7 @@ window.addEvent('domready', function() {
 		new Event(e).stop();
 		
 		// reload the catchpa
-		$("catchpa").set('src', CONFIG.site_prefix +
-			'/include/securimage/securimage_show.php?' + Math.random());
+		$("catchpa").set('src', '/include/securimage/securimage_show.php?' + Math.random());
 	});
 	
 	// hack for fckeditor

@@ -8,7 +8,7 @@ include_once("header.inc");
 	<h2>Forgotten password</h2>
 </div>
 
-<form id="forgotPassForm" action="<?php echo SITE_BASEDIR . "/pages/users/forgotpass.submit.php" ?>" method="post">
+<form id="forgotPassForm" action="/pages/users/forgotpass.submit.php" method="post">
 	<fieldset style="width:400px; margin: 0px auto">
 
 		<!-- ajax login response -->
@@ -29,7 +29,7 @@ include_once("header.inc");
 			<input type="submit" value="Submit" id="submit" class="btn"/>
 			&nbsp;
 			<span id="waiting" style="visibility: hidden">			
-				<img align="absmiddle" src="<?php echo SITE_PREFIX; ?>/images/spinner.gif"/>
+				<img align="absmiddle" src="/images/spinner.gif"/>
 				&nbsp;<strong>Processing...<strong>
 			</span>	
 		</div>

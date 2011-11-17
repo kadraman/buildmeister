@@ -96,11 +96,11 @@ include_once("database.php");
 			$time   = date("M d, Y", $row['timestamp']);
 			$active = (($row['active'] == 1) ? "Yes" : "No");
 			echo "<td><a class='editUser' href='" . SITE_PREFIX . "/pages/users/view.php?user=" . $uname
-				. "'><img src='" . SITE_BASEDIR . "/images/icons-small/User-edit.png'></img></a>";
+				. "'><img src='/images/icons-small/User-edit.png'></img></a>";
 			echo "<td><a class='deleteUser' id='" . $uname 
 				. "' href=''>"
-				. "<img src='" . SITE_BASEDIR . "/images/icons-small/User-del.png'></img></a>";
-			echo "<td><a href='" . SITE_PREFIX . "/pages/users/view.php?user=" .
+				. "<img src='/images/icons-small/User-del.png'></img></a>";
+			echo "<td><a href='/pages/users/view.php?user=" .
 				$uname . "'>$uname</a></td>\n";
 			echo "<td class='centerAlign'>$ulevel</td>\n";
 			echo "<td>$email</td>\n";
@@ -139,8 +139,7 @@ $js = <<<EOD
                     		// delete the comment via ajax
                     		var req = new Request({
                     			method: 'post',
-                    			url: CONFIG.site_prefix + 
-                    				'/pages/admin/users/_user.delete.php',
+                    			url: '/pages/admin/users/_user.delete.php',
                     		    data: { 'user' : link.id },
                     		    onComplete: function(response) { 
                     		    	// decode the JSON response

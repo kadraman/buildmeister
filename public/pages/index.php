@@ -61,9 +61,9 @@ if ($site_info['show_latest_article']) {
 				echo "<div id='boxedtitle'>" . substrws($row['title'], 40) . " ...</div>";
 				$html = substrws($row['content'], 1000);
 				echo htmlspecialchars_decode($html . " ... ");
-				echo "<a href='" . REWRITE_PREFIX . "/articles/" . $atitle . "'>Read more</a>";
+				echo "<a href='/articles/" . $atitle . "'>Read more</a>";
 				echo "</td>";
-				echo "<td><img src='" . SITE_PREFIX . "/images/bmg.jpg" . "'></td></tr></table>"; 
+				echo "<td><img src='/images/bmg.jpg'></td></tr></table>";
 			}
 		}
 		mysqli_free_result($result);
@@ -85,7 +85,7 @@ if ($site_info['show_recent_articles']) {
 			while ($row = mysqli_fetch_assoc($result)) {
 				$atitle = strtolower(str_replace(" ", "_", $row['title']));
 				echo "<div id='splitlist'><strong><a href='"
-					. REWRITE_PREFIX . "/articles/" . $atitle . "'>" 
+					. "/articles/" . $atitle . "'>"
 					. $row['title'] . "</a></strong>"
 					. " (" . $row['newdate'] . ")<br/>" 
 					. $row['summary'] . "</div>\n";
@@ -109,7 +109,7 @@ if ($site_info['show_popular_articles']) {
 			while ($row = mysqli_fetch_assoc($result)) {
 				$atitle = strtolower(str_replace(" ", "_", $row['title']));
 				echo "<div id='splitlist'><strong><a href='"
-					. REWRITE_PREFIX . "/articles/" . $atitle . "'>" 
+					. "/articles/" . $atitle . "'>"
 					. $row['title'] . "</a></strong> ("
 					. $row['views'] . " views)<br/>" . $row['summary'] . "</div>\n";
 			}
@@ -135,7 +135,7 @@ if ($site_info['show_recent_comments'] == "1") {
 				echo "<div id='splitlist'>";
 				echo "<div class='comment'>";
 				echo "<b>" . $row['posted_by'] . "</b> on <a href='"
-					. REWRITE_PREFIX . "/articles/" . $atitle . "'>" 
+					. "/articles/" . $atitle . "'>"
 					. $database->getArticleTitle($row['art_id'])
 					. "</a>:<br/>";
 				echo htmlspecialchars_decode($row['comment']);

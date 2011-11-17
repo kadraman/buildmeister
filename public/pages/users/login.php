@@ -12,7 +12,7 @@ include_once("header.inc");
 <!-- named div so content can be replaced on successfull login -->
 <div id="status" style="width:400px; margin: 0px auto">
 
-<form id="loginForm" action="<?php echo SITE_BASEDIR . "/pages/users/login.submit.php"?>" method="post">
+<form id="loginForm" action="/pages/users/login.submit.php" method="post">
     <fieldset>   	
 
 		<!-- ajax login response -->
@@ -47,7 +47,7 @@ include_once("header.inc");
 			<input type="submit" value="Login" id="submit" class="btn"/>
 			&nbsp;
 			<span id="waiting" style="visibility: hidden">			
-				<img align="absmiddle" src="<?php echo SITE_PREFIX; ?>/images/spinner.gif"/>
+				<img align="absmiddle" src="/images/spinner.gif"/>
 				&nbsp;<strong>Processing...<strong>
 			</span>	
 		</div>

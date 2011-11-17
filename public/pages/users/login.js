@@ -55,11 +55,11 @@ window.addEvent('domready', function() {
 					$('submit').set('disabled', false);
 				
 					$('status').set('html', "<span class='success'><b>You are now logged in!</b><br />" +
-						"<img align='absmiddle' src='" + CONFIG.image_dir + "/loader-bar.gif'>" +
+						"<img align='absmiddle' src='/images/loader-bar.gif'>" +
 						"'<br>Please wait while we redirect you to your home page...</span></div>");
 
 					// go to home page
-					setTimeout(function() { 
+					setTimeout(function() {
 						window.location = redirectURL;
 					}, 3000);	
 				} else {
