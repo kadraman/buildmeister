@@ -175,9 +175,6 @@ amazon_color_link="2B5A6B"; //--></script>
 			<!-- logos begin -->
 			<div align="center">			
 				<!-- TODO: include logos -->
-				<b>Best viewed on:</b><br/>
-				<a href="http://www.mozilla.com/firefox?from=sfx&uid=256449&t=305"><img border="0" alt="Spreadfirefox Affiliate Button" src="http://sfx-images.mozilla.org/affiliates/Buttons/firefox3/110x32_best-yet.png" /></a>
-				<br/><br/>
 			</div>
 			<!-- logos end -->
 		
