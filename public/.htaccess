@@ -1,0 +1,46 @@
+#AddType x-mapp-php5 .php .php4
+
+#ErrorDocument 404 /404.html
+#ErrorDocument 500 /500.html 
+
+# prevent directory listing
+IndexIgnore * 
+
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteBase /
+
+# redirect all www to non-www and preserve folder and file path.
+#RewriteCond %{HTTP_HOST} ^http://s346279562.websitehome.co.uk [NC]
+#RewriteRule ^(.*)$ http://s346279562.websitehome.co.uk/$1 [R=301,L]
+
+#RewriteRule ^(.*)\.html$ $1.php [nc]
+
+RewriteRule ^$ /pages/index.php
+RewriteRule ^public/$ /pages/index.php
+
+RewriteRule ^articles/$ /pages/articles/index.php
+RewriteRule ^articles/(.*)\.html$ /pages/articles/$1.php
+RewriteRule ^articles/(.*)\.js$ /pages/articles/$1.js
+RewriteRule ^articles/([a-zA-Z0-9\-_.,]+)/?$ /pages/articles/view.php?title=$1
+RewriteRule ^articles/edit/([0-9]+)/?$ /pages/articles/edit.php?id=$1
+
+RewriteRule ^categories/([a-zA-Z0-9_-]+)/?$ /pages/categories/viewcategory.php?name=$1
+
+RewriteRule ^books/$ /pages/books/index.php
+
+RewriteRule ^glossary/$ /pages/glossary/index.php
+RewriteRule ^glossary/([a-zA-Z0-9_-]+)/?$ /pages/glossary/viewterm.php?term=$1
+
+RewriteRule ^links/$ /pages/links/index.php
+
+RewriteRule ^users/(.*)\.html$ /pages/users/$1.php
+RewriteRule ^users/(.*)\.js$ /pages/users/$1.js
+RewriteRule ^users/view/$ /pages/users/view.php
+RewriteRule ^users/([a-zA-Z0-9_-]+)/?$ /pages/users/view.php?user=$1
+RewriteRule ^users/edit/([a-zA-Z0-9_-]+)/?$ /pages/users/edit.php?user=$1
+
+RewriteRule ^contact/$ /pages/contact.php
+RewriteRule ^about/$ /pages/about.php
+RewriteRule ^terms/$ /pages/terms.php
+</IfModule> 
