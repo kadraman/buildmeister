@@ -71,14 +71,14 @@
     <!-- prepare a release -->
     <target name="package" depends="get-relnum"
         description="package up the release">
-    <zip destfile="${dir.dist}/${phing.project.name}-${rel.num}.zip">
-             <fileset dir="${phing.basedir}/..">
+    <zip destfile="${dir.dist}/${ant.project.name}-${rel.num}.zip">
+             <fileset dir="${ant.basedir}/..">
                  <include name="**/**/*"/>
                  <exclude name="**/build.properties"/>
                  <exclude name="**/release.properties"/>
             </fileset>
         </zip>
-    <checksum file="${dir.dist}/${phing.project.name}-${rel.num}.zip"/>
+    <checksum file="${dir.dist}/${ant.project.name}-${rel.num}.zip"/>
     </target>
 
     <!-- get environment -->
@@ -168,8 +168,8 @@
 
     <!-- help -->
     <target name="help" description="display help">
-        <echo>build file for ${phing.project.name}</echo>
-        <echo>please type phing -p for description of all targets</echo>
+        <echo>build file for ${ant.project.name}</echo>
+        <echo>please type ant -p for description of all targets</echo>
     </target>
 
 </project>

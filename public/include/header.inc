@@ -3,10 +3,11 @@
 include_once("session.php");
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+
+<!DOCTYPE html>
+<html>
 <head>
-<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 <?php
 // meta description
 if (isset($html_head_description)) {
@@ -24,30 +25,49 @@ if (isset($html_head_title)) {
 	echo SITE_NAME;
 }
 echo "</title>";
-?>	
-<script type="text/javascript" src="/include/config.js"></script>
-<script type="text/javascript" src="/javascript/mootools-1.2.1-core.js"></script>
-<script type="text/javascript" src="/javascript/mootools-1.2-more.js"></script>
-<script type="text/javascript" src="/javascript/clientcide-1.2.js"></script>
-<script type="text/javascript" src="/javascript/datetimepicker.js"></script>
-<script type="text/javascript" src="/javascript/global.js"></script>
-<script type="text/javascript" src="/javascript/FilterTable.js"></script>
-<script type="text/javascript" src="/javascript/FormValidator.js"></script>
-<script type="text/javascript" src="/javascript/LabelledInput.js"></script>
-<script type="text/javascript" src="/javascript/LabelledInput.js"></script>
+?>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="javascript/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="/include/config.js"></script>
+    <script type="text/javascript" src="/javascript/mootools-1.2.1-core.js"></script>
+    <script type="text/javascript" src="/javascript/mootools-1.2-more.js"></script>
+    <script type="text/javascript" src="/javascript/clientcide-1.2.js"></script>
+    <script type="text/javascript" src="/javascript/datetimepicker.js"></script>
+    <script type="text/javascript" src="/javascript/global.js"></script>
+    <script type="text/javascript" src="/javascript/FilterTable.js"></script>
+    <script type="text/javascript" src="/javascript/FormValidator.js"></script>
+    <script type="text/javascript" src="/javascript/LabelledInput.js"></script>
+    <script type="text/javascript" src="/javascript/LabelledInput.js"></script>
 <?php
 // include supporting javascript file for page (if present)
 $jsfile = str_replace(".php", ".js", $_SERVER['PHP_SELF']);
 //if (file_exists($jsfile)) {
 	echo "<script type=\"text/javascript\" src=\"" . $jsfile . "\"></script>";
 //}
-?>	
+?>
+
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+<?php
+/*
 <style type="text/css">
 @import "/stylesheets/main.css";
 @import "/stylesheets/admin.css";
 @import "/stylesheets/article.css";
 @import "/stylesheets/socializer.css";
-</style>
+</style> */
+?>
 </head>
 
 <body id="buildmeister">

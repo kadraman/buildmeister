@@ -1,13 +1,13 @@
 window.addEvent('domready', function() {
 
-	new FormValidator($('userEditForm'), "Successfully updated user information, redirecting to home page...",
-		{
-			redirect: false,
-			redirectURL: "/users/view/"
-		}
-	);
+    new FormValidator($('userEditForm'), "Successfully updated user information, redirecting to user administration...",
+        {
+            redirect: true,
+            redirectURL: "/pages/admin/users/"
+        }
+    );
 
-    // go back to the users home page
+    // go back to the article
     $('cancel').addEvent('click', function(e) {
         e.preventDefault();
         new StickyWinModal({
@@ -18,7 +18,7 @@ window.addEvent('domready', function() {
                         {
                             text: 'Yes',
                             onClick: function() {
-                                window.location = "/users/view";
+                                window.location = "/pages/admin/users";
                             }
                         },
                         {

@@ -6,7 +6,7 @@ include_once("header.inc");
 ?>
 
 <div id="toptitle">
-	<h2>Comment Administration</h2>
+	<h2>User Administration</h2>
 </div>
 
 <?php
@@ -18,55 +18,7 @@ if (!$session->isAdmin()){
 
 ?>
 
-<div class="tableNav">
-	<a class="addButton" href="/comments/add/"><img src="/images/icons-small/Comments-add.png"></img></a>
-	&nbsp;
-	<input id="firstButton" type="button" value="&nbsp;&lt;&lt;&nbsp;"/>
-	&nbsp;
-	<input id="prevButton" type="button" value="&nbsp;&lt;&nbsp;"/>
-	&nbsp;
-	<input id="nextButton" type="button" value="&nbsp;&gt;&nbsp;"/>
-	&nbsp;
-	<input id="lastButton" type="button" value="&nbsp;&gt;&gt;&nbsp;"/>
-	&nbsp;
-	<label id="searchLabel" for="filterString" class="formInputLabel">Filter:</label>
-	<select class="formInputText" id="filterColumn" class="formInputText">
-		<option id="1" value="posted_by">posted_by</option>
-		<option id="2" value="comment">comment</option>
-		<option id="3" value="state">state</option>
-	</select>
-	</select>
-	&nbsp; 
-	<input id="filterString" class="formInputText" style="width:100px" type="text" 
-		name="filterString" maxlength="40" value=""/>
-	&nbsp;
-	<input id="filterButton" type="button" value="Filter"/>
-	&nbsp;
-	<input id="resetButton" type="button" value="Reset"/>
-	&nbsp;
-	<span id="waiting" style="visibility: hidden">			
-		<img align="absmiddle" src="<?php echo SITE_PREFIX; ?>/images/spinner.gif"/>
-		&nbsp;<strong>Processing...<strong>
-	</span>	
-</div>
-<div id="results">
-	<input type="hidden" id="curPage" value="1"/>
-	<input type="hidden" id="maxPage" value="1"/>
-	<input type="hidden" id="items"   value="1"/>
-	<table class="admintable">
-		<tr><td>&nbsp;</td></tr>
-	</table>
-</div>
-<div class="tableSummary">
-	<label id="numEntriesLabel" class="formInputLabel"></label>
-	&nbsp;|&nbsp;
-	<label id="rowsLabel" for="rowsString" class="formInputLabel">Showing </label>
-	<input id="rowsString" class="formInputText" style="width:20px" type="text" 
-		name="rowsString" maxlength="4" value="<?php echo PAGE_LIMIT; ?>"/>
-	<label id="rowsLabel2" class="formInputLabel">per page</label>
-	&nbsp;|&nbsp;
-	<a id="allRows" href="">Show all</a>	
-</div>
+<div id="filterTable"></div>
 		
 <?php 
 }
